@@ -26,7 +26,7 @@ public class DriveCommand extends CommandBase {
     double movespeed = RobotContainer.XboxController.getRawAxis(1);
     double rotatespeed = RobotContainer.XboxController.getRawAxis(0);
 
-    RobotContainer.DriveSub.arcadeDrive(movespeed*.5,rotatespeed*.5);
+    RobotContainer.DriveSub.arcadeDrive(movespeed* -0.5,rotatespeed*.5);
 
   }
 
