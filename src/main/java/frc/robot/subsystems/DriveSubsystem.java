@@ -41,6 +41,7 @@ public class DriveSubsystem extends SubsystemBase {
     
   public DriveSubsystem(){
     LeftMotors.setInverted(true);
+    RightMotors.setInverted(true);
   }
   
   public void arcadeDrive(double movespeed, double rotatespeed) {
