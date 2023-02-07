@@ -40,6 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
     DifferentialDrive DDrive= new DifferentialDrive(LeftMotors, RightMotors);
     
   public DriveSubsystem(){
+    RightMotors.setInverted(true);
   }
   
   public void arcadeDrive(double movespeed, double rotatespeed) {
