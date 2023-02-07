@@ -24,7 +24,7 @@ public class DriveSubsystem extends SubsystemBase {
  
     CANSparkMax FLMotor = new CANSparkMax(Constants.FL, MotorType.kBrushless);
     CANSparkMax BLMotor = new CANSparkMax(Constants.BL, MotorType.kBrushless);
-    CANSparkMax FRMotor = new CANSparkMax(Constants.FR, MotorType.kBrushless);
+    static CANSparkMax FRMotor = new CANSparkMax(Constants.FR, MotorType.kBrushless);
     CANSparkMax BRMotor = new CANSparkMax(Constants.BR, MotorType.kBrushless);
 
     
@@ -40,7 +40,7 @@ public class DriveSubsystem extends SubsystemBase {
     DifferentialDrive DDrive= new DifferentialDrive(LeftMotors, RightMotors);
     
   public DriveSubsystem(){
-    RightMotors.setInverted(true);
+    LeftMotors.setInverted(true);
   }
   
   public void arcadeDrive(double movespeed, double rotatespeed) {
