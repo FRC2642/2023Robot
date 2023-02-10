@@ -43,7 +43,6 @@ public class AutoCommand extends CommandBase {
     
     RobotContainer.DriveSub.arcadeDrive(-.25, turnspeed);
   }
-  
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}
