@@ -7,9 +7,9 @@ package frc.robot.commands;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
+
 
 public class AutoCommand extends CommandBase {
   /** Creates a new AutonomousCommand. */
@@ -19,7 +19,7 @@ public class AutoCommand extends CommandBase {
     addRequirements(RobotContainer.DriveSub);
   
   }
-  final PIDController PID = new PIDController(.02, 0, 0);
+  final PIDController PID = new PIDController(.01, 0, 0);
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
