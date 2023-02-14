@@ -4,36 +4,70 @@
 
 package frc.robot.commands.autonomous.drive;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
 public class FollowVectorCommand extends CommandBase {
   /** Creates a new FollowVectorCommand. */
   private DriveSubsystem drive;
-  private VectorR vector;
+  private VectorR velocity;
   private double faceDegree;
+  public boolean set_period = false;
+  private VectorR periodVector = new VectorR();
+  private VectorR initVector = new VectorR();
+  private PIDController autoPid = new PIDController(0.02, 0, 0);
 
-  public FollowVectorCommand(DriveSubsystem drive, VectorR vector, double faceDegree) {
+  public FollowVectorCommand(DriveSubsystem drive, VectorR velocity, double faceDegree) {
     //THIS COMMAND TAKES IN A VECTOR WITH AN ANGLE IN RADIANS AND AN ORIENTATION IN DEGREES
     this.drive = drive;
-    this.vector = vector;
+    this.velocity = velocity;
     this.faceDegree = faceDegree;
-    drive.set_period = false;
+    set_period = false;
     addRequirements(drive);
+  }
+
+  public void setPeriodOrigin(){
+    initVector = drive.getDisplacement().clone();
+  }
+
+  public void setPeriodVector(){
+    periodVector = VectorR.subVectors(drive.getDisplacement().clone(), initVector);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     DriveSubsystem.resetDisplacement(VectorR.fromCartesian(0, 0));
-    drive.resetInitVector();
+    initVector.setFromCartesian(0, 0);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.rotationMove(vector, faceDegree);
+    if (set_period == false){
+      setPeriodOrigin();
+      set_period = true;
+    }
+
+    double reference = 0;
+    double turnWheelSpeed = 0;
+      
+    reference = MathR.halfOptimize(DriveSubsystem.getYaw(), faceDegree, 360);
+    
+    //0.25 speed auto
+    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 400;
+    //0.5 speed auto
+    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 100;
+    //0.75 speed auto
+    turnWheelSpeed = MathR.limit(autoPid.calculate(reference, faceDegree), -1, 1) * 200;
+    drive.move(velocity, turnWheelSpeed);
+
+    
+    //profiler.updatePosition();
+    setPeriodVector();
   }
 
   // Called once the command ends or is interrupted.
@@ -43,7 +77,6 @@ public class FollowVectorCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
-    return VectorR.compareVectors(drive.getPeriodVector(), vector);
+    return VectorR.compareVectors(periodVector, velocity);
   }
 }

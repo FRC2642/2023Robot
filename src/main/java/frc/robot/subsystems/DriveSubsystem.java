@@ -18,13 +18,11 @@ import frc.robot.utils.VectorR;
 
 public class DriveSubsystem extends SubsystemBase{
   
-  private VectorR periodVector = new VectorR();
-  private VectorR initVector = new VectorR();
 
   // COMPONENTS
   private final SwerveModules modules;
   private static AHRS gyro;
-  private PIDController autoPid = new PIDController(0.02, 0, 0);
+  
 
   // POSITION TRACKING
   private static VectorR displacement;
@@ -36,10 +34,6 @@ public class DriveSubsystem extends SubsystemBase{
   public boolean defenseActivated = true;
   private static double yawOffsetDegrees = 0;
   
-
-
-  //EXTRA
-  public boolean set_period = false;
 
   public  DriveSubsystem() {
     modules = new SwerveModules(
@@ -54,31 +48,6 @@ public class DriveSubsystem extends SubsystemBase{
     acceleration = new TimedVectorDerivative(velocity);
     jerk = new TimedVectorDerivative(acceleration);
 
-  }
-
-  public void rotationMove(VectorR velocity, double faceDegree){
-    if (set_period == false){
-      setPeriodOrigin();
-      set_period = true;
-    }
-
-    double reference = 0;
-    double turnWheelSpeed = 0;
-      
-    reference = MathR.halfOptimize(DriveSubsystem.getYaw(), faceDegree, 360);
-    
-    
-    //0.25 speed auto
-    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 400;
-    //0.5 speed auto
-    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 100;
-    //0.75 speed auto
-    turnWheelSpeed = MathR.limit(autoPid.calculate(reference, faceDegree), -1, 1) * 200;
-    move(velocity, turnWheelSpeed);
-
-    
-    //profiler.updatePosition();
-    setPeriodVector();
   }
 
   /*
@@ -137,33 +106,15 @@ public class DriveSubsystem extends SubsystemBase{
     defenseActivated = defensive;
   }
 
-  public void setPeriodOrigin(){
-    initVector = displacement.clone();
-  }
-
-  public void setPeriodVector(){
-    System.out.println("displacement: "+displacement.getMagnitude());
-    System.out.println("init: "+initVector.getMagnitude());
-
-    periodVector = VectorR.subVectors(displacement, initVector);
-    System.out.println("period: "+periodVector.getMagnitude());
-  }
-
   public VectorR getDisplacement(){
     return displacement;
   }
 
-  public VectorR getPeriodVector(){
-    return periodVector;
-  }
 
   public static void resetDisplacement(VectorR v) {
     displacement.setFromCartesian(v.getX(), v.getY());
   }
 
-  public void resetInitVector() {
-    initVector.setFromCartesian(0, 0);
-  }
 
   public void setDefenseMode(boolean activated){
     defenseActivated = activated;
