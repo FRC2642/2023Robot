@@ -50,7 +50,7 @@ public class DriveSubsystem extends SubsystemBase{
     gyro.reset();
 
     displacement = new VectorR();
-    velocity = new TimedVectorDerivative(displacement);
+    velocity = new VectorR();
     acceleration = new TimedVectorDerivative(velocity);
     jerk = new TimedVectorDerivative(acceleration);
 
