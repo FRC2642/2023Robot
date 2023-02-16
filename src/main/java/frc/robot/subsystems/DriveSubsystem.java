@@ -33,7 +33,6 @@ public class DriveSubsystem extends SubsystemBase{
   //OTHER
   public boolean defenseActivated = true;
   private static double yawOffsetDegrees = 0;
-  
 
   public  DriveSubsystem() {
     modules = new SwerveModules(
@@ -142,6 +141,7 @@ public class DriveSubsystem extends SubsystemBase{
     return DriveSubsystem.velocity.clone();
   }
 
+
   public static VectorR getRelativeAcceleration() {
     return DriveSubsystem.acceleration.clone();
   }
@@ -164,10 +164,6 @@ public class DriveSubsystem extends SubsystemBase{
   }
 
   //+ LEFT
-  public static double getYaw() {
-    return -gyro.getYaw();
-  }
-
   public static double getRoll(){
     return gyro.getRoll();
   }
@@ -192,7 +188,7 @@ public class DriveSubsystem extends SubsystemBase{
     SmartDashboard.putNumber("x field", displacement.getX());
     SmartDashboard.putNumber("y field", displacement.getY());
 
-    // SmartDashboard.putNumber("gyro", getYaw());
+    SmartDashboard.putNumber("gyro", getYawDegrees());
 
     SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
     SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());

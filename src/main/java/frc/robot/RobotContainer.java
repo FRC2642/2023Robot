@@ -16,6 +16,7 @@ import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.JoystickOrientedDriveCommand;
+import frc.robot.commands.teleop.JoystickTurnSpeedDriveCommand;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
@@ -43,10 +44,18 @@ public class RobotContainer {
     }
     var subs = testPath.getSubPaths();
     
-    testPathFollowCommand = new SequentialCommandGroup(
+    /*testPathFollowCommand = new SequentialCommandGroup(
       new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(0))),
       new WaitFor(drive, 2),
       new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(1))),
+      new WaitFor(drive, 2),
+      new FollowPathCommand(drive, subs.get(2))
+    );*/
+
+    testPathFollowCommand = new SequentialCommandGroup(
+      new FollowPathCommand(drive, subs.get(0)),
+      new WaitFor(drive, 2),
+      new FollowPathCommand(drive, subs.get(1)),
       new WaitFor(drive, 2),
       new FollowPathCommand(drive, subs.get(2))
     );

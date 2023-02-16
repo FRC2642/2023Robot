@@ -55,7 +55,7 @@ public class FollowVectorCommand extends CommandBase {
     double reference = 0;
     double turnWheelSpeed = 0;
       
-    reference = MathR.halfOptimize(DriveSubsystem.getYaw(), faceDegree, 360);
+    reference = MathR.halfOptimize(DriveSubsystem.getYawDegrees(), faceDegree, 360);
     
     //0.25 speed auto
     //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 400;

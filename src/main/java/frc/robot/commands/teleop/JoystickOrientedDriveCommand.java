@@ -41,17 +41,18 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
+    
     maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
 
     //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
     
 
     leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
-    leftJoystick.rotate(Math.toRadians(90));
+    leftJoystick.rotate(Math.toRadians(-90));
     rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
-    rightJoystick.rotate(Math.toRadians(90));
+    rightJoystick.rotate(Math.toRadians(-90));
 
-    double yaw = Math.toRadians(drive.getYawDegrees());
+    double yaw = Math.toRadians(DriveSubsystem.getYawDegrees());
 
     if (leftJoystick.getMagnitude() < 0.1 && rightJoystick.getMagnitude() < 0.2) {
       drive.stop();
@@ -70,11 +71,12 @@ public class JoystickOrientedDriveCommand extends CommandBase {
     }
     else isLocked = false;
 
-      double angleToFace = isLocked ? lockedHeading : rightJoystick.getAngle();
+    double angleToFace = isLocked ? lockedHeading : rightJoystick.getAngle();
 
-    double turnPower = MathR.lerp(0, 1, 0.2, 1.0, rightJoystick.getMagnitude())  * MathR
+    double turnPower = MathR.lerp(0.35, 1, 0.2, 1.0, rightJoystick.getMagnitude())  * MathR
         .limit(TURN_KP * MathR.getDistanceToAngleRadians(yaw, angleToFace), -1, 1);
 
+    System.out.println(turnPower);
     leftJoystick.mult(maxSpeed);
     drive.move(leftJoystick, turnPower * maxSpeed);
   }

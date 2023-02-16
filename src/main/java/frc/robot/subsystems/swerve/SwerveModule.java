@@ -24,8 +24,8 @@ import frc.robot.utils.VectorR;
 public class SwerveModule {
 
   // HARDWARE
-  private final WPI_TalonFX angleMotor;
-  private final WPI_TalonFX driveMotor;
+  public final WPI_TalonFX angleMotor;
+  public final WPI_TalonFX driveMotor;
   public final CANCoder absEncoder;
 
   // INFORMATION
@@ -41,10 +41,11 @@ public class SwerveModule {
     this.absMaxValue = info.ABS_ENCODER_MAX_VALUE;
     this.absStraightValue = info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
     this.position = VectorR.fromCartesian(info.X, info.Y);
-    this.absEncoder = new CANCoder(0);
+    this.absEncoder = new CANCoder(info.ENCODER_ID);
 
-    angleMotor.configClosedloopRamp(0);
-    driveMotor.configClosedloopRamp(0);
+    //angleMotor.configClosedloopRamp(0);
+    //driveMotor.configClosedloopRamp(0);
+    driveMotor.setSelectedSensorPosition(0);
 
     
   }
@@ -83,7 +84,7 @@ public class SwerveModule {
    * negative (-) = right turn CW
    */
   public double getWheelHeadingRadians() {
-    return -(((absEncoder.getPosition() - absStraightValue) / absMaxValue) * Math.PI * 2.0);
+    return (((getTurnEncoderValue() - absStraightValue) / absMaxValue) * Math.PI * 2.0);
   }
 
   public VectorR getVelocity() {
@@ -138,7 +139,7 @@ public class SwerveModule {
       reverse();
 
     double speed_power = MathR.limit(desiredSpeed(), -1, 1);
-    double angle_power = -1 * MathR
+    double angle_power = 1 * MathR
         .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngleRadians(getWheelHeadingRadians(), desiredAngle()), -1, 1);
 
     driveMotor.set(speed_power);

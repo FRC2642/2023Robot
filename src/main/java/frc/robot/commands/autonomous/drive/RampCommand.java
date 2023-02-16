@@ -29,14 +29,14 @@ public class RampCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    lockAngle = DriveSubsystem.getYaw();
+    lockAngle = DriveSubsystem.getYawDegrees();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     
-    double turnPower = MathR.limit(anglePid.calculate(DriveSubsystem.getYaw(), lockAngle), -0.5, 0.5);
+    double turnPower = MathR.limit(anglePid.calculate(DriveSubsystem.getYawDegrees(), lockAngle), -0.5, 0.5);
 
     if (onRamp == false){
       drive.move(vector, turnPower);

@@ -5,6 +5,7 @@ public class SwerveModuleInfo {
     public final int TURN_ID;
     public final double ABS_ENCODER_MAX_VALUE;
     public final double ABS_ENCODER_VALUE_WHEN_STRAIGHT;
+    public final int ENCODER_ID;
     public final double X;
     public final double Y;
 
@@ -14,6 +15,7 @@ public class SwerveModuleInfo {
         TURN_ID = angle_motor_CAN_ID;
         ABS_ENCODER_MAX_VALUE = abs_encoder_max_value;
         ABS_ENCODER_VALUE_WHEN_STRAIGHT = abs_encoder_value_when_wheel_straight;
+        ENCODER_ID = encoder_CAN_ID;
         X = x;
         Y = y;
     }
