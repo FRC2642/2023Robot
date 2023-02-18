@@ -29,7 +29,10 @@ public class MoveMainSliderCommand extends CommandBase {
   @Override
   public void execute() {
 
+    
     double speed = auxController.getLeftY();
+
+    //moves the main slider
     slider.moveSlider(speed *.6);
     
   }

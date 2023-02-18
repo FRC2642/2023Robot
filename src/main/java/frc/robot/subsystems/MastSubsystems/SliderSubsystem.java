@@ -13,19 +13,22 @@ import frc.robot.Constants;
 
 public class SliderSubsystem extends SubsystemBase {
   /** Creates a new SliderSubsystem. */
-
+  
+  //Unsure whether or not the motor is inverted, make changes accordingly
   CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
+
+  //It's likely that the switches return "True" when not pressed and vice versa, makes sure to test their Outputs
   DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
   DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
 
-  //It's likely that the switch returns "True" when not pressed and vice versa
+  
   RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
 
   public SliderSubsystem() {}
 
+  
   public void moveSlider(double speed){
-    
-    if (frontSliderLimitSwitch.get() && rearSliderLimitSwitch.get()){
+    if (frontSliderLimitSwitch.get() && rearSliderLimitSwitch.get()){//checks if either limit switch is pressed
       sliderMotor.set(speed);
     }
     else{
@@ -36,7 +39,7 @@ public class SliderSubsystem extends SubsystemBase {
         sliderMotor.set(speed);
       }
 
-      else{
+      else{//Stops the motor 
         sliderMotor.set(0);
       }
       
