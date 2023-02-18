@@ -5,9 +5,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.revrobotics.ColorSensorV3.MainControl;
 
 import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -19,6 +21,7 @@ import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.JoystickTurnSpeedDriveCommand;
+import frc.robot.commands.teleop.RunIntakeCommand;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
@@ -29,11 +32,14 @@ import frc.robot.path.*;
 
 public class RobotContainer {
 
+  
+  private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
+  private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
+
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
-  private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
-  private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
+
 
   PiratePath testPath;
   Command testPathFollowCommand;
@@ -68,6 +74,7 @@ public class RobotContainer {
 
     
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl).alongWith(new RecenterDisplacementCommand(limelight)));
+    intake.setDefaultCommand(new RunIntakeCommand(intake, mainControl, auxControl));
 
     configureButtonBindings();
   }
@@ -79,7 +86,7 @@ public class RobotContainer {
     new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
     new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
 
-    //new JoystickButton(mainControl, button.);
+    
 
   }
 
