@@ -3,21 +3,21 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import frc.robot.subsystems.swerve.SwerveModuleInfo;
 
-/**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
- */
 public final class Constants {
+
   
-public static final int FL = 2;
-public static final int BL = 3;
-public static final int FR = 1;
-public static final int BR = 16;
-public static final int kDriverControllerPort = 0;
+
+    public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1);
+    public static final SwerveModuleInfo FRONT_LEFT = new SwerveModuleInfo(2, 1, 11, 360, 66.7, 1, 1);
+    public static final SwerveModuleInfo BACK_RIGHT = new SwerveModuleInfo(6, 5, 13, 360, 287.9, -1, -1);
+    public static final SwerveModuleInfo BACK_LEFT = new SwerveModuleInfo(4, 3, 12, 360, 0.3, -1, 1);
+    public static final int DRIVE_CONTROL_PORT = 0;
+    public static final int AUX_CONTROL_PORT = 1;
+    public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
+    public static final double MODULE_ANGLE_KP = 0.3;
+    public static final String TEST_PATH = "Backwards.wpilib.json";
+    public static final double FOOT_PER_METER = 3.28084;
 }
 

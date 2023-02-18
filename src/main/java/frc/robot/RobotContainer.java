@@ -1,71 +1,84 @@
-// Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
-
 package frc.robot;
 
-//import frc.robot.Constants.OperatorConstants;
-import frc.robot.commands.AutoCommand;
-import frc.robot.commands.DriveCommand;
-import frc.robot.subsystems.DriveSubsystem;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+
+import java.io.IOException;
+import java.util.ArrayList;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.autonomous.FollowPathVisionRecenterCommand;
+import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
+import frc.robot.commands.autonomous.waiters.WaitFor;
+import frc.robot.commands.teleop.JoystickOrientedDriveCommand;
+import frc.robot.commands.teleop.JoystickTurnSpeedDriveCommand;
+import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
+import frc.robot.commands.teleop.resetters.ResetGyro;
+import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
+import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.path.*;
 
-/**
- * This class is where the bulk of the robot should be declared. Since Command-based is a
- * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
- * periodic methods (other than the scheduler calls). Instead, the structure of the robot (including
- * subsystems, commands, and trigger mappings) should be declared here.
- */
 public class RobotContainer {
-  // The robot's subsystems and commands are defined here...
-  public static final DriveSubsystem DriveSub = new DriveSubsystem();
-  public static DriveCommand DriveCom = new DriveCommand();
-  public static XboxController XboxController = new XboxController(Constants.kDriverControllerPort);
 
-  //XboxController Controller = new XboxController(0);
-// private final ExampleSubsystem m_exampleSubsystem = new ExampleSubsystem();
+  private final DriveSubsystem drive = new DriveSubsystem();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final XboxController control = new XboxController(Constants.DRIVE_CONTROL_PORT);
 
-  // Replace with CommandPS4Controller or CommandJoystick if needed
-  private final CommandXboxController m_driverController =
-      new CommandXboxController(Constants.kDriverControllerPort);
+  PiratePath testPath;
+  Command testPathFollowCommand;
 
-  /** The container for the robot. Contains subsystems, OI devices, and commands. */
   public RobotContainer() {
-    DriveSub.setDefaultCommand(new DriveCommand());
-    // Configure the trigger bindings
-    configureBindings();
+
+    try {
+      testPath = new PiratePath(Constants.TEST_PATH);
+    } catch (JsonProcessingException e) {
+      e.printStackTrace();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    var subs = testPath.getSubPaths();
+    
+    /*testPathFollowCommand = new SequentialCommandGroup(
+      new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(0))),
+      new WaitFor(drive, 2),
+      new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(1))),
+      new WaitFor(drive, 2),
+      new FollowPathCommand(drive, subs.get(2))
+    );*/
+
+    testPathFollowCommand = new SequentialCommandGroup(
+      new FollowPathCommand(drive, subs.get(0)),
+      new WaitFor(drive, 2),
+      new FollowPathCommand(drive, subs.get(1)),
+      new WaitFor(drive, 2),
+      new FollowPathCommand(drive, subs.get(2))
+    );
+
+
+    
+    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, control).alongWith(new RecenterDisplacementCommand(limelight)));
+
+    configureButtonBindings();
   }
 
-  /**
-   * Use this method to define your trigger->command mappings. Triggers can be created via the
-   * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
-   * predicate, or via the named factories in {@link
-   * edu.wpi.first.wpilibj2.command.button.CommandGenericHID}'s subclasses for {@link
-   * CommandXboxController Xbox}/{@link edu.wpi.first.wpilibj2.command.button.CommandPS4Controller
-   * PS4} controllers or {@link edu.wpi.first.wpilibj2.command.button.CommandJoystick Flight
-   * joysticks}.
-   */
-  private void configureBindings() {
-    // Schedule `ExampleCommand` when `exampleCondition` changes to `true`
-    /*new Trigger(m_exampleSubsystem::exampleCondition)
-        .onTrue(new ExampleCommand(m_exampleSubsystem));
+  private void configureButtonBindings() {
+    SmartDashboard.putData(new ResetGyro(drive));
+    SmartDashboard.putData(new ResetDisplacementCommand(drive));
 
-    // Schedule `exampleMethodCommand` when the Xbox controller's B button is pressed,
-    // cancelling on release.
-    m_driverController.b().whileTrue(m_exampleSubsystem.exampleMethodCommand()); */
+    new POVButton(control, 0).whileTrue(new ResetGyro(drive));
+    new POVButton(control, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
+
   }
 
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
   public Command getAutonomousCommand() {
-    // An example command will be run in autonomous
-    return new AutoCommand(); 
+    return testPathFollowCommand;// FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), testPathFollowCommand);
+
   }
 }
-

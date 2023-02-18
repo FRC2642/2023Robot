@@ -4,76 +4,200 @@
 
 package frc.robot.subsystems;
 
-import edu.wpi.first.wpilibj.drive.DifferentialDrive;
-import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
+import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.swerve.SwerveModule;
+import frc.robot.subsystems.swerve.SwerveModules;
+import frc.robot.utils.MathR;
+import frc.robot.utils.TimedVectorDerivative;
+import frc.robot.utils.VectorR;
 
-import com.ctre.phoenix.sensors.PigeonIMU;
-import com.ctre.phoenix.sensors.WPI_Pigeon2;
-import com.ctre.phoenixpro.hardware.Pigeon2;
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
-
-public class DriveSubsystem extends SubsystemBase {
-  /** Creates a new DriveSubsystem. */
+public class DriveSubsystem extends SubsystemBase{
   
+
+  // COMPONENTS
+  private final SwerveModules modules;
+  private static AHRS gyro;
   
- 
-    CANSparkMax FLMotor = new CANSparkMax(Constants.FL, MotorType.kBrushless);
-    CANSparkMax BLMotor = new CANSparkMax(Constants.BL, MotorType.kBrushless);
-    static CANSparkMax FRMotor = new CANSparkMax(Constants.FR, MotorType.kBrushless);
-    CANSparkMax BRMotor = new CANSparkMax(Constants.BR, MotorType.kBrushless);
 
-    
-    RelativeEncoder FRencoder = FRMotor.getEncoder();
-    RelativeEncoder FLencoder = FLMotor.getEncoder();
-    WPI_Pigeon2 Gyro = new WPI_Pigeon2(18);
-   
-    
+  // POSITION TRACKING
+  private static VectorR displacement;
+  private static VectorR velocity;
+  private static TimedVectorDerivative acceleration;
+  private static TimedVectorDerivative jerk;
 
-    MotorControllerGroup RightMotors= new MotorControllerGroup(FRMotor, BRMotor);
-    MotorControllerGroup LeftMotors= new MotorControllerGroup(FLMotor, BLMotor);
+  //OTHER
+  public boolean defenseActivated = true;
+  private static double yawOffsetDegrees = 0;
 
-    DifferentialDrive DDrive= new DifferentialDrive(LeftMotors, RightMotors);
-    
-  public DriveSubsystem(){
-    LeftMotors.setInverted(true);
+  public  DriveSubsystem() {
+    modules = new SwerveModules(
+        new SwerveModule(Constants.FRONT_RIGHT), new SwerveModule(Constants.FRONT_LEFT),
+        new SwerveModule(Constants.BACK_RIGHT), new SwerveModule(Constants.BACK_LEFT));
+
+    gyro = new AHRS();
+    gyro.reset();
+
+    displacement = new VectorR();
+    velocity = new VectorR();
+    acceleration = new TimedVectorDerivative(velocity);
+    jerk = new TimedVectorDerivative(acceleration);
+
+  }
+
+  /*
+   * SYSTEM STANDARD FOLLOWS COORDINATE PLANE STANDARD
+   * positive (+) = forwards/left/left turn CCW
+   * negative (-) = backwards/right/right turn CW
+   * velocity magnitude (0-1) 1:fastest 0:stopped
+   * turn (0-1) 
+   * NOTE: the speed of any wheel can reach a maximum of turn + |velocity|
+   */
+  public void move(VectorR velocity, double turn) {
+
+    DriveSubsystem.velocity.setFromCartesian(0, 0);
+
+    VectorR directionalPull = velocity.clone();
+    directionalPull.rotate(Math.toRadians(-getYawDegrees()));
+
+    for (SwerveModule module : modules) {
+
+      double moduleTangent = module.position.getAngle() + Math.toRadians(90);
+      VectorR rotationalPull = VectorR.fromPolar(turn, moduleTangent);
+
+      VectorR wheelPull = VectorR.addVectors(directionalPull, rotationalPull);
+      double speed = wheelPull.getMagnitude();
+      double angle = wheelPull.getAngle();
+
+      module.update(speed, angle);
+
+      //position tracking
+      var increment = module.getPositionIncrement();
+      increment.mult(1d / 4d);
+      increment.rotate(Math.toRadians(getYawDegrees()));
+      DriveSubsystem.displacement.add(increment);
+
+      var velocityMeasured = module.getVelocity();
+      velocityMeasured.mult(1d / 4d);
+      velocityMeasured.rotate(Math.toRadians(getYawDegrees()));
+      DriveSubsystem.velocity.add(velocityMeasured);
+    }
+    DriveSubsystem.acceleration.update();
+    DriveSubsystem.jerk.update();
   }
   
-  public void arcadeDrive(double movespeed, double rotatespeed) {
-    DDrive.arcadeDrive(movespeed, rotatespeed);
+
+  /*
+   * public void debugWheelDirections(double angle) {
+   * modules.frontRight.update(0.25, angle);
+   * modules.frontLeft.update(0.25, angle);
+   * modules.backRight.update(0.25, angle);
+   * modules.backLeft.update(0.25, angle);
+   * }
+   */
+
+  
+  public void setDefensiveMode(boolean defensive) {
+    defenseActivated = defensive;
   }
 
-  public double GetRightTicks(){
-
-    return FRencoder.getPosition();
+  public VectorR getDisplacement(){
+    return displacement;
   }
 
-  public double GetLeftTicks(){
 
-    return FLencoder.getPosition();
+  public static void resetDisplacement(VectorR v) {
+    displacement.setFromCartesian(v.getX(), v.getY());
   }
 
-  public double GetYaw(){
 
-    return Gyro.getYaw();
+  public void setDefenseMode(boolean activated){
+    defenseActivated = activated;
   }
+
+  public void stop() {
+    for (SwerveModule module : modules) {
+      if (defenseActivated)
+        module.stopDefensively();
+      else
+        module.stop();
+    }
+
+    velocity.setFromCartesian(0, 0);
+    DriveSubsystem.acceleration.update();
+    DriveSubsystem.jerk.update();
+  }
+
+  // POSITION DATA
+  public static VectorR getRelativeFieldPosition() {
+    return DriveSubsystem.displacement.clone();
+  }
+
+  public static VectorR getRelativeVelocity() {
+    return DriveSubsystem.velocity.clone();
+  }
+
+
+  public static VectorR getRelativeAcceleration() {
+    return DriveSubsystem.acceleration.clone();
+  }
+
+  public static VectorR getRelativeJerk() {
+    return DriveSubsystem.jerk.clone();
+  }
+  
+  /*
+   * positive (+) = left turn CCW
+   * negative (-) = right turn CW
+   */
+  public static double getYawDegrees() {
+    return -1 * gyro.getYaw() + yawOffsetDegrees;
+  }
+
+  public void resetEncoders() {
+    for (var mod : modules)
+      mod.resetDriveEncoder();
+  }
+
+  //+ LEFT
+  public static double getRoll(){
+    return gyro.getRoll();
+  }
+
+  public static double getPitch(){
+    return gyro.getPitch();
+  }
+
+  public static void resetGyro(double yawDegrees) {
+    gyro.reset();
+    yawOffsetDegrees = yawDegrees;
+  }
+
+
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
-  }
-  public void GyroYawReset() {
+    // modules.debugSmartDashboard();
+    modules.debugSmartDashboard();
+    
 
-    Gyro.setYaw(0);
-  }
+    SmartDashboard.putNumber("x field", displacement.getX());
+    SmartDashboard.putNumber("y field", displacement.getY());
 
-  public void EncoderReset() {
+    SmartDashboard.putNumber("gyro", getYawDegrees());
 
-    FRencoder.setPosition(0);
-    FLencoder.setPosition(0);
+    SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
+    SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
+    // SmartDashboard.putNumber("angle [degrees]",
+    // Math.toDegrees(getRelativeFieldPosition().getAngle()));
+    // SmartDashboard.putNumber("speed [ft/s]",
+    // getRelativeVelocity().getMagnitude());
+    // SmartDashboard.putNumber("accell [ft/s^2]",
+    // getRelativeAccelleration().getMagnitude());
+    // SmartDashboard.putNumber("jerk [ft/s^3]", getRelativeJerk().getMagnitude());
   }
 }
