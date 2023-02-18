@@ -48,6 +48,14 @@ public class CarriageSubsystem extends SubsystemBase {
     return carriageEncoder.getPosition();
   }
 
+  public boolean isCarriageFullyExtended (){
+    return !carriageFrontLimitSwitch.get();
+  }
+  
+  public boolean isCarriageFullyRetracted(){
+    return !carriageBackLimitSwitch.get();
+  }
+
   public void resetCarriageEncoder() {
     carriageEncoder.setPosition(0);
   }
