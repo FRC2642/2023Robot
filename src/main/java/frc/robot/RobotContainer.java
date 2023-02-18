@@ -26,6 +26,7 @@ import frc.robot.commands.teleop.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.JoystickTurnSpeedDriveCommand;
 import frc.robot.commands.teleop.RunIntakeCommand;
 import frc.robot.commands.teleop.MoveMainSliderCommand;
+import frc.robot.commands.teleop.MoveShoulder;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
@@ -34,6 +35,7 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.path.*;
 import frc.robot.Constants;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
@@ -50,6 +52,7 @@ public class RobotContainer {
   public static final CarriageSubsystem carriage = new CarriageSubsystem();
   private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
   private final SliderSubsystem slider = new SliderSubsystem();
+  private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
 
   PiratePath testPath;
   Command testPathFollowCommand;
@@ -88,6 +91,8 @@ public class RobotContainer {
     carriage.setDefaultCommand(new CarriageMoveCommand(carriage, auxControl));
     intake.setDefaultCommand(new RunIntakeCommand(intake, mainControl, auxControl));
     slider.setDefaultCommand(new MoveMainSliderCommand(slider, auxControl));
+    shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
+
 
     configureButtonBindings();
   }
