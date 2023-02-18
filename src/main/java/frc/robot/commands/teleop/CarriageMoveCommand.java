@@ -5,12 +5,12 @@
 package frc.robot.commands.teleop;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 
 public class CarriageMoveCommand extends CommandBase {
+
+  //imports
   private XboxController aux;
   private CarriageSubsystem carriage;
 
@@ -28,6 +28,8 @@ public class CarriageMoveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+
+    //left bumper moves down right moves up
     if (aux.getLeftBumper()){
       carriage.moveCarriage(.1);
     }
