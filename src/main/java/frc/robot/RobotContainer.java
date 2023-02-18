@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.FollowPathVisionRecenterCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
@@ -23,13 +24,16 @@ import frc.robot.commands.teleop.resetters.ResetGyro;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.path.*;
 
 public class RobotContainer {
 
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
-  private final XboxController control = new XboxController(Constants.DRIVE_CONTROL_PORT);
+  private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
+  private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
+  private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
 
   PiratePath testPath;
   Command testPathFollowCommand;
@@ -63,7 +67,7 @@ public class RobotContainer {
 
 
     
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, control).alongWith(new RecenterDisplacementCommand(limelight)));
+    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl).alongWith(new RecenterDisplacementCommand(limelight)));
 
     configureButtonBindings();
   }
@@ -72,8 +76,10 @@ public class RobotContainer {
     SmartDashboard.putData(new ResetGyro(drive));
     SmartDashboard.putData(new ResetDisplacementCommand(drive));
 
-    new POVButton(control, 0).whileTrue(new ResetGyro(drive));
-    new POVButton(control, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
+    new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
+    new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
+
+    //new JoystickButton(mainControl, button.);
 
   }
 
