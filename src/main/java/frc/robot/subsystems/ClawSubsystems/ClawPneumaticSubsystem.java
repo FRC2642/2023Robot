@@ -16,10 +16,12 @@ public class ClawPneumaticSubsystem extends SubsystemBase {
 
   }
 
+  // opens claw with solenoid
   public void gripperExtend() {
     gripperSolenoid.set(true);
   }
   
+  // closes claw with solenoid
   public void gripperRetract() {
     gripperSolenoid.set(false);
   }

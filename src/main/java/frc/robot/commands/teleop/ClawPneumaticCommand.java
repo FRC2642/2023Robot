@@ -11,6 +11,7 @@ import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 
 public class ClawPneumaticCommand extends CommandBase {
   /** Creates a new ClawPneumaticCommand. */ 
+  // gives this stuff simpler names
   ClawPneumaticSubsystem pneumatics;
   XboxController mainControl;
   XboxController auxControl;
@@ -27,11 +28,13 @@ public class ClawPneumaticCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
+  // when y button pressed claw closes
   public void execute() {
     if (mainControl.getYButton()) {
       pneumatics.gripperExtend();
     }
 
+  // when b button pressed claw opens
     else if (mainControl.getBButton()) {
       pneumatics.gripperRetract();
     }
