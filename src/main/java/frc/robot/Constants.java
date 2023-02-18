@@ -19,5 +19,5 @@ public final class Constants {
     public static final int CARRIAGE_MOTOR = 22;
     public static final int CARRIAGE_BACK_LIMIT_SWITCH = 3;
     public static final int CARRIAGE_FRONT_LIMIT_SWITCH = 4;
-    
+    public static final int GRIPPER_INTAKE_MOTOR_ID = 25;
 }
