@@ -11,13 +11,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClawIntakeSubsystem extends SubsystemBase {
+  //Wheel motors and limit switch ID
   CANSparkMax gripperMotor = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
   DigitalInput gripperLimitSwitch = new DigitalInput(0);
   
-  public ClawIntakeSubsystem() {
-
-  }
-
+  public ClawIntakeSubsystem() {}
+  //Sets the speed at which the wheels spin
   public void runGripperIntake(double speed) {
     gripperMotor.set(speed);
   }
