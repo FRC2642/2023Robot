@@ -16,4 +16,15 @@ public final class Constants {
     public static final double MODULE_ANGLE_KP = 0.3;
     public static final String TEST_PATH = "Backwards.wpilib.json";
     public static final double FOOT_PER_METER = 3.28084;
+
+    //Mast Subsystem Motors
+    public static final int MAIN_SLIDER_MOTOR = 21; 
+    public static final int SLIDER_REAR_LIMIT_SWITCH = 1;
+    public static final int SLIDER_FRONT_LIMIT_SWITCH = 2;
+
+    public static final int SHOULDER_MOTOR = 23; 
+    public static final int SHOULDER_FRONT_LIMIT_SWITCH = 5;
+    public static final int SHOULDER_REAR_LIMIT_SWITCH = 6;
+
+
 }

@@ -18,18 +18,24 @@ import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.JoystickTurnSpeedDriveCommand;
+import frc.robot.commands.teleop.MoveMainSliderCommand;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.path.*;
 
 public class RobotContainer {
 
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
+
+  private final SliderSubsystem slider = new SliderSubsystem();
+
   private final XboxController control = new XboxController(Constants.DRIVE_CONTROL_PORT);
+  private final  XboxController aux = new XboxController(Constants.AUX_CONTROL_PORT);
 
   PiratePath testPath;
   Command testPathFollowCommand;
@@ -64,6 +70,7 @@ public class RobotContainer {
 
     
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, control).alongWith(new RecenterDisplacementCommand(limelight)));
+    slider.setDefaultCommand(new MoveMainSliderCommand(slider, aux));
 
     configureButtonBindings();
   }
