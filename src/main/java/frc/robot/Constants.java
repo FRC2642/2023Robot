@@ -51,7 +51,7 @@ public final class Constants {
         //Wrist
         public static final int WRIST_LIMIT_SWITCH = 7;
 
-    //Solinoids
+    //Solenoids
 
         //gripper
         public static final int GRIPPER_SOLENOID_CHANNEL = 0;
