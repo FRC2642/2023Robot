@@ -16,4 +16,8 @@ public final class Constants {
     public static final double MODULE_ANGLE_KP = 0.3;
     public static final String TEST_PATH = "Backwards.wpilib.json";
     public static final double FOOT_PER_METER = 3.28084;
+    public static final int CARRIAGE_MOTOR = 22;
+    public static final int CARRIAGE_BACK_LIMIT_SWITCH = 3;
+    public static final int CARRIAGE_FRONT_LIMIT_SWITCH = 4;
+    
 }
