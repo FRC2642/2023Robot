@@ -6,7 +6,6 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -16,6 +15,7 @@ public class ClawPneumaticSubsystem extends SubsystemBase {
   public ClawPneumaticSubsystem() {
 
   }
+
   public void gripperExtend() {
     gripperSolenoid.set(true);
   }
@@ -23,6 +23,7 @@ public class ClawPneumaticSubsystem extends SubsystemBase {
   public void gripperRetract() {
     gripperSolenoid.set(false);
   }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

@@ -5,10 +5,8 @@
 package frc.robot.subsystems.MastSubsystems;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -59,8 +57,6 @@ public class CarriageSubsystem extends SubsystemBase {
   public void resetCarriageEncoder() {
     carriageEncoder.setPosition(0);
   }
-
-
 
   @Override
   public void periodic() {

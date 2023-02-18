@@ -7,17 +7,14 @@ package frc.robot.subsystems.MastSubsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.RobotContainer;
 
 public class SliderSubsystem extends SubsystemBase {
   /** Creates a new SliderSubsystem. */
 
   CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
-
   DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
   DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
 
@@ -50,9 +47,6 @@ public class SliderSubsystem extends SubsystemBase {
   public double getSliderEncoderTicks(){
     return sliderEncoder.getPosition();
   }
-
-  
-  
 
   @Override
   public void periodic() {

@@ -1,21 +1,13 @@
 package frc.robot;
 
-
 import java.io.IOException;
 import java.util.ArrayList;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.revrobotics.ColorSensorV3.MainControl;
-
-import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.PS4Controller.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.commands.autonomous.FollowPathVisionRecenterCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
@@ -23,7 +15,6 @@ import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawPneumaticCommand;
 import frc.robot.commands.teleop.CarriageMoveCommand;
 import frc.robot.commands.teleop.JoystickOrientedDriveCommand;
-import frc.robot.commands.teleop.JoystickTurnSpeedDriveCommand;
 import frc.robot.commands.teleop.RunIntakeCommand;
 import frc.robot.commands.teleop.MoveMainSliderCommand;
 import frc.robot.commands.teleop.MoveShoulder;
@@ -37,7 +28,6 @@ import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.path.*;
-import frc.robot.Constants;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 
 public class RobotContainer {
@@ -83,8 +73,6 @@ public class RobotContainer {
       new WaitFor(drive, 2),
       new FollowPathCommand(drive, subs.get(2))
     );
-
-
     
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl).alongWith(new RecenterDisplacementCommand(limelight)));
     clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
@@ -92,7 +80,6 @@ public class RobotContainer {
     intake.setDefaultCommand(new RunIntakeCommand(intake, mainControl, auxControl));
     slider.setDefaultCommand(new MoveMainSliderCommand(slider, auxControl));
     shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
-
 
     configureButtonBindings();
   }
@@ -103,12 +90,8 @@ public class RobotContainer {
 
     new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
     new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
-
-    
     }
     
-  
-
   public Command getAutonomousCommand() {
     return testPathFollowCommand;// FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), testPathFollowCommand);
 
