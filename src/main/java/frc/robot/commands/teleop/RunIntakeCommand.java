@@ -26,6 +26,7 @@ public class RunIntakeCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
+  //Gets the amount that the trigger is pressed
   public void execute() {
     intake.runGripperIntake(mainControl.getRightTriggerAxis());
   }
