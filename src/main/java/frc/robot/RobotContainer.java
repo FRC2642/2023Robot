@@ -80,16 +80,5 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return testPathFollowCommand;// FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), testPathFollowCommand);
 
-import edu.wpi.first.wpilibj2.command.Command;
-
-public class RobotContainer {
-      
-  public RobotContainer() {
-    
-  }
-
-  public Command getAutonomousCommand() {
-    return null;
-
   }
 }
