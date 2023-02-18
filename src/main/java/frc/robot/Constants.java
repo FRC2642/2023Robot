@@ -21,4 +21,15 @@ public final class Constants {
     public static final int CARRIAGE_FRONT_LIMIT_SWITCH = 4;
     public static final int GRIPPER_INTAKE_MOTOR_ID = 25;
     public static final int GRIPPER_SOLENOID_CHANNEL = 0;
+
+    //Mast Subsystem Motors
+    public static final int MAIN_SLIDER_MOTOR = 21; 
+    public static final int SLIDER_REAR_LIMIT_SWITCH = 1;
+    public static final int SLIDER_FRONT_LIMIT_SWITCH = 2;
+
+    public static final int SHOULDER_MOTOR = 23; 
+    public static final int SHOULDER_FRONT_LIMIT_SWITCH = 5;
+    public static final int SHOULDER_REAR_LIMIT_SWITCH = 6;
+
+
 }
