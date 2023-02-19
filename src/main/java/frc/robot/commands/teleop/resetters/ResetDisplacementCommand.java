@@ -19,7 +19,7 @@ public class ResetDisplacementCommand extends CommandBase {
 
   @Override
   public void execute() {
-    drive.resetDisplacement(new VectorR());
+    DriveSubsystem.resetDisplacement(new VectorR());
   }
 
   @Override
