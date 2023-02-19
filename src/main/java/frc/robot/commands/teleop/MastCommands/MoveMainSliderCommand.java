@@ -2,22 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.teleop;
+package frc.robot.commands.teleop.MastCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
-public class MoveShoulder extends CommandBase {
-  ShoulderSubsystem shoulder;
+public class MoveMainSliderCommand extends CommandBase {
+  /** Creates a new MoveMainSliderCommand. */
+  SliderSubsystem slider;
   XboxController auxController;
-  /** Creates a new MoveShoulder. */
-  public MoveShoulder(ShoulderSubsystem shoulder, XboxController auxController) {
-    this.shoulder = shoulder;
-    this.auxController = auxController;
 
-    addRequirements(shoulder);
+  public MoveMainSliderCommand(SliderSubsystem slider, XboxController auxController) {
     // Use addRequirements() here to declare subsystem dependencies.
+    this.slider = slider;
+    this.auxController = auxController;
+    
+    addRequirements(slider);
   }
 
   // Called when the command is initially scheduled.
@@ -27,8 +28,10 @@ public class MoveShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = auxController.getRightY();
-    shoulder.moveShoulder(speed);
+
+    double speed = auxController.getLeftY();
+    slider.moveSlider(speed *.6);
+    
   }
 
   // Called once the command ends or is interrupted.

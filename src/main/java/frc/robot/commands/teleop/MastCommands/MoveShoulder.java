@@ -2,22 +2,21 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.teleop;
+package frc.robot.commands.teleop.MastCommands;
 
-import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.RobotContainer;
-import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
-public class CarriageMoveCommand extends CommandBase {
-  private XboxController aux;
-  private CarriageSubsystem carriage;
+public class MoveShoulder extends CommandBase {
+  ShoulderSubsystem shoulder;
+  XboxController auxController;
+  /** Creates a new MoveShoulder. */
+  public MoveShoulder(ShoulderSubsystem shoulder, XboxController auxController) {
+    this.shoulder = shoulder;
+    this.auxController = auxController;
 
-  /** Creates a new CarriageMoveCommand. */
-  public CarriageMoveCommand(CarriageSubsystem carriage, XboxController aux) {
-    this.aux = aux;
-    addRequirements(carriage);
+    addRequirements(shoulder);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
@@ -28,16 +27,8 @@ public class CarriageMoveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (aux.getLeftBumper()){
-      carriage.moveCarriage(.1);
-    }
-    else if (aux.getRightBumper()) {
-      carriage.moveCarriage(-.1);
-    }
-    else {
-      carriage.moveCarriage(0);
-    }
-    
+    double speed = auxController.getRightY();
+    shoulder.moveShoulder(speed);
   }
 
   // Called once the command ends or is interrupted.
