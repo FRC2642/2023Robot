@@ -16,7 +16,7 @@ public class SliderSubsystem extends SubsystemBase {
 
   CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
   DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
-  DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
+  private static DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
 
   //It's likely that the switch returns "True" when not pressed and vice versa
   RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
@@ -43,6 +43,11 @@ public class SliderSubsystem extends SubsystemBase {
     }
     
   }
+
+  public static boolean isSliderBack(){
+    return !rearSliderLimitSwitch.get();
+  }
+
 
   public double getSliderEncoderTicks(){
     return sliderEncoder.getPosition();

@@ -7,6 +7,8 @@ package frc.robot.commands.teleop;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 
 public class ClawPneumaticCommand extends CommandBase {
@@ -28,13 +30,25 @@ public class ClawPneumaticCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (mainControl.getYButton()) {
-      pneumatics.gripperExtend();
+    if (CarriageSubsystem.isCarriageFullyRetracted() && SliderSubsystem.isSliderBack()){
+      if (mainControl.getRightBumper()) {
+        pneumatics.gripperExtend();
+      }
+  
+      else if (mainControl.getLeftBumper()) {
+        pneumatics.gripperRetract();
+      }
     }
-
-    else if (mainControl.getBButton()) {
-      pneumatics.gripperRetract();
+    else{
+      if (auxControl.getRightBumper()) {
+        pneumatics.gripperExtend();
+      }
+  
+      else if (auxControl.getLeftBumper()) {
+        pneumatics.gripperRetract();
+      }
     }
+    
   }
 
   // Called once the command ends or is interrupted.
