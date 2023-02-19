@@ -4,7 +4,6 @@
 
 package frc.robot.utils;
 
-import frc.robot.Constants;
 
 /** Wrapper class for vectors */
 public class VectorR implements Cloneable {

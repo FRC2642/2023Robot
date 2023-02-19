@@ -1,7 +1,6 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -12,10 +11,10 @@ import frc.robot.commands.autonomous.FollowPathVisionRecenterCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
-import frc.robot.commands.teleop.ClawCommands.CarriageMoveCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
 import frc.robot.commands.teleop.ClawCommands.RunIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
+import frc.robot.commands.teleop.MastCommands.CarriageMoveCommand;
 import frc.robot.commands.teleop.MastCommands.MoveMainSliderCommand;
 import frc.robot.commands.teleop.MastCommands.MoveShoulder;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
