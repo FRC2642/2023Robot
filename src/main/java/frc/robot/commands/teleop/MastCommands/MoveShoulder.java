@@ -27,7 +27,7 @@ public class MoveShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = auxController.getRightY();
+    double speed = auxController.getLeftY();
     shoulder.moveShoulder(speed);
   }
 
