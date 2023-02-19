@@ -5,14 +5,11 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
-
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.swerve.SwerveModule;
 import frc.robot.subsystems.swerve.SwerveModules;
-import frc.robot.utils.MathR;
 import frc.robot.utils.TimedVectorDerivative;
 import frc.robot.utils.VectorR;
 
