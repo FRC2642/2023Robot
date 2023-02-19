@@ -10,6 +10,8 @@ import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 
 
 public class CarriageMoveCommand extends CommandBase {
+
+  //imports
   private XboxController aux;
   private CarriageSubsystem carriage;
 
@@ -27,16 +29,12 @@ public class CarriageMoveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (aux.getLeftBumper()){
-      carriage.moveCarriage(.1);
-    }
-    else if (aux.getRightBumper()) {
-      carriage.moveCarriage(-.1);
+    if (aux.getLeftTriggerAxis() != 0){
+        carriage.moveCarriage(aux.getLeftTriggerAxis());
     }
     else {
       carriage.moveCarriage(0);
     }
-    
   }
 
   // Called once the command ends or is interrupted.
