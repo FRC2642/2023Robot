@@ -19,7 +19,7 @@ public class ClawWristSubsystem extends SubsystemBase {
   RelativeEncoder wristEncoder = clawWristMotor.getEncoder();
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
-    clawWristMotor = new CANSparkMax(24, MotorType.kBrushless);
+    clawWristMotor = new CANSparkMax(24, MotorType.kBrushed);
   }
 
   @Override

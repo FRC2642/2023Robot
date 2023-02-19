@@ -17,8 +17,8 @@ public class ClawControlCommand extends CommandBase {
   public ClawControlCommand(XboxController aux, ClawWristSubsystem wrist, double position, double speed) {
     this.aux = aux;
     this.wrist = wrist;
-    this.position = position;
-    this.speed = speed;
+    //this.position = position;
+    //this.speed = speed;
     addRequirements(wrist);
   }
 
