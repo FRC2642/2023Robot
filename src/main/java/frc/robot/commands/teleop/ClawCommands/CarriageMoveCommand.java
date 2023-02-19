@@ -2,25 +2,22 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands;
+package frc.robot.commands.teleop.ClawCommands;
 
-import frc.robot.subsystems.ExampleSubsystem;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.XboxController;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 
-/** An example command that uses an example subsystem. */
-public class ExampleCommand extends CommandBase {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ExampleSubsystem m_subsystem;
 
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ExampleCommand(ExampleSubsystem subsystem) {
-    m_subsystem = subsystem;
+public class CarriageMoveCommand extends CommandBase {
+  private XboxController aux;
+  private CarriageSubsystem carriage;
+
+  /** Creates a new CarriageMoveCommand. */
+  public CarriageMoveCommand(CarriageSubsystem carriage, XboxController aux) {
+    this.aux = aux;
+    addRequirements(carriage);
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +26,18 @@ public class ExampleCommand extends CommandBase {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    if (aux.getLeftBumper()){
+      carriage.moveCarriage(.1);
+    }
+    else if (aux.getRightBumper()) {
+      carriage.moveCarriage(-.1);
+    }
+    else {
+      carriage.moveCarriage(0);
+    }
+    
+  }
 
   // Called once the command ends or is interrupted.
   @Override

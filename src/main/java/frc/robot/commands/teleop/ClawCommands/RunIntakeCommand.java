@@ -2,23 +2,23 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.teleop;
+package frc.robot.commands.teleop.ClawCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 
-public class MoveMainSliderCommand extends CommandBase {
-  /** Creates a new MoveMainSliderCommand. */
-  SliderSubsystem slider;
-  XboxController auxController;
 
-  public MoveMainSliderCommand(SliderSubsystem slider, XboxController auxController) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.slider = slider;
-    this.auxController = auxController;
-    
-    addRequirements(slider);
+public class RunIntakeCommand extends CommandBase {
+  ClawIntakeSubsystem intake;
+  XboxController mainControl;
+  XboxController auxControl;
+  /** Creates a new RunIntakeCommand. */
+  public RunIntakeCommand(ClawIntakeSubsystem intake, XboxController mainControl, XboxController auxControl) {
+    this.intake = intake;
+    this.mainControl = mainControl;
+    this.auxControl = auxControl;
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
@@ -28,13 +28,7 @@ public class MoveMainSliderCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    
-    double speed = auxController.getLeftY();
-
-    //moves the main slider
-    slider.moveSlider(speed *.6);
-    
+    intake.runGripperIntake(mainControl.getRightTriggerAxis());
   }
 
   // Called once the command ends or is interrupted.
