@@ -29,11 +29,10 @@ public class MoveMainSliderCommand extends CommandBase {
   @Override
   public void execute() {
 
-    
-    double speed = auxController.getLeftY();
+    //gets the button pressed on D-pad
+    int dpadButton = auxController.getPOV();
 
-    //moves the main slider
-    slider.moveSlider(speed *.6);
+    slider.moveSlider(dpadButton);
     
   }
 
@@ -44,6 +43,6 @@ public class MoveMainSliderCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return Math.abs(slider.getSliderEncoderTicks() - slider.positions.get(auxController.getPOV())) < .1;
   }
 }
