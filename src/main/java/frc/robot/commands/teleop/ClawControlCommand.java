@@ -11,8 +11,8 @@ import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 public class ClawControlCommand extends CommandBase {
   private XboxController aux;
   private ClawWristSubsystem wrist;
-  double position;
-  double speed;
+  //double position;
+  //double speed;
   /** Creates a new ClawWristDirection. */
   public ClawControlCommand(XboxController aux, ClawWristSubsystem wrist, double position, double speed) {
     this.aux = aux;
@@ -31,21 +31,18 @@ public class ClawControlCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (aux.getLeftX() > 0) {
-      if (wrist.getLimitSwitchState() == true) {
-        wrist.stopWrist();
-      } else {
+    // If limit switch is hit, prevents wrist from moving wrist in the same direction further
+    if (wrist.getLimitSwitchState() == true) {
+      if (wrist.getEncoderTicks() > 0 && aux.getLeftX() < 0) {
         wrist.moveWrist(aux.getLeftX());
-      }
-    }
-    if (aux.getLeftX() < 0) {
-      if (wrist.getEncoderTicks() <= 0) {
-        wrist.stopWrist();
-      } else {
+      } else if (wrist.getEncoderTicks() < 0 && aux.getLeftX() > 0) {
         wrist.moveWrist(aux.getLeftX());
+      } else {
+        wrist.stopWrist();
       }
+    } else {
+      wrist.moveWrist(aux.getLeftX());
     }
-      
   } 
 
   // Called once the command ends or is interrupted.
