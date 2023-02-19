@@ -1,15 +1,14 @@
 package frc.robot;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.autonomous.FollowPathVisionRecenterCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.drive.FollowPathVisionRecenterCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
