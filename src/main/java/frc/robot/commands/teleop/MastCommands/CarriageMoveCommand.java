@@ -29,8 +29,8 @@ public class CarriageMoveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (aux.getLeftTriggerAxis() != 0){
-        carriage.moveCarriage(aux.getLeftTriggerAxis());
+    if (aux.getRightX() != 0){
+        carriage.moveCarriage(aux.getRightX());
     }
     else {
       carriage.moveCarriage(0);
