@@ -16,39 +16,70 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
+
 public class SliderSubsystem extends SubsystemBase {
   /** Creates a new SliderSubsystem. */
   
   //Unsure whether or not the motor is inverted, make changes accordingly
   CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
+  RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
 
   //It's likely that the switches return "True" when not pressed and vice versa, makes sure to test their Outputs
   DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
   DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
 
+  
   PIDController pid = new PIDController(0, 0, 0);
 
   
-  RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
+  
 
-  public final HashMap <Integer, Double> positions = new HashMap<Integer, Double>();
+  public final HashMap <SliderPositions, Double> positions = new HashMap<SliderPositions, Double>();
+  SliderPositions position;
 
   public SliderSubsystem() {
-    positions.put(270, 0.0);//Left on D-pad
-    positions.put(0, 5.0);//Up on D-pad
-    positions.put(90, 10.0);//Right on D-pad
+    positions.put(SliderPositions.FIRST_POSITION, 0.0);//Left on aux D-pad
+    positions.put(SliderPositions.SECOND_POSITION, 5.0);//Up on aux D-pad
+    positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
   }
 
   
-  public void moveSlider(int DpadInput){
-    //The targeted encoder tick value
-    double targetEncoderPosition = positions.get(DpadInput); 
+  public void moveSlider(SliderPositions position){
+    //Using the enum value it gets the targeted encoder value from the hashmap
+    double targetEncoderPosition = positions.get(position); 
     
-    //The speed of the sldier motor
+    //The speed of the slider motor
     double speed = MathUtil.clamp(pid.calculate(sliderEncoder.getPosition(), targetEncoderPosition), -1, 1);
 
     sliderMotor.set(speed);
   }
+  //returns the position to go to based on D-pad input
+  public SliderPositions choosePosition(int dPadInput){
+    switch (dPadInput){
+      case 270://Left on aux D-Pad
+      position = SliderPositions.FIRST_POSITION;
+      break;
+
+      case 0://Up on aux D Pad
+      position = SliderPositions.SECOND_POSITION;
+      break;
+
+      case 90://Right on aux D-Pad
+      position = SliderPositions.THIRD_POSITION;
+      break;
+
+    }
+
+    return position;
+  }
+    
+  public enum SliderPositions {
+    FIRST_POSITION,
+    SECOND_POSITION,
+    THIRD_POSITION
+
+  }
+
 
   
   /*public void moveSlider(double speed){
@@ -72,7 +103,7 @@ public class SliderSubsystem extends SubsystemBase {
   }*/
 
   
-
+  //returns the current encoder ticks
   public double getSliderEncoderTicks(){
     return sliderEncoder.getPosition();
   }

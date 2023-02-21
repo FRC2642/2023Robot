@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPositions;
 
 public class MoveMainSliderCommand extends CommandBase {
   /** Creates a new MoveMainSliderCommand. */
@@ -30,7 +31,7 @@ public class MoveMainSliderCommand extends CommandBase {
   public void execute() {
 
     //gets the button pressed on D-pad
-    int dpadButton = auxController.getPOV();
+    SliderPositions dpadButton = slider.choosePosition(auxController.getPOV());
 
     slider.moveSlider(dpadButton);
     
@@ -43,6 +44,9 @@ public class MoveMainSliderCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return Math.abs(slider.getSliderEncoderTicks() - slider.positions.get(auxController.getPOV())) < .1;
+    double targetEncoderValue = slider.positions.get(slider.choosePosition(auxController.getPOV()));
+    double currentEncoderValue = slider.getSliderEncoderTicks();
+    
+    return Math.abs(currentEncoderValue - targetEncoderValue) < .1;
   }
 }
