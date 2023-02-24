@@ -13,6 +13,7 @@ import frc.robot.Constants;
 public class ClawIntakeSubsystem extends SubsystemBase {
   CANSparkMax gripperMotor = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
   DigitalInput gripperLimitSwitch = new DigitalInput(0);
+  public boolean intakeMode = true;
   
   public ClawIntakeSubsystem() {
 
@@ -20,6 +21,10 @@ public class ClawIntakeSubsystem extends SubsystemBase {
 
   public void runGripperIntake(double speed) {
     gripperMotor.set(speed);
+  }
+
+  public void outtakeGripperIntake(double speed){
+    gripperMotor.set(-speed);
   }
 
   @Override

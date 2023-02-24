@@ -4,17 +4,10 @@
 
 package frc.robot.path;
 
-import java.io.Console;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.SortedSet;
 import java.util.TreeSet;
-
-import org.opencv.core.Point;
-
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

@@ -7,6 +7,8 @@ package frc.robot.commands.teleop.ClawCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 
 public class RunIntakeCommand extends CommandBase {
@@ -28,7 +30,28 @@ public class RunIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.runGripperIntake(mainControl.getRightTriggerAxis());
+    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
+      if (mainControl.getYButton()){
+        intake.intakeMode = !intake.intakeMode;
+      }
+
+      if (intake.intakeMode){
+        intake.runGripperIntake(mainControl.getRightTriggerAxis());
+      }
+      else{
+        intake.outtakeGripperIntake(mainControl.getRightTriggerAxis());
+      }
+      
+    }
+    else{
+      if (auxControl.getLeftTriggerAxis() < 0.1){
+        intake.runGripperIntake(mainControl.getRightTriggerAxis());
+      }
+      else if (auxControl.getRightTriggerAxis() < 0.1){
+        intake.outtakeGripperIntake(auxControl.getLeftTriggerAxis());
+      }
+    }
+    
   }
 
   // Called once the command ends or is interrupted.

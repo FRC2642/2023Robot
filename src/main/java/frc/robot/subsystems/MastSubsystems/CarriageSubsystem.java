@@ -12,9 +12,11 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class CarriageSubsystem extends SubsystemBase {
-  public CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
-  DigitalInput carriageFrontLimitSwitch = new DigitalInput(Constants.CARRIAGE_FRONT_LIMIT_SWITCH);
-  DigitalInput carriageBackLimitSwitch = new DigitalInput(Constants.CARRIAGE_BACK_LIMIT_SWITCH);
+
+  //creates motos and limit switches
+  public CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushed);
+  private static DigitalInput carriageFrontLimitSwitch = new DigitalInput(Constants.CARRIAGE_FRONT_LIMIT_SWITCH);
+  private static DigitalInput carriageBackLimitSwitch = new DigitalInput(Constants.CARRIAGE_BACK_LIMIT_SWITCH);
   RelativeEncoder carriageEncoder = carriage.getEncoder();
 
 
@@ -23,6 +25,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   //motor direction not known must TEST!!!!1!11!1!!
 
+  //moves the carriage unless its touching limit switches
   public void moveCarriage(double speed){
     if (speed > 0){
       if (carriageFrontLimitSwitch.get()){
@@ -42,18 +45,22 @@ public class CarriageSubsystem extends SubsystemBase {
     }
   }
 
+  //tells what position the carriage is out
   public double getCarriageEncoder() {
     return carriageEncoder.getPosition();
   }
 
-  public boolean isCarriageFullyExtended (){
+  //tests if carriage is at the end
+  public static boolean isCarriageFullyExtended (){
     return !carriageFrontLimitSwitch.get();
   }
   
-  public boolean isCarriageFullyRetracted(){
+  //tests if carriage is at the begining
+  public static boolean isCarriageFullyRetracted(){
     return !carriageBackLimitSwitch.get();
   }
 
+  //reset the carriage position
   public void resetCarriageEncoder() {
     carriageEncoder.setPosition(0);
   }
