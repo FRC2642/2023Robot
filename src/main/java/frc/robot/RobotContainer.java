@@ -10,7 +10,6 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
-import frc.robot.commands.autonomous.drive.FollowPathVisionRecenterCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
