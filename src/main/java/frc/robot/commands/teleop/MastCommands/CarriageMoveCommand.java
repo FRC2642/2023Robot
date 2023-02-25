@@ -7,6 +7,8 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
 
 public class CarriageMoveCommand extends CommandBase {
@@ -29,11 +31,15 @@ public class CarriageMoveCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (aux.getRightX() != 0){
+    //make sure robot wont pull claw into sliders
+    if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
+      (ShoulderSubsystem.getEncoderTicks() > 170 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+      if (aux.getRightX() != 0){
         carriage.moveCarriage(aux.getRightX());
-    }
-    else {
-      carriage.moveCarriage(0);
+     }
+      else {
+        carriage.moveCarriage(0);
+      }
     }
   }
 

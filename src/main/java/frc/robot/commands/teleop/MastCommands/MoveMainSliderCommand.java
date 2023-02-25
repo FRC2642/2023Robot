@@ -6,7 +6,10 @@ package frc.robot.commands.teleop.MastCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import java.lang.Math;
 
 public class MoveMainSliderCommand extends CommandBase {
   /** Creates a new MoveMainSliderCommand. */
@@ -28,10 +31,12 @@ public class MoveMainSliderCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    double speed = auxController.getLeftY();
-    slider.moveSlider(speed *.6);
-    
+    //stops slider form breaking by going up
+    if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+    }else {
+      double speed = auxController.getLeftY();
+      slider.moveSlider(speed *.6);
+    }
   }
 
   // Called once the command ends or is interrupted.
