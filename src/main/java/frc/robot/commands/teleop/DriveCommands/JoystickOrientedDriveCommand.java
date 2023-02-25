@@ -40,44 +40,59 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
+    if (DriveSubsystem.getPitch() <= 5 || DriveSubsystem.getRoll() <= 5){
     
-    maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
+      maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
 
-    //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
-    
+      //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
+      
 
-    leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
-    leftJoystick.rotate(Math.toRadians(-90));
-    rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
-    rightJoystick.rotate(Math.toRadians(-90));
+      leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
+      leftJoystick.rotate(Math.toRadians(-90));
+      rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
+      rightJoystick.rotate(Math.toRadians(-90));
 
-    double yaw = Math.toRadians(DriveSubsystem.getYawDegrees());
+      double yaw = Math.toRadians(DriveSubsystem.getYawDegrees());
 
-    if (leftJoystick.getMagnitude() < 0.1 && rightJoystick.getMagnitude() < 0.2) {
-      drive.stop();
-      isLocked = false;
-      return;
-    }
-
-    if (leftJoystick.getMagnitude() > 0.1 && rightJoystick.getMagnitude() < 0.2) {
-      if (!isLocked) {
-        lockedHeading = yaw;
-        isLocked = true;
+      if (leftJoystick.getMagnitude() < 0.1 && rightJoystick.getMagnitude() < 0.2) {
+        drive.stop();
+        isLocked = false;
+        return;
       }
-    } 
-    else if (leftJoystick.getMagnitude() < 0.1 && rightJoystick.getMagnitude() > 0.2) {
-      leftJoystick.setFromCartesian(0.0, 0.0);
+
+      if (leftJoystick.getMagnitude() > 0.1 && rightJoystick.getMagnitude() < 0.2) {
+        if (!isLocked) {
+          lockedHeading = yaw;
+          isLocked = true;
+        }
+      } 
+      else if (leftJoystick.getMagnitude() < 0.1 && rightJoystick.getMagnitude() > 0.2) {
+        leftJoystick.setFromCartesian(0.0, 0.0);
+      }
+      else isLocked = false;
+
+      double angleToFace = isLocked ? lockedHeading : rightJoystick.getAngle();
+
+      double turnPower = MathR.lerp(0.35, 1, 0.2, 1.0, rightJoystick.getMagnitude())  * MathR
+          .limit(TURN_KP * MathR.getDistanceToAngleRadians(yaw, angleToFace), -1, 1);
+
+      leftJoystick.mult(maxSpeed);
+      drive.move(leftJoystick, turnPower * maxSpeed);
     }
-    else isLocked = false;
-
-    double angleToFace = isLocked ? lockedHeading : rightJoystick.getAngle();
-
-    double turnPower = MathR.lerp(0.35, 1, 0.2, 1.0, rightJoystick.getMagnitude())  * MathR
-        .limit(TURN_KP * MathR.getDistanceToAngleRadians(yaw, angleToFace), -1, 1);
-
-    System.out.println(turnPower);
-    leftJoystick.mult(maxSpeed);
-    drive.move(leftJoystick, turnPower * maxSpeed);
+    else{
+      if (DriveSubsystem.getPitch() <= -5){
+        drive.move(VectorR.fromPolar(0.6, Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
+      }
+      else if (DriveSubsystem.getPitch() >= 5){
+        drive.move(VectorR.fromPolar(0.6, Math.PI + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
+      }
+      else if (DriveSubsystem.getRoll() <= -5){
+        drive.move(VectorR.fromPolar(0.6, (Math.PI/2) + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
+      }
+      else if (DriveSubsystem.getRoll() >= 5){
+        drive.move(VectorR.fromPolar(0.6, (3*Math.PI/2) + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
+      }
+    }
   }
 
   // Called once the command ends or is interrupted.

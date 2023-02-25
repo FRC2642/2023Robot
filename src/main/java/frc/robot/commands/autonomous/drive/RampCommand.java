@@ -5,6 +5,7 @@
 package frc.robot.commands.autonomous.drive;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.MathR;
@@ -16,20 +17,26 @@ public class RampCommand extends CommandBase {
   VectorR vector;
   boolean onRamp = false;
   boolean climbingRamp = false;
-  double maxRoll = 0;
+  double maxTilt = 0;
   double lockAngle = 0;
+  double maxSpeed = 1;
+  Timer timer = new Timer();
+  boolean timerStarted = false;
   PIDController pid = new PIDController(0.2, 0, 0);
   PIDController anglePid = new PIDController(0.02, 0, 0);
-  public RampCommand(DriveSubsystem drive, VectorR vector) {
+  public RampCommand(DriveSubsystem drive, VectorR vector, boolean onRamp) {
     this.drive = drive;
     this.vector = vector;
+    this.onRamp = onRamp;
     addRequirements(drive);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
+    DriveSubsystem.resetGyro(0.0);
     lockAngle = DriveSubsystem.getYawDegrees();
+    vector.mult(maxSpeed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,25 +44,50 @@ public class RampCommand extends CommandBase {
   public void execute() {
     
     double turnPower = MathR.limit(anglePid.calculate(DriveSubsystem.getYawDegrees(), lockAngle), -0.5, 0.5);
-
     if (onRamp == false){
       drive.move(vector, turnPower);
     }
     else{
-      double movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * -1), -0.5, 0.5);
-      drive.move(VectorR.fromPolar(movement, Math.PI/2), turnPower);
+      double movement;
+      
+      if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+        movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.10, 0.10);
+      }
+      else{
+        movement = MathR.limit((pid.calculate(DriveSubsystem.getPitch(), 0) * 1), -0.10, 0.10);
+      }
+        drive.move(VectorR.fromPolar(movement, 0), turnPower);
     }
 
-    maxRoll = (DriveSubsystem.getRoll() <= maxRoll)?DriveSubsystem.getRoll():maxRoll;
-
-    if (DriveSubsystem.getRoll() >= 20){
-      climbingRamp = true;
-      
+    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+      maxTilt = (DriveSubsystem.getRoll() <= maxTilt)?DriveSubsystem.getRoll():maxTilt;
+    }
+    else{
+      maxTilt = (DriveSubsystem.getPitch() <= maxTilt)?DriveSubsystem.getPitch():maxTilt;
     }
     
-    if (DriveSubsystem.getRoll() >= maxRoll && climbingRamp){
-      onRamp = true;
+    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+      if (DriveSubsystem.getRoll() <= -15){
+        climbingRamp = true;
+      }
     }
+    else{
+      if (DriveSubsystem.getPitch() <= -15){
+        climbingRamp = true;
+      }
+    }
+    
+    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+      if (DriveSubsystem.getRoll() >= maxTilt + 10 && climbingRamp){
+        onRamp = true;
+      }
+    }
+    else{
+      if (DriveSubsystem.getPitch() >= maxTilt + 10 && climbingRamp){
+        onRamp = true;
+      }
+    }
+    
 
   }
 
@@ -66,12 +98,30 @@ public class RampCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    
-    if (DriveSubsystem.getRoll() >= -0.1 && DriveSubsystem.getRoll() <= 0.1 && onRamp){
-      
-      return true;
+    if (!timerStarted){
+      timer.start();
     }
-    else{return false;}
+    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+      if (DriveSubsystem.getRoll() >= -3 && DriveSubsystem.getRoll() <= 3 && onRamp && timer.get() >= 3){
+        return true;
+      }
+      else if (DriveSubsystem.getRoll() >= -3 && DriveSubsystem.getRoll() <= 3 && onRamp){
+        drive.stop();
+        return false;
+      }
+      else{timer.reset(); timerStarted = false; return false;}
+    }
+    else{
+      if (DriveSubsystem.getPitch() >= -3 && DriveSubsystem.getPitch() <= 3 && onRamp && timer.get() >= 3){
+        return true;
+      }
+      else if (DriveSubsystem.getPitch() >= -3 && DriveSubsystem.getPitch() <= 3 && onRamp){
+        drive.stop();
+        return false;
+      }
+      else{timer.reset(); timerStarted = false; return false;}
+    }
+    
     
   }
 }
