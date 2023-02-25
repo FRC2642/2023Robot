@@ -24,7 +24,7 @@ public class ClawWristSubsystem extends SubsystemBase {
   public ClawWristSubsystem() {
     clawWristMotor = new CANSparkMax(24, MotorType.kBrushed);
     wristEncoder = clawWristMotor.getEncoder();
-    wristLimitSwitch = clawWristMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    wristLimitSwitch = clawWristMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     
   }
 

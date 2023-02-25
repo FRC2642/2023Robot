@@ -22,8 +22,8 @@ public class ShoulderSubsystem extends SubsystemBase {
 
   public ShoulderSubsystem() {
     shoulderEncoder = shoulderMotor.getEncoder();
-    frontShoulderLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    rearShoulderLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    frontShoulderLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    rearShoulderLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
   public void moveShoulder(double speed){
