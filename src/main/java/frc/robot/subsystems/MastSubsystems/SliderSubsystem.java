@@ -42,8 +42,8 @@ public class SliderSubsystem extends SubsystemBase {
     positions.put(SliderPositions.SECOND_POSITION, 10.0);//Up on aux D-pad
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
 
-    frontSliderLimitSwitch = sliderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    rearSliderLimitSwitch = sliderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    frontSliderLimitSwitch = sliderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    rearSliderLimitSwitch = sliderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
   

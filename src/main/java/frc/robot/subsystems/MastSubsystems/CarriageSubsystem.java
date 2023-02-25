@@ -23,8 +23,8 @@ public class CarriageSubsystem extends SubsystemBase {
   /** Creates a new CarriageSubsystem. */
   public CarriageSubsystem() {
     carriageEncoder = carriage.getEncoder();
-    carriageFrontLimitSwitch = carriage.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
-    carriageBackLimitSwitch = carriage.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    carriageFrontLimitSwitch = carriage.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    carriageBackLimitSwitch = carriage.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
   //motor direction not known must TEST!!!!1!11!1!!

@@ -20,11 +20,11 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   }
 
   public void runGripperIntake(double speed) {
-    gripperMotor.set(speed);
+    gripperMotor.set(speed *.25);
   }
 
   public void outtakeGripperIntake(double speed){
-    gripperMotor.set(-speed);
+    gripperMotor.set(-speed*.25);
   }
 
   @Override
