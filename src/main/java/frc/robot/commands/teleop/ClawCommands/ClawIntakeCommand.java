@@ -11,12 +11,12 @@ import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 
-public class RunIntakeCommand extends CommandBase {
+public class ClawIntakeCommand extends CommandBase {
   ClawIntakeSubsystem intake;
   XboxController mainControl;
   XboxController auxControl;
   /** Creates a new RunIntakeCommand. */
-  public RunIntakeCommand(ClawIntakeSubsystem intake, XboxController mainControl, XboxController auxControl) {
+  public ClawIntakeCommand(ClawIntakeSubsystem intake, XboxController mainControl, XboxController auxControl) {
     this.intake = intake;
     this.mainControl = mainControl;
     this.auxControl = auxControl;

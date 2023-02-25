@@ -12,12 +12,12 @@ import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPositions;
 import java.lang.Math;
 
-public class MoveMainSliderCommand extends CommandBase {
+public class MoveSliderCommand extends CommandBase {
   /** Creates a new MoveMainSliderCommand. */
   SliderSubsystem slider;
   XboxController auxController;
 
-  public MoveMainSliderCommand(SliderSubsystem slider, XboxController auxController) {
+  public MoveSliderCommand(SliderSubsystem slider, XboxController auxController) {
     // Use addRequirements() here to declare subsystem dependencies.
     this.slider = slider;
     this.auxController = auxController;

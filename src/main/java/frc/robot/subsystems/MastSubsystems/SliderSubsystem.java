@@ -9,12 +9,11 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import com.revrobotics.SparkMaxLimitSwitch;
 
 
 public class SliderSubsystem extends SubsystemBase {
@@ -24,9 +23,9 @@ public class SliderSubsystem extends SubsystemBase {
   CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
   RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
 
-  //It's likely that the switches return "True" when not pressed and vice versa, makes sure to test their Outputs
-  DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
-  private static DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
+
+  public static SparkMaxLimitSwitch frontSliderLimitSwitch;
+  public static SparkMaxLimitSwitch rearSliderLimitSwitch;
   
 
   
@@ -42,6 +41,9 @@ public class SliderSubsystem extends SubsystemBase {
     positions.put(SliderPositions.FIRST_POSITION, 0.0);//Left on aux D-pad
     positions.put(SliderPositions.SECOND_POSITION, 10.0);//Up on aux D-pad
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
+
+    frontSliderLimitSwitch = sliderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    rearSliderLimitSwitch = sliderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
   }
 
   
@@ -104,7 +106,7 @@ public class SliderSubsystem extends SubsystemBase {
   }*/
 
   public static boolean isSliderBack(){
-    return !rearSliderLimitSwitch.get();
+    return rearSliderLimitSwitch.isPressed();
   }
 
 

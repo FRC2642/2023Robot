@@ -4,25 +4,27 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch;
 
 public class CarriageSubsystem extends SubsystemBase {
 
   //creates motos and limit switches
   public CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
-  private static DigitalInput carriageFrontLimitSwitch = new DigitalInput(Constants.CARRIAGE_FRONT_LIMIT_SWITCH);
-  private static DigitalInput carriageBackLimitSwitch = new DigitalInput(Constants.CARRIAGE_BACK_LIMIT_SWITCH);
+  public static SparkMaxLimitSwitch carriageFrontLimitSwitch;
+  public static SparkMaxLimitSwitch carriageBackLimitSwitch;
   public static RelativeEncoder carriageEncoder;
 
 
   /** Creates a new CarriageSubsystem. */
   public CarriageSubsystem() {
     carriageEncoder = carriage.getEncoder();
+    carriageFrontLimitSwitch = carriage.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    carriageBackLimitSwitch = carriage.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
   }
 
   //motor direction not known must TEST!!!!1!11!1!!
@@ -30,7 +32,7 @@ public class CarriageSubsystem extends SubsystemBase {
   //moves the carriage unless its touching limit switches
   public void moveCarriage(double speed){
     if (speed > 0){
-      if (carriageFrontLimitSwitch.get()){
+      if (carriageFrontLimitSwitch.isPressed()){
         carriage.set(0);
       }
       else {
@@ -38,7 +40,7 @@ public class CarriageSubsystem extends SubsystemBase {
       }
     }
     else {
-      if (carriageBackLimitSwitch.get()){
+      if (carriageBackLimitSwitch.isPressed()){
         carriage.set(0);
       }
       else {
@@ -54,12 +56,12 @@ public class CarriageSubsystem extends SubsystemBase {
 
   //tests if carriage is at the end
   public static boolean isCarriageFullyExtended (){
-    return !carriageFrontLimitSwitch.get();
+    return carriageFrontLimitSwitch.isPressed();
   }
   
   //tests if carriage is at the begining
   public static boolean isCarriageFullyRetracted(){
-    return !carriageBackLimitSwitch.get();
+    return carriageBackLimitSwitch.isPressed();
   }
 
   //reset the carriage position

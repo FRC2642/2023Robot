@@ -4,20 +4,14 @@
 
 package frc.robot.subsystems;
 
-import javax.xml.crypto.Data;
-
-import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
-
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.DataStreamJitterDetector;
-import frc.robot.utils.RunningAverage;
 
 public class LimelightSubsystem extends SubsystemBase {
 

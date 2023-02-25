@@ -11,14 +11,14 @@ import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
 
-public class CarriageMoveCommand extends CommandBase {
+public class MoveCarriageCommand extends CommandBase {
 
   //imports
   private XboxController aux;
   private CarriageSubsystem carriage;
 
   /** Creates a new CarriageMoveCommand. */
-  public CarriageMoveCommand(CarriageSubsystem carriage, XboxController aux) {
+  public MoveCarriageCommand(CarriageSubsystem carriage, XboxController aux) {
     this.aux = aux;
     addRequirements(carriage);
     // Use addRequirements() here to declare subsystem dependencies.

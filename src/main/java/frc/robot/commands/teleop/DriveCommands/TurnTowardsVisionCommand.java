@@ -4,17 +4,12 @@
 
 package frc.robot.commands.teleop.DriveCommands;
 
-import java.util.Arrays;
-import java.util.Iterator;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.subsystems.LimelightSubsystem.DetectionError;
-import frc.robot.subsystems.LimelightSubsystem.DetectionType;
 import frc.robot.utils.MathR;
 import frc.robot.utils.RunningAverage;
 import frc.robot.utils.VectorR;

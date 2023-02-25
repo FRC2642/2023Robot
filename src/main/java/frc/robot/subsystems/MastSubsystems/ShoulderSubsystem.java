@@ -7,33 +7,35 @@ package frc.robot.subsystems.MastSubsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import com.revrobotics.SparkMaxLimitSwitch;
 
 public class ShoulderSubsystem extends SubsystemBase {
   /** Creates a new ShoulderSubsystem. */
   CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushless);
 
-  DigitalInput frontShoulderLimitSwitch = new DigitalInput(Constants.SHOULDER_FRONT_LIMIT_SWITCH);
-  DigitalInput rearShoulderLimitSwitch = new DigitalInput(Constants.SHOULDER_REAR_LIMIT_SWITCH);
+  SparkMaxLimitSwitch frontShoulderLimitSwitch;
+  SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
   static RelativeEncoder shoulderEncoder;
 
   public ShoulderSubsystem() {
     shoulderEncoder = shoulderMotor.getEncoder();
+    frontShoulderLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    rearShoulderLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
   }
 
   public void moveShoulder(double speed){
     
-    if(frontShoulderLimitSwitch.get() && rearShoulderLimitSwitch.get()){//checks which switch is being pressed
+    if(!frontShoulderLimitSwitch.isPressed() && !rearShoulderLimitSwitch.isPressed()){//checks which switch is being pressed
       shoulderMotor.set(speed);
     }
     else{
-      if(!(frontShoulderLimitSwitch.get()) && speed <= 0){//Ensures that the motor stops moving towards the direction of the pressed switch
+      if((frontShoulderLimitSwitch.isPressed()) && speed <= 0){//Ensures that the motor stops moving towards the direction of the pressed switch
         shoulderMotor.set(speed);
       }
-      else if(!(rearShoulderLimitSwitch.get()) && speed >=0){//Ensures that the motor stops moving towards the direction of the pressed switch
+      else if((rearShoulderLimitSwitch.isPressed()) && speed >=0){//Ensures that the motor stops moving towards the direction of the pressed switch
         shoulderMotor.set(speed);
       }
       else{//Makes the motor stop

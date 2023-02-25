@@ -7,19 +7,15 @@ package frc.robot.commands.teleop.ClawCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
-import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
-import java.lang.Math;
 
-public class ClawControlCommand extends CommandBase {
+public class ClawWristCommand extends CommandBase {
   private XboxController aux;
   private ClawWristSubsystem wrist;
   //double position;
   //double speed;
   /** Creates a new ClawWristDirection. */
-  public ClawControlCommand(XboxController aux, ClawWristSubsystem wrist, double position, double speed) {
+  public ClawWristCommand(XboxController aux, ClawWristSubsystem wrist, double position, double speed) {
     this.aux = aux;
     this.wrist = wrist;
     //this.position = position;
@@ -46,9 +42,9 @@ public class ClawControlCommand extends CommandBase {
     if (wrist.getLimitSwitchState() == true) {
       // prevents wrist from twisting inside of robot
       if (!wrist.clawInRobot()){
-        if (wrist.getEncoderTicks() > 0 && aux.getLeftX() < 0) {
+        if (ClawWristSubsystem.getEncoderTicks() > 0 && aux.getLeftX() < 0) {
           wrist.moveWrist(aux.getLeftX());
-        }else if (wrist.getEncoderTicks() < 0 && aux.getLeftX() > 0) {
+        }else if (ClawWristSubsystem.getEncoderTicks() < 0 && aux.getLeftX() > 0) {
           wrist.moveWrist(aux.getLeftX());
         }else {
           wrist.stopWrist();

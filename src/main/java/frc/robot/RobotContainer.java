@@ -15,11 +15,11 @@ import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
-import frc.robot.commands.teleop.ClawCommands.RunIntakeCommand;
+import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
-import frc.robot.commands.teleop.MastCommands.CarriageMoveCommand;
-import frc.robot.commands.teleop.MastCommands.MoveMainSliderCommand;
+import frc.robot.commands.teleop.MastCommands.MoveCarriageCommand;
+import frc.robot.commands.teleop.MastCommands.MoveSliderCommand;
 import frc.robot.commands.teleop.MastCommands.MoveShoulder;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
@@ -80,9 +80,9 @@ public class RobotContainer {
     
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl).alongWith(new RecenterDisplacementCommand(limelight)));
     clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
-    carriage.setDefaultCommand(new CarriageMoveCommand(carriage, auxControl));
-    intake.setDefaultCommand(new RunIntakeCommand(intake, mainControl, auxControl));
-    slider.setDefaultCommand(new MoveMainSliderCommand(slider, auxControl));
+    carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
+    intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
+    slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
     shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
 
     configureButtonBindings();
