@@ -36,19 +36,19 @@ public class RunIntakeCommand extends CommandBase {
       }
 
       if (intake.intakeMode){
-        intake.runGripperIntake(mainControl.getRightTriggerAxis());
+        intake.runGripperIntake(mainControl.getRightTriggerAxis() * .8);
       }
       else{
-        intake.outtakeGripperIntake(mainControl.getRightTriggerAxis());
+        intake.outtakeGripperIntake(mainControl.getRightTriggerAxis() * .8);
       }
       
     }
     else{
       if (auxControl.getLeftTriggerAxis() < 0.1){
-        intake.runGripperIntake(mainControl.getRightTriggerAxis());
+        intake.runGripperIntake(mainControl.getRightTriggerAxis() * .8);
       }
       else if (auxControl.getRightTriggerAxis() < 0.1){
-        intake.outtakeGripperIntake(auxControl.getLeftTriggerAxis());
+        intake.outtakeGripperIntake(auxControl.getLeftTriggerAxis()*.8);
       }
     }
     

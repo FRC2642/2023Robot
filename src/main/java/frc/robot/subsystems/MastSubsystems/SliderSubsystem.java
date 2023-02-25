@@ -40,8 +40,8 @@ public class SliderSubsystem extends SubsystemBase {
 
   public SliderSubsystem() {
     positions.put(SliderPositions.FIRST_POSITION, 0.0);//Left on aux D-pad
-    positions.put(SliderPositions.SECOND_POSITION, 5.0);//Up on aux D-pad
-    positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
+    positions.put(SliderPositions.SECOND_POSITION, 10.0);//Up on aux D-pad
+    //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
   }
 
   
@@ -65,9 +65,9 @@ public class SliderSubsystem extends SubsystemBase {
       position = SliderPositions.SECOND_POSITION;
       break;
 
-      case 90://Right on aux D-Pad
+      /*case 90://Right on aux D-Pad
       position = SliderPositions.THIRD_POSITION;
-      break;
+      break;*/
 
     }
 
@@ -76,8 +76,8 @@ public class SliderSubsystem extends SubsystemBase {
     
   public enum SliderPositions {
     FIRST_POSITION,
-    SECOND_POSITION,
-    THIRD_POSITION
+    SECOND_POSITION
+    //THIRD_POSITION
 
   }
 
