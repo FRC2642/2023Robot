@@ -75,7 +75,7 @@ public class SliderSubsystem extends SubsystemBase {
     
   public enum SliderPositions {
     FIRST_POSITION,
-    SECOND_POSITION,
+    SECOND_POSITION
     //THIRD_POSITION
 
   }
