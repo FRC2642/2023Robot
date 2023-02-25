@@ -14,14 +14,16 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class CarriageSubsystem extends SubsystemBase {
 
   //creates motos and limit switches
-  public CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushed);
+  public CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private static DigitalInput carriageFrontLimitSwitch = new DigitalInput(Constants.CARRIAGE_FRONT_LIMIT_SWITCH);
   private static DigitalInput carriageBackLimitSwitch = new DigitalInput(Constants.CARRIAGE_BACK_LIMIT_SWITCH);
-  RelativeEncoder carriageEncoder = carriage.getEncoder();
+  public static RelativeEncoder carriageEncoder;
 
 
   /** Creates a new CarriageSubsystem. */
-  public CarriageSubsystem() {}
+  public CarriageSubsystem() {
+    carriageEncoder = carriage.getEncoder();
+  }
 
   //motor direction not known must TEST!!!!1!11!1!!
 
@@ -46,7 +48,7 @@ public class CarriageSubsystem extends SubsystemBase {
   }
 
   //tells what position the carriage is out
-  public double getCarriageEncoder() {
+  public static double getCarriageEncoder() {
     return carriageEncoder.getPosition();
   }
 

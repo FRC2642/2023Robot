@@ -49,6 +49,14 @@ public class ClawPneumaticCommand extends CommandBase {
       }
     }
     
+     
+    // if (/*pipeline == CONE & */ !pneumatics.isExtended()) {
+    //   pneumatics.gripperExtend();
+    // }
+    // else if (/*pipeline == CUBE & */ pneumatics.isExtended()){
+    //   pneumatics.gripperRetract();
+    // }
+    
   }
 
   // Called once the command ends or is interrupted.

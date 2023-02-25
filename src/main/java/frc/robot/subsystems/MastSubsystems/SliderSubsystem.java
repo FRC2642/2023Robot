@@ -27,6 +27,7 @@ public class SliderSubsystem extends SubsystemBase {
   //It's likely that the switches return "True" when not pressed and vice versa, makes sure to test their Outputs
   DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
   private static DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
+  
 
   
   PIDController pid = new PIDController(0, 0, 0);

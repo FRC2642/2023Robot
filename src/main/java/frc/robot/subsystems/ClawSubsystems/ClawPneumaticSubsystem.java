@@ -24,6 +24,10 @@ public class ClawPneumaticSubsystem extends SubsystemBase {
     gripperSolenoid.set(false);
   }
 
+  public boolean isExtended(){
+    return gripperSolenoid.get();
+  }
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
