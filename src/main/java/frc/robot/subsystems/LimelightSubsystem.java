@@ -4,96 +4,216 @@
 
 package frc.robot.subsystems;
 
+import javax.xml.crypto.Data;
+
+import com.fasterxml.jackson.databind.deser.std.ContainerDeserializerBase;
+
 import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.utils.DataStreamFilter;
+import frc.robot.utils.DataStreamJitterDetector;
+import frc.robot.utils.RunningAverage;
 
 public class LimelightSubsystem extends SubsystemBase {
 
- // private double x;
-  //private double y;
-  //private double area;
-  private static NetworkTable table;
+  /*
+   * Limelight Detection pipeline, NOTE: pipeline order must follow enum order
+   * Pipeline 0: CONE
+   * Pipeline 1: CUBE
+   * Pipeline 2: FIDUCIAL
+   * Pipeline 3: TAPE
+   */
+  public enum DetectionType {
+    CONE(0),
+    CUBE(1),
+    FIDUCIAL(2),
+    RETROREFLECTIVE(3),
+    NONE(-1);
 
-  
- // private final DataStreamFilter filterX = new DataStreamFilter(10, 2d);
- // private final DataStreamFilter filterY = new DataStreamFilter(10, 2d);
+    public final int pipeline;
 
+    private DetectionType(int pipeline) {
+      this.pipeline = pipeline;
+    }
+  }
 
+  public enum DetectionError {
+    NOT_STARTED,
+    NO_DETECTIONS,
+    TV_NULL,
+    NO_PIPELINES,
+    UNDETERMINED,
+    NO_BOTPOSE,
+    SUCCESS,
+  }
+
+  private DetectionType detectionType = DetectionType.FIDUCIAL;
+
+  public void setDetectionType(DetectionType type) {
+    if (detectionType != type) {
+      detectionType = type;
+      jitterDetectorX.reset();
+      jitterDetectorY.reset();
+    }
+    // jitterDetectorY.reset();
+  }
+
+  public DetectionType getDetectionType() {
+    return detectionType;
+  }
+
+  /*
+   * Enum which states the most recent limelight detection error, determined in
+   * the update method.
+   */
+  private DetectionError detectionError = DetectionError.NOT_STARTED;
+
+  public DetectionError getDetectionError() {
+    return detectionError;
+  }
+
+  private final DataStreamJitterDetector jitterDetectorX = new DataStreamJitterDetector();
+
+   private final DataStreamJitterDetector jitterDetectorY = new DataStreamJitterDetector();
+  public double confidence() {
+    return detectionError == DetectionError.SUCCESS ? (((jitterDetectorX.getConfidence()) + jitterDetectorY.getConfidence()) / 2) : -1.0;
+  }
+
+  // private double x;
+  // private double y;
+  // private double area;
+  private NetworkTable limelightTable;
+
+  public void initialize() {
+    limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    jitterDetectorX.reset();
+    jitterDetectorY.reset();
+  }
+
+  public boolean isInitialized() {
+    return limelightTable != null;
+  }
+
+  // private final DataStreamFilter filterX = new DataStreamFilter(10, 2d);
+  // private final DataStreamFilter filterY = new DataStreamFilter(10, 2d);
 
   public double x;
   public double y;
   public double a;
-  public double zrot;
   public boolean isDetection = false;
 
-  
-  private void updateLimelightMeasurements() {
-    double[] transform = table.getEntry("botpose").getDoubleArray(new double[6]);
+  public double botposeX;
+  public double botposeY;
+  public double botposeZ;
+  public double botposeXRot;
+  public double botposeYRot;
+  public double botposeZRot;
 
-    isDetection = table.getEntry("tv").getDouble(0.0) == 1.0;
-    a = table.getEntry("ta").getDouble(0);
-    x = transform[0] * Constants.FOOT_PER_METER + 27.0416;
-    y = transform[1] * Constants.FOOT_PER_METER + 13.2916;
-    zrot = transform[5];
+  public void reset() {
+    x = 0;
+    y = 0;
+    a = -1;
+    isDetection = false;
+    botposeX = 0;
+    botposeXRot = 0;
+    botposeY = 0;
+    botposeYRot = 0;
+    botposeZ = 0;
+    botposeZRot = 0;
   }
 
-  /** Creates a new LimelightSubsystem. */
+  public DetectionError update() {
+    reset();
+    if (!isInitialized())
+      return DetectionError.NOT_STARTED;
+
+    NetworkTableEntry pipeline = limelightTable.getEntry("pipeline");
+    if (pipeline == null)
+      return DetectionError.NO_PIPELINES;
+    pipeline.setDouble(detectionType.pipeline);
+
+    NetworkTableEntry tv = limelightTable.getEntry("tv");
+    if (tv == null)
+      return DetectionError.TV_NULL;
+    isDetection = tv.getDouble(0.0) == 1.0;
+    if (!isDetection)
+      return DetectionError.NO_DETECTIONS;
+
+    DetectionError updatederror = update2DMeasurements();
+    if (updatederror != DetectionError.SUCCESS)
+      return updatederror;
+
+    if (detectionType == DetectionType.FIDUCIAL)
+      updatederror = updateBotposeMeasurements();
+    if (updatederror != DetectionError.SUCCESS)
+      return updatederror;
+
+    if (detectionType == DetectionType.FIDUCIAL) {
+      jitterDetectorX.update(botposeX);
+       jitterDetectorY.update(botposeY);
+    } else {
+      jitterDetectorX.update(x);
+       jitterDetectorY.update(y);
+
+    }
+
+    return DetectionError.SUCCESS;
+  }
+
+  private DetectionError updateBotposeMeasurements() {
+    NetworkTableEntry botpose = limelightTable.getEntry("botpose");
+    if (botpose == null)
+      return DetectionError.NO_BOTPOSE;
+    double[] transform = botpose.getDoubleArray(new double[6]);
+
+    botposeX = transform[0] * Constants.FOOT_PER_METER + 27.0416;
+    botposeY = transform[1] * Constants.FOOT_PER_METER + 13.2916;
+    botposeZ = transform[2] * Constants.FOOT_PER_METER + 0.0;
+    botposeXRot = transform[3];
+    botposeYRot = transform[4];
+    botposeZRot = transform[5];
+    return DetectionError.SUCCESS;
+  }
+
+  public DetectionError update2DMeasurements() {
+    a = limelightTable.getEntry("ta").getDouble(0);
+    x = limelightTable.getEntry("tx").getDouble(0);
+    y = limelightTable.getEntry("ty").getDouble(0);
+    return DetectionError.SUCCESS;
+  }
+
+  SendableChooser<LimelightSubsystem.DetectionType> visiontype = new SendableChooser<>();
+
   public LimelightSubsystem() {
-    table = NetworkTableInstance.getDefault().getTable("limelight");
-    delta_t_timer.start();
+
+    visiontype.setDefaultOption("cones", LimelightSubsystem.DetectionType.CONE);
+    visiontype.addOption("cubes", LimelightSubsystem.DetectionType.CUBE);
+    visiontype.addOption("fiducial", LimelightSubsystem.DetectionType.FIDUCIAL);
+    visiontype.addOption("tape", LimelightSubsystem.DetectionType.RETROREFLECTIVE);
+
+    SmartDashboard.putData(visiontype);
   }
-
-  private final DataStreamFilter diffFilterX = new DataStreamFilter(20);
-  private final DataStreamFilter diffFilterY = new DataStreamFilter(20);
-  private double confidence = -1;
-
-  private Timer delta_t_timer = new Timer();
-  public double delta_x;
-  public double delta_y;
-
-  public double getConfidence() {
-    return confidence;
-  }
-
 
   @Override
   public void periodic() {
-  //  if (delta_t == 0) return;
+    if (isInitialized()) {
+      detectionError = update();
+    } else {
+      initialize();
+    }
 
-    double delta_t = delta_t_timer.get() / 0.022;
+   // setDetectionType(visiontype.getSelected());
 
-    delta_x = x;
-    delta_y = y;
-
-   updateLimelightMeasurements();
-
-    delta_x -= x;
-    delta_y -= y;
-
-    //System.out.println("filter: " + diffFilterX.getRunningAvg());
-   // SmartDashboard.putNumber("timer", delta_t);
-   //System.out.println("dx: " + delta_x + "dy: " + delta_y + "dt: " + delta_t + "x: " + x + "y: " + y + "");
-   if (delta_t != 0 && isDetection && delta_x != 0 && delta_y != 0){
-      diffFilterX.calculate(Math.abs(delta_x/delta_t));
-      diffFilterY.calculate(Math.abs(delta_y/delta_t));
-      
-      confidence = isDetection ? 2/(diffFilterX.getRunningAvg() + diffFilterY.getRunningAvg()) : -1;
-      if (Double.isInfinite(confidence)) confidence = -3;
-
-   }
-   else if (!isDetection) confidence = -1;
-   //else if (delta_x != 0 && delta_y != 0) confidence = -2;
-   delta_t_timer.reset();
-
-    //SmartDashboard.putBoolean("detections", isDetection);
-    SmartDashboard.putNumber("confidence", confidence);
-    //SmartDashboard.putNumber("x", x);
-    //SmartDashboard.putNumber("y", y);
-    //SmartDashboard.putNumber("z rot", zrot);
+    SmartDashboard.putNumber("confidence", confidence());
+    SmartDashboard.putNumber("x vision", x);
+    SmartDashboard.putNumber("y vision", y);
+    SmartDashboard.putNumber("botpose x", botposeX);
+    SmartDashboard.putNumber("botpose y", botposeY);
+    SmartDashboard.putString("vision status", detectionError.toString());
   }
 }
