@@ -31,7 +31,7 @@ public class RunIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
-      if (mainControl.getYButton()){
+      if (mainControl.getStartButton()){
         intake.intakeMode = !intake.intakeMode;
       }
 
