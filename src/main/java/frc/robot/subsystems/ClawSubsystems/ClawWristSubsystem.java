@@ -11,19 +11,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
-
+import com.revrobotics.SparkMaxLimitSwitch;
+import com.revrobotics.CANDigitalInput.LimitSwitchPolarity;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch;
 
 
 public class ClawWristSubsystem extends SubsystemBase {
 
   public CANSparkMax clawWristMotor;
-  DigitalInput clawLimitSwitch = new DigitalInput(2);
   public static RelativeEncoder wristEncoder;
+  public static SparkMaxLimitSwitch wristLimitSwitch;
+
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
     clawWristMotor = new CANSparkMax(24, MotorType.kBrushed);
     wristEncoder = clawWristMotor.getEncoder();
+    wristLimitSwitch = clawWristMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyClosed);
+    
   }
 
   @Override
@@ -45,7 +50,7 @@ public class ClawWristSubsystem extends SubsystemBase {
     clawWristMotor.set(speed);
   }
   public boolean getLimitSwitchState() {
-    return clawLimitSwitch.get();
+    return wristLimitSwitch.isPressed();
   }
 
   public boolean clawInRobot(){
