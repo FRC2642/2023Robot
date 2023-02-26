@@ -7,22 +7,19 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
 
 public class MoveCarriageCommand extends CommandBase {
 
   //imports
-  private XboxController aux;
+  private XboxController control;
   private CarriageSubsystem carriage;
 
   /** Creates a new CarriageMoveCommand. */
-  public MoveCarriageCommand(CarriageSubsystem carriage, XboxController aux) {
-    this.aux = aux;
+  public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {
+    this.control = auxControl;
     this.carriage = carriage;
     addRequirements(carriage);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -32,17 +29,8 @@ public class MoveCarriageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //make sure robot wont pull claw into sliders
-    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
-      (ShoulderSubsystem.getEncoderTicks() > 170 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
-      if (aux.getRightX() != 0){
-        carriage.moveCarriage(aux.getRightX());
-     }
-      else {
-        carriage.moveCarriage(0);
-      }
-    }*/
-    carriage.moveCarriage(aux.getRightX() * 0.5);
+    double speed = control.getRightX();
+    carriage.move(speed);
   }
 
   // Called once the command ends or is interrupted.

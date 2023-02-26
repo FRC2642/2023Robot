@@ -13,7 +13,7 @@ import com.revrobotics.SparkMaxLimitSwitch;
 
 public class ShoulderSubsystem extends SubsystemBase {
   /** Creates a new ShoulderSubsystem. */
-  CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
+  CANSparkMax shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
 
   SparkMaxLimitSwitch frontShoulderLimitSwitch;
   SparkMaxLimitSwitch rearShoulderLimitSwitch;
@@ -22,42 +22,45 @@ public class ShoulderSubsystem extends SubsystemBase {
 
   public ShoulderSubsystem() {
     //shoulderEncoder = shoulderMotor.getEncoder();
-    frontShoulderLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    rearShoulderLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    frontShoulderLimitSwitch = shoulder.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    rearShoulderLimitSwitch = shoulder.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
-  public void moveShoulder(double speed){
-    
-    /*if(!frontShoulderLimitSwitch.isPressed() && !rearShoulderLimitSwitch.isPressed()){//checks which switch is being pressed
-      shoulderMotor.set(speed);
+  public boolean getFrontShoulderLimitSwitch(){
+    return frontShoulderLimitSwitch.isPressed();
+  }
+
+  public boolean getRearShoulderLimitSwitch(){
+    return rearShoulderLimitSwitch.isPressed();
+  }
+
+  public void move(double speed){
+    if(!getFrontShoulderLimitSwitch() && !getRearShoulderLimitSwitch() && Math.abs(speed) >= 0.1){
+      //Move if limit switches are false
+      shoulder.set(speed);
+    }
+    else if(getFrontShoulderLimitSwitch() && speed <= -0.1){
+        //Dont move further than front switch
+        shoulder.set(speed);
+      }
+    else if(getRearShoulderLimitSwitch() && speed >= 0.1){
+      //Dont move further than rear switch
+      shoulder.set(speed);
     }
     else{
-      if((frontShoulderLimitSwitch.isPressed()) && speed <= 0){//Ensures that the motor stops moving towards the direction of the pressed switch
-        shoulderMotor.set(speed);
-      }
-      else if((rearShoulderLimitSwitch.isPressed()) && speed >=0){//Ensures that the motor stops moving towards the direction of the pressed switch
-        shoulderMotor.set(speed);
-      }
-      else{//Makes the motor stop
-        shoulderMotor.set(0);
-      }
-
-      }*/
-      if (speed >= 0.1 || speed <= -0.1){
-        shoulderMotor.set(speed);
-      }
-      else{
-        shoulderMotor.set(0);
-      }
+      //Stop
+      shoulder.set(speed);
     }
+      
+  }
 
-    public static double getEncoderTicks(){
-      return shoulderEncoder.getPosition();
-    }
+  public static double getEncoderTicks(){
+    return shoulderEncoder.getPosition();
+  }
 
-    public void resetEncoder(){
-      shoulderEncoder.setPosition(0);
-    }
+  public void resetEncoder(){
+    shoulderEncoder.setPosition(0);
+  }
 
   @Override
   public void periodic() {

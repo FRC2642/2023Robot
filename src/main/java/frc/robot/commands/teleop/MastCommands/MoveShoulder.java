@@ -10,14 +10,13 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
 public class MoveShoulder extends CommandBase {
   ShoulderSubsystem shoulder;
-  XboxController auxController;
+  XboxController control;
   /** Creates a new MoveShoulder. */
-  public MoveShoulder(ShoulderSubsystem shoulder, XboxController auxController) {
+  public MoveShoulder(ShoulderSubsystem shoulder, XboxController auxControl) {
     this.shoulder = shoulder;
-    this.auxController = auxController;
+    this.control = auxControl;
 
     addRequirements(shoulder);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -27,8 +26,8 @@ public class MoveShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = auxController.getLeftY();
-    shoulder.moveShoulder(speed);
+    double speed = control.getLeftY();
+    shoulder.move(speed);    
   }
 
   // Called once the command ends or is interrupted.

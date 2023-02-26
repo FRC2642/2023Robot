@@ -9,11 +9,10 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+
 import com.revrobotics.SparkMaxLimitSwitch;
 
 
@@ -21,21 +20,14 @@ public class SliderSubsystem extends SubsystemBase {
   /** Creates a new SliderSubsystem. */
   
   //Unsure whether or not the motor is inverted, make changes accordingly
-  CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
-  RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
+  CANSparkMax slider = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
+  RelativeEncoder sliderEncoder = slider.getEncoder();
 
 
   public static SparkMaxLimitSwitch frontSliderLimitSwitch;
   public static SparkMaxLimitSwitch rearSliderLimitSwitch;
-  
 
-  
-  PIDController pid = new PIDController(0, 0, 0);
-
-  
-  
-
-  public final HashMap <SliderPositions, Double> positions = new HashMap<SliderPositions, Double>();
+  public static final HashMap <SliderPositions, Double> positions = new HashMap<SliderPositions, Double>();
   SliderPositions position;
 
   public SliderSubsystem() {
@@ -43,22 +35,18 @@ public class SliderSubsystem extends SubsystemBase {
     positions.put(SliderPositions.SECOND_POSITION, 10.0);//Up on aux D-pad
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
 
-    frontSliderLimitSwitch = sliderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    rearSliderLimitSwitch = sliderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    frontSliderLimitSwitch = slider.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    rearSliderLimitSwitch = slider.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
   
-  public void moveSlider(XboxController control){
-    //Using the enum value it gets the targeted encoder value from the hashmap
-    //double targetEncoderPosition = positions.get(position); 
-    
-    //The speed of the slider motor
-    //double speed = MathUtil.clamp(pid.calculate(sliderEncoder.getPosition(), targetEncoderPosition), -1, 1);
-    if (control.getLeftX() >= 0.1 || control.getLeftX() <= -0.1){
-      sliderMotor.set(control.getLeftX()*0.8);
+  public void move(double speed){
+    //stops slider from breaking by going up
+    if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+      slider.set(0);
     }
-    else{
-      sliderMotor.set(0);
+    else {
+      slider.set(speed);
     }
   }
   //returns the position to go to based on D-pad input
