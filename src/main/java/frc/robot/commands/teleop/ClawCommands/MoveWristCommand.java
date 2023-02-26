@@ -9,17 +9,13 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 
 
-public class ClawWristCommand extends CommandBase {
-  private XboxController aux;
+public class MoveWristCommand extends CommandBase {
+  private XboxController control;
   private ClawWristSubsystem wrist;
-  //double position;
-  //double speed;
   /** Creates a new ClawWristDirection. */
-  public ClawWristCommand(XboxController aux, ClawWristSubsystem wrist, double position, double speed) {
-    this.aux = aux;
+  public MoveWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
+    this.control = auxControl;
     this.wrist = wrist;
-    //this.position = position;
-    //this.speed = speed;
     addRequirements(wrist);
   }
 
@@ -38,21 +34,10 @@ public class ClawWristCommand extends CommandBase {
       }
     }*/
 
-    // If limit switch is hit, prevents wrist from moving wrist in the same direction further
-    if (wrist.getLimitSwitchState() == true) {
-      // prevents wrist from twisting inside of robot
-      if (!wrist.clawInRobot()){
-        if (ClawWristSubsystem.getEncoderTicks() > 0 && aux.getLeftX() < 0) {
-          wrist.moveWrist(aux.getLeftX());
-        }else if (ClawWristSubsystem.getEncoderTicks() < 0 && aux.getLeftX() > 0) {
-          wrist.moveWrist(aux.getLeftX());
-        }else {
-          wrist.stopWrist();
-        }
-      }
-    } else {
-      wrist.moveWrist(aux.getLeftX());
-    }
+    double speed = control.getLeftX();
+
+    wrist.move(speed);
+    
   } 
 
   // Called once the command ends or is interrupted.

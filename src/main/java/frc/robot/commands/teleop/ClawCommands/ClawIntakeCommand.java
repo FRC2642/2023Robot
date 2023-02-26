@@ -30,35 +30,22 @@ public class ClawIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-  /*   if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
+    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
+      double speed = mainControl.getRightTriggerAxis();
       if (mainControl.getStartButton()){
         intake.intakeMode = !intake.intakeMode;
       }
-
-      if (intake.intakeMode){
-        intake.runGripperIntake(mainControl.getRightTriggerAxis() * .8);
-      }
-      else{
-        intake.outtakeGripperIntake(mainControl.getRightTriggerAxis() * .8);
-      }
-      
+      intake.move(speed);
     }
     else{
-      if (auxControl.getLeftTriggerAxis() < 0.1){
-        intake.runGripperIntake(mainControl.getRightTriggerAxis() * .8);
+      double speed = 0;
+      if (auxControl.getRightTriggerAxis() >= 0.1){
+        speed = auxControl.getRightTriggerAxis();
       }
-      else if (auxControl.getRightTriggerAxis() < 0.1){
-        intake.outtakeGripperIntake(auxControl.getLeftTriggerAxis()*.8);
+      else if (auxControl.getLeftTriggerAxis() >= 0.1){
+        speed = -auxControl.getLeftTriggerAxis();
       }
-    }*/
-    if (auxControl.getRightTriggerAxis() >= 0.1){
-      intake.runGripperIntake(auxControl.getRightTriggerAxis());
-    }
-    else if (auxControl.getLeftTriggerAxis() >= 0.1){
-      intake.runGripperIntake(-auxControl.getLeftTriggerAxis());
-    }
-    else{
-      intake.runGripperIntake(0);
+      intake.move(speed);
     }
     
   }

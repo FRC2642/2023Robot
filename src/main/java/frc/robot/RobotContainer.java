@@ -15,7 +15,7 @@ import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
-import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
+import frc.robot.commands.teleop.ClawCommands.MoveWristCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
@@ -87,7 +87,7 @@ public class RobotContainer {
     intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
     slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
     shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
-    wrist.setDefaultCommand(new RunCommand(() -> {wrist.moveWrist(auxControl.getRightY()*0.15);},wrist));
+    wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
 
     configureButtonBindings();
   }
