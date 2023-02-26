@@ -11,6 +11,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -47,14 +48,18 @@ public class SliderSubsystem extends SubsystemBase {
   }
 
   
-  public void moveSlider(SliderPositions position){
+  public void moveSlider(XboxController control){
     //Using the enum value it gets the targeted encoder value from the hashmap
-    double targetEncoderPosition = positions.get(position); 
+    //double targetEncoderPosition = positions.get(position); 
     
     //The speed of the slider motor
-    double speed = MathUtil.clamp(pid.calculate(sliderEncoder.getPosition(), targetEncoderPosition), -1, 1);
-
-    sliderMotor.set(speed);
+    //double speed = MathUtil.clamp(pid.calculate(sliderEncoder.getPosition(), targetEncoderPosition), -1, 1);
+    if (control.getLeftX() >= 0.1 || control.getLeftX() <= -0.1){
+      sliderMotor.set(control.getLeftX()*0.8);
+    }
+    else{
+      sliderMotor.set(0);
+    }
   }
   //returns the position to go to based on D-pad input
   public SliderPositions choosePosition(int dPadInput){

@@ -30,7 +30,7 @@ public class ClawIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
+  /*   if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
       if (mainControl.getStartButton()){
         intake.intakeMode = !intake.intakeMode;
       }
@@ -50,11 +50,20 @@ public class ClawIntakeCommand extends CommandBase {
       else if (auxControl.getRightTriggerAxis() < 0.1){
         intake.outtakeGripperIntake(auxControl.getLeftTriggerAxis()*.8);
       }
+    }*/
+    if (auxControl.getRightTriggerAxis() >= 0.1){
+      intake.runGripperIntake(auxControl.getRightTriggerAxis());
+    }
+    else if (auxControl.getLeftTriggerAxis() >= 0.1){
+      intake.runGripperIntake(-auxControl.getLeftTriggerAxis());
+    }
+    else{
+      intake.runGripperIntake(0);
     }
     
   }
 
-  // Called once the command ends or is interrupted.
+  // Called once the command ends or is interrupted.2
   @Override
   public void end(boolean interrupted) {}
 

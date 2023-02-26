@@ -37,11 +37,11 @@ public class MoveSliderCommand extends CommandBase {
     
     
     //stops slider form breaking by going up
-    if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
-    }else {
-      SliderPositions dpadButton = slider.choosePosition(auxController.getPOV());
-      slider.moveSlider(dpadButton);
-    }
+    //if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+    //}else {
+      //SliderPositions dpadButton = slider.choosePosition(auxController.getPOV());
+      slider.moveSlider(auxController);
+    //}
   }
 
   // Called once the command ends or is interrupted.
@@ -51,9 +51,10 @@ public class MoveSliderCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    double targetEncoderValue = slider.positions.get(slider.choosePosition(auxController.getPOV()));
+    return false;
+    /*double targetEncoderValue = slider.positions.get(slider.choosePosition(auxController.getPOV()));
     double currentEncoderValue = slider.getSliderEncoderTicks();
     
-    return Math.abs(currentEncoderValue - targetEncoderValue) < .1;
+    return Math.abs(currentEncoderValue - targetEncoderValue) < .1;*/
   }
 }

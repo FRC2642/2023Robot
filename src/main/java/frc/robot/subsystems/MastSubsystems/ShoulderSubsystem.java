@@ -13,7 +13,7 @@ import com.revrobotics.SparkMaxLimitSwitch;
 
 public class ShoulderSubsystem extends SubsystemBase {
   /** Creates a new ShoulderSubsystem. */
-  CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushless);
+  CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
 
   SparkMaxLimitSwitch frontShoulderLimitSwitch;
   SparkMaxLimitSwitch rearShoulderLimitSwitch;
@@ -21,14 +21,14 @@ public class ShoulderSubsystem extends SubsystemBase {
   static RelativeEncoder shoulderEncoder;
 
   public ShoulderSubsystem() {
-    shoulderEncoder = shoulderMotor.getEncoder();
+    //shoulderEncoder = shoulderMotor.getEncoder();
     frontShoulderLimitSwitch = shoulderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     rearShoulderLimitSwitch = shoulderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
   public void moveShoulder(double speed){
     
-    if(!frontShoulderLimitSwitch.isPressed() && !rearShoulderLimitSwitch.isPressed()){//checks which switch is being pressed
+    /*if(!frontShoulderLimitSwitch.isPressed() && !rearShoulderLimitSwitch.isPressed()){//checks which switch is being pressed
       shoulderMotor.set(speed);
     }
     else{
@@ -42,6 +42,12 @@ public class ShoulderSubsystem extends SubsystemBase {
         shoulderMotor.set(0);
       }
 
+      }*/
+      if (speed >= 0.1 || speed <= -0.1){
+        shoulderMotor.set(speed);
+      }
+      else{
+        shoulderMotor.set(0);
       }
     }
 

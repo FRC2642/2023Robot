@@ -23,7 +23,7 @@ public class ClawWristSubsystem extends SubsystemBase {
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
     clawWristMotor = new CANSparkMax(24, MotorType.kBrushed);
-    wristEncoder = clawWristMotor.getEncoder();
+    //wristEncoder = clawWristMotor.getEncoder();
     wristLimitSwitch = clawWristMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     
   }
@@ -44,7 +44,12 @@ public class ClawWristSubsystem extends SubsystemBase {
     clawWristMotor.set(0);
   }
   public void moveWrist(double speed) {
-    clawWristMotor.set(speed);
+    if (speed >= 0.1 || speed <= -0.1){
+      clawWristMotor.set(speed);
+    }
+    else{
+      clawWristMotor.set(0);
+    }
   }
   public boolean getLimitSwitchState() {
     return wristLimitSwitch.isPressed();

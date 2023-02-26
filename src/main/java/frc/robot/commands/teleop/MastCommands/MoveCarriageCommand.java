@@ -20,6 +20,7 @@ public class MoveCarriageCommand extends CommandBase {
   /** Creates a new CarriageMoveCommand. */
   public MoveCarriageCommand(CarriageSubsystem carriage, XboxController aux) {
     this.aux = aux;
+    this.carriage = carriage;
     addRequirements(carriage);
     // Use addRequirements() here to declare subsystem dependencies.
   }
@@ -32,7 +33,7 @@ public class MoveCarriageCommand extends CommandBase {
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
+    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
       (ShoulderSubsystem.getEncoderTicks() > 170 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
       if (aux.getRightX() != 0){
         carriage.moveCarriage(aux.getRightX());
@@ -40,7 +41,8 @@ public class MoveCarriageCommand extends CommandBase {
       else {
         carriage.moveCarriage(0);
       }
-    }
+    }*/
+    carriage.moveCarriage(aux.getRightX() * 0.5);
   }
 
   // Called once the command ends or is interrupted.

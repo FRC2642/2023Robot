@@ -31,7 +31,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   //moves the carriage unless its touching limit switches
   public void moveCarriage(double speed){
-    if (speed > 0){
+    /*if (speed > 0){
       if (carriageFrontLimitSwitch.isPressed()){
         carriage.set(0);
       }
@@ -46,6 +46,12 @@ public class CarriageSubsystem extends SubsystemBase {
       else {
         carriage.set(speed);
       }
+    }*/
+    if (speed >= 0.1 || speed <= -0.1){
+      carriage.set(speed);
+    }
+    else{
+      carriage.set(0);
     }
   }
 
