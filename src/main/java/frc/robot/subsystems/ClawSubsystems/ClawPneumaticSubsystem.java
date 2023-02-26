@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.ClawSubsystems;
 
+import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -11,7 +12,8 @@ import frc.robot.Constants;
 
 public class ClawPneumaticSubsystem extends SubsystemBase {
   /** Creates a new ClawPneumaticSubsystem. */
-  Solenoid gripperSolenoid = new Solenoid(PneumaticsModuleType.REVPH, Constants.GRIPPER_SOLENOID_CHANNEL);
+  PneumaticHub pneumatics = new PneumaticHub(32);
+  Solenoid gripperSolenoid = pneumatics.makeSolenoid(Constants.GRIPPER_SOLENOID_CHANNEL);
   public ClawPneumaticSubsystem() {
 
   }

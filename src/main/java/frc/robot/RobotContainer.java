@@ -45,11 +45,11 @@ public class RobotContainer {
   private final DriveSubsystem drive = new DriveSubsystem();
   //private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final ClawPneumaticSubsystem clawPneumatics = new ClawPneumaticSubsystem();
-  public static final CarriageSubsystem carriage = new CarriageSubsystem();
+  //public static final CarriageSubsystem carriage = new CarriageSubsystem();
   private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
   private final SliderSubsystem slider = new SliderSubsystem();
   private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
-  private final ClawWristSubsystem wrist = new ClawWristSubsystem();
+  //private final ClawWristSubsystem wrist = new ClawWristSubsystem();
 
   PiratePath testPath;
   Command testPathFollowCommand;
@@ -83,11 +83,11 @@ public class RobotContainer {
     
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));//.alongWith(new RecenterDisplacementCommand(limelight)));
     //clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
-    carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
-    intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
-    slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
-    shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
-    wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
+    //carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
+    //intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
+    //slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
+    //shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
+    //wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
 
     configureButtonBindings();
   }
