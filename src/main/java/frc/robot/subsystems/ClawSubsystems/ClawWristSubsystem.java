@@ -12,6 +12,7 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.PIDController;
 
 
 public class ClawWristSubsystem extends SubsystemBase {
@@ -19,6 +20,7 @@ public class ClawWristSubsystem extends SubsystemBase {
   public CANSparkMax clawWristMotor;
   public static RelativeEncoder wristEncoder;
   public static SparkMaxLimitSwitch wristLimitSwitch;
+  private PIDController wristPID = new PIDController(0.2, 0, 0);
 
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
@@ -48,6 +50,30 @@ public class ClawWristSubsystem extends SubsystemBase {
   }
   public boolean getLimitSwitchState() {
     return wristLimitSwitch.isPressed();
+  }
+
+  public void flipClaw(){
+    //Uh oh button
+    if (Math.abs(getEncoderTicks()) > 100 && !clawInRobot()){
+      moveWrist(wristPID.calculate(getEncoderTicks(), 0));
+    }
+    else if (Math.abs(getEncoderTicks()) < 25 && !clawInRobot()){
+      moveWrist(wristPID.calculate(getEncoderTicks(), 180));
+    }
+  }
+
+  public void setWrist(double speed){
+    if (speed == -1){
+      moveWrist(wristPID.calculate(getEncoderTicks(), -90));
+    } else if (speed <= -.2){
+      moveWrist(wristPID.calculate(getEncoderTicks(), -45));
+    } else if (speed < .2){
+      moveWrist(wristPID.calculate(getEncoderTicks(), 0));
+    } else if (speed < 1){
+      moveWrist(wristPID.calculate(getEncoderTicks(), 45));
+    } else{
+      moveWrist(wristPID.calculate(getEncoderTicks(), 90));
+    }
   }
 
   public boolean clawInRobot(){
