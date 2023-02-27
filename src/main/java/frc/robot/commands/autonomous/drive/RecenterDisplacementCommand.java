@@ -32,7 +32,7 @@ public class RecenterDisplacementCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (limelight.getConfidence() > MIN_CONFIDENCE && timer.get() > RESET_INTERVAL) {
+    /*if (limelight.getConfidence() > MIN_CONFIDENCE && timer.get() > RESET_INTERVAL) {
       timer.reset();
       VectorR old = DriveSubsystem.getRelativeFieldPosition();
       DriveSubsystem.resetDisplacement(VectorR.fromCartesian(limelight.x, limelight.y));
@@ -41,7 +41,7 @@ public class RecenterDisplacementCommand extends CommandBase {
         "RESET THE DISPLACEMENT TO: " + DriveSubsystem.getRelativeFieldPosition().toString() + 
         "ft DIFFERENCE: " + VectorR.subVectors(DriveSubsystem.getRelativeFieldPosition(), old).toString() + "ft CONFIDENCE: " + limelight.getConfidence());
         
-    }
+    }*/
   }
 
   // Returns true when the command should end.

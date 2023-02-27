@@ -23,9 +23,6 @@ public class ClawIntakeSubsystem extends SubsystemBase {
     gripperMotor.set(speed);
   }
 
-  public void outtakeGripperIntake(double speed){
-    gripperMotor.set(-speed);
-  }
 
   @Override
   public void periodic() {

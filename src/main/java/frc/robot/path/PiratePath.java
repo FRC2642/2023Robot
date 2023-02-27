@@ -4,10 +4,17 @@
 
 package frc.robot.path;
 
+import java.io.Console;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.FileSystem;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.SortedSet;
 import java.util.TreeSet;
+
+import org.opencv.core.Point;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -36,15 +43,15 @@ public class PiratePath extends TreeSet<PiratePoint> {
     /*
      * Creates a path from a JSON file from FRC PathPlanner 2023
      */
-    public PiratePath(String fileName) throws JsonProcessingException, IOException {
-        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, fileName));
+    public PiratePath(String fileName, boolean redAlliance) throws JsonProcessingException, IOException {
+        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, fileName), redAlliance);
         if (e != null) {
             e.printStackTrace();
             add(DEFAULT_VALUE);
         }
     }
 
-    public Exception trySetFromPathPlannerJSON(File jsonFile) {
+    public Exception trySetFromPathPlannerJSON(File jsonFile, boolean redAlliance) {
         try {
             JsonNode root = JSON_MAPPER.readTree(jsonFile);
             var pointIterator = root.elements();
@@ -54,12 +61,24 @@ public class PiratePath extends TreeSet<PiratePoint> {
                 var point = pointIterator.next();
                 double t = point.get("time").asDouble();
                 JsonNode pose = point.get("pose");
+                double x = 0;
+                double y = 0;
+                double h = 0;
 
-                double h = Math.toRadians(point.get("holonomicRotation").asDouble());
                 JsonNode translation = pose.get("translation");
+                
+                if (redAlliance){
+                    x = translation.get("x").asDouble();
+                    y = translation.get("y").asDouble();
+                    h = Math.toRadians(point.get("holonomicRotation").asDouble());
+                }
+                else{
+                    double distance = translation.get("x").asDouble() - 26;
+                    x = 26 - distance;
+                    y = translation.get("y").asDouble();
+                    h = Math.toRadians(point.get("holonomicRotation").asDouble() - 180);
+                }
 
-                double x = translation.get("x").asDouble();
-                double y = translation.get("y").asDouble();
 
                 boolean stop = point.get("velocity").asDouble() == 0.0 && !first;
 
@@ -80,7 +99,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
 
     public ArrayList<PiratePath> getSubPaths() {
         ArrayList<PiratePath> paths = new ArrayList<>();
-        
+        ArrayList<PiratePath> usablePaths = new ArrayList<>();
 
         PiratePath current = new PiratePath();
         for (var pt : this) {
@@ -91,6 +110,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
             
             }
         }
+        
 
         return paths;
     }

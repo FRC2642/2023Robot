@@ -11,12 +11,12 @@ import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 
-public class RunIntakeCommand extends CommandBase {
+public class ClawIntakeCommand extends CommandBase {
   ClawIntakeSubsystem intake;
   XboxController mainControl;
   XboxController auxControl;
   /** Creates a new RunIntakeCommand. */
-  public RunIntakeCommand(ClawIntakeSubsystem intake, XboxController mainControl, XboxController auxControl) {
+  public ClawIntakeCommand(ClawIntakeSubsystem intake, XboxController mainControl, XboxController auxControl) {
     this.intake = intake;
     this.mainControl = mainControl;
     this.auxControl = auxControl;
@@ -30,8 +30,8 @@ public class RunIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
-      if (mainControl.getYButton()){
+  /*   if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
+      if (mainControl.getStartButton()){
         intake.intakeMode = !intake.intakeMode;
       }
 
@@ -50,11 +50,20 @@ public class RunIntakeCommand extends CommandBase {
       else if (auxControl.getRightTriggerAxis() < 0.1){
         intake.outtakeGripperIntake(auxControl.getLeftTriggerAxis()*.8);
       }
+    }*/
+    if (auxControl.getRightTriggerAxis() >= 0.1){
+      intake.runGripperIntake(auxControl.getRightTriggerAxis());
+    }
+    else if (auxControl.getLeftTriggerAxis() >= 0.1){
+      intake.runGripperIntake(-auxControl.getLeftTriggerAxis());
+    }
+    else{
+      intake.runGripperIntake(0);
     }
     
   }
 
-  // Called once the command ends or is interrupted.
+  // Called once the command ends or is interrupted.2
   @Override
   public void end(boolean interrupted) {}
 

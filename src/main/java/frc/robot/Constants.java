@@ -11,6 +11,7 @@ public final class Constants {
     public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
     public static final double MODULE_ANGLE_KP = 0.3;
     public static final double FOOT_PER_METER = 3.28084;
+    public static final double DRIFT_PER_DEGREE = 0.01805556;
     
     //Controlers
     public static final int DRIVE_CONTROL_PORT = 0;

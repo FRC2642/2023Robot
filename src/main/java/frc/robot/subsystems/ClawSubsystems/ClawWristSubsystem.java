@@ -6,19 +6,26 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 public class ClawWristSubsystem extends SubsystemBase {
 
   public CANSparkMax clawWristMotor;
-  DigitalInput clawLimitSwitch = new DigitalInput(2);
-  RelativeEncoder wristEncoder = clawWristMotor.getEncoder();
+  public static RelativeEncoder wristEncoder;
+  public static SparkMaxLimitSwitch wristLimitSwitch;
+
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
     clawWristMotor = new CANSparkMax(24, MotorType.kBrushed);
+    //wristEncoder = clawWristMotor.getEncoder();
+    wristLimitSwitch = clawWristMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    
   }
 
   @Override
@@ -30,17 +37,28 @@ public class ClawWristSubsystem extends SubsystemBase {
     wristEncoder.setPosition(0);
   }
 
-  public double getEncoderTicks() {
+  public static double getEncoderTicks() {
     return wristEncoder.getPosition();
   }
   public void stopWrist() {
     clawWristMotor.set(0);
   }
   public void moveWrist(double speed) {
-    clawWristMotor.set(speed);
+    if (speed >= 0.1 || speed <= -0.1){
+      clawWristMotor.set(speed);
+    }
+    else{
+      clawWristMotor.set(0);
+    }
   }
   public boolean getLimitSwitchState() {
-    return clawLimitSwitch.get();
+    return wristLimitSwitch.isPressed();
+  }
+
+  public boolean clawInRobot(){
+    //checks if claw is inside sliders /*no number are correct*/
+    return ((ShoulderSubsystem.getEncoderTicks() < 10 & ((CarriageSubsystem.getCarriageEncoder() > 90 ) || (!SliderSubsystem.isSliderBack()))) || 
+    (ShoulderSubsystem.getEncoderTicks() > 170 & ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
   }
 
 }
