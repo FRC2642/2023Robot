@@ -105,14 +105,14 @@ public class SwerveModule {
     return VectorR.fromPolar(increment, getWheelHeadingRadians());
   }
   private void updateIncrementMeasurement() {
-    double pos = getWheelPosition();
+    double pos = getWheelPositionWithoutDrift();
     
     increment = pos - lastWheelPosition;
     lastWheelPosition = pos;
   }
 
   public void updateTotalDegreesTurned(){
-    //totalDegreesTurned = turnEncoder.getPosition() / Constants.TICKS_PER_DEGREE;
+    totalDegreesTurned = turnEncoder.getPosition();
   }
 
   // MODULE SPEEDS CALCULATIONS

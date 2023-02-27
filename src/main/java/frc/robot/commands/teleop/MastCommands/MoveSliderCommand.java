@@ -31,12 +31,13 @@ public class MoveSliderCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    SliderPositions selectedPosition = slider.choosePosition(control.getPOV());
+    //SliderPositions selectedPosition = slider.choosePosition(control.getPOV());
     //Using the enum value it gets the targeted encoder value from the hashmap
-    double targetEncoderPosition = SliderSubsystem.positions.get(selectedPosition); 
-    double speed = MathR.limit(pid.calculate(slider.getSliderEncoderTicks(), targetEncoderPosition), -1, 1);
+    //double targetEncoderPosition = SliderSubsystem.positions.get(selectedPosition); 
+    //double speed = MathR.limit(pid.calculate(slider.getSliderEncoderTicks(), targetEncoderPosition), -1, 1);
     
-    slider.move(speed);
+    double speed = control.getLeftX();
+    slider.move(speed* 0.5);
   }
 
   // Called once the command ends or is interrupted.

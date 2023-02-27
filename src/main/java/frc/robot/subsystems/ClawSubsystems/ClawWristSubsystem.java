@@ -22,7 +22,7 @@ public class ClawWristSubsystem extends SubsystemBase {
 
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
-    wristEncoder = wrist.getEncoder();
+    //wristEncoder = wrist.getEncoder();
     wristLimitSwitch = wrist.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     
   }

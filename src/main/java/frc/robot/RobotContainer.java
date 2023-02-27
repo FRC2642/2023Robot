@@ -24,6 +24,7 @@ import frc.robot.commands.teleop.MastCommands.MoveSliderCommand;
 import frc.robot.commands.teleop.MastCommands.MoveShoulder;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
+import frc.robot.commands.teleop.resetters.ResetTurnEncoderCommand;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -45,11 +46,11 @@ public class RobotContainer {
   private final DriveSubsystem drive = new DriveSubsystem();
   //private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final ClawPneumaticSubsystem clawPneumatics = new ClawPneumaticSubsystem();
-  //public static final CarriageSubsystem carriage = new CarriageSubsystem();
+  public static final CarriageSubsystem carriage = new CarriageSubsystem();
   private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
   private final SliderSubsystem slider = new SliderSubsystem();
   private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
-  //private final ClawWristSubsystem wrist = new ClawWristSubsystem();
+  private final ClawWristSubsystem wrist = new ClawWristSubsystem();
 
   PiratePath testPath;
   Command testPathFollowCommand;
@@ -81,11 +82,11 @@ public class RobotContainer {
       new FollowPathCommand(drive, subs.get(2))
     );
     
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));//.alongWith(new RecenterDisplacementCommand(limelight)));
+    //drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));//.alongWith(new RecenterDisplacementCommand(limelight)));
     //clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
-    //carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
+    carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
     //intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
-    //slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
+    slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
     //shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
     //wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
 
@@ -93,6 +94,7 @@ public class RobotContainer {
   }
 
   private void configureButtonBindings() {
+    SmartDashboard.putData(new ResetTurnEncoderCommand(drive));
     SmartDashboard.putData(new ResetGyro(drive));
     SmartDashboard.putData(new ResetDisplacementCommand(drive));
 

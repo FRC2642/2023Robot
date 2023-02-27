@@ -17,7 +17,7 @@ public class DriveSubsystem extends SubsystemBase{
   
 
   // COMPONENTS
-  private final SwerveModules modules;
+  public final SwerveModules modules;
   private static AHRS gyro;
   
 

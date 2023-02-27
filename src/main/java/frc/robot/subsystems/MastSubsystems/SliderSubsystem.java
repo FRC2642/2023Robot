@@ -42,12 +42,13 @@ public class SliderSubsystem extends SubsystemBase {
   
   public void move(double speed){
     //stops slider from breaking by going up
-    if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+    /*if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
       slider.set(0);
     }
     else {
       slider.set(speed);
-    }
+    }*/
+    slider.set(speed);
   }
   //returns the position to go to based on D-pad input
   public SliderPositions choosePosition(int dPadInput){

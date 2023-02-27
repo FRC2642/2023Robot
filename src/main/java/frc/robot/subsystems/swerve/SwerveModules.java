@@ -58,9 +58,6 @@ public class SwerveModules implements Iterable<SwerveModule> {
     SmartDashboard.putNumber("BR heading", Math.toDegrees(backRight.getWheelHeadingRadians()));
     SmartDashboard.putNumber("BL heading", Math.toDegrees(backLeft.getWheelHeadingRadians()));
 
-    SmartDashboard.putData(new InstantCommand(()->{
-      frontLeft.turnEncoder.setPosition(0);
-    }));
 
     SmartDashboard.putNumber("FL Turn Encoder", frontLeft.getRelativeTurnEncoderValue());
   } 

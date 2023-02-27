@@ -24,7 +24,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   /** Creates a new CarriageSubsystem. */
   public CarriageSubsystem() {
-    carriageEncoder = carriage.getEncoder();
+    //carriageEncoder = carriage.getEncoder();
     carriageFrontLimitSwitch = carriage.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     carriageBackLimitSwitch = carriage.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
@@ -34,7 +34,7 @@ public class CarriageSubsystem extends SubsystemBase {
   //moves the carriage unless its touching limit switches
   public void move(double speed){
     //make sure robot wont pull claw into sliders
-    if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
+    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
       (ShoulderSubsystem.getEncoderTicks() > 170 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
       
         if (speed >= 0.1){
@@ -57,7 +57,8 @@ public class CarriageSubsystem extends SubsystemBase {
       else {
         carriage.set(0);
       }
-    }
+    }*/
+    carriage.set(speed*0.5);
   }
 
   //tells what position the carriage is out
