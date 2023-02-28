@@ -75,19 +75,20 @@ public class RobotContainer {
     );*/
 
     testPathFollowCommand = new SequentialCommandGroup(
-      new FollowPathCommand(drive, subs.get(0)),
+      /*new FollowPathCommand(drive, subs.get(0)),
       new WaitFor(drive, 2),
       new FollowPathCommand(drive, subs.get(1)),
       new WaitFor(drive, 2),
-      new FollowPathCommand(drive, subs.get(2))
+      new FollowPathCommand(drive, subs.get(2))*/
+      new FollowPathCommand(drive, testPath)
     );
     
-    //drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));//.alongWith(new RecenterDisplacementCommand(limelight)));
-    //clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
+    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));//.alongWith(new RecenterDisplacementCommand(limelight)));
+    clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
     carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
-    //intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
+    intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
     slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
-    //shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
+    shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
     //wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
 
     configureButtonBindings();

@@ -69,7 +69,7 @@ public class ClawWristSubsystem extends SubsystemBase {
   public boolean clawInRobot(){
     //checks if claw is inside sliders /*no number are correct*/
     return ((ShoulderSubsystem.getEncoderTicks() < 10 && ((CarriageSubsystem.getCarriageEncoder() > 90 ) || (!SliderSubsystem.isSliderBack()))) || 
-    (ShoulderSubsystem.getEncoderTicks() > 170 & ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
+    (ShoulderSubsystem.getEncoderTicks() > 170 && ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
   }
 
 }

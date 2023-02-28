@@ -9,9 +9,12 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.utils.MathR;
 
 import com.revrobotics.SparkMaxLimitSwitch;
 
@@ -27,55 +30,39 @@ public class SliderSubsystem extends SubsystemBase {
   public static SparkMaxLimitSwitch frontSliderLimitSwitch;
   public static SparkMaxLimitSwitch rearSliderLimitSwitch;
 
-  public static final HashMap <SliderPositions, Double> positions = new HashMap<SliderPositions, Double>();
-  SliderPositions position;
+  private PIDController pid = new PIDController(0.05, 0, 0);
+  private static boolean isBack = true;
 
   public SliderSubsystem() {
-    positions.put(SliderPositions.FIRST_POSITION, 0.0);//Left on aux D-pad
-    positions.put(SliderPositions.SECOND_POSITION, 10.0);//Up on aux D-pad
+    
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
 
     frontSliderLimitSwitch = slider.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     rearSliderLimitSwitch = slider.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    sliderEncoder.setPosition(0);
   }
 
   
-  public void move(double speed){
-    //stops slider from breaking by going up
-    /*if (ShoulderSubsystem.getEncoderTicks() < 10 & ((Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
-      slider.set(0);
+  public void move(boolean extend){
+    double speed;
+    
+    
+    if (extend){
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 250), -0.9, 0.9);
     }
-    else {
-      slider.set(speed);
-    }*/
+    else{
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 10), -0.9, 0.9);
+    }
+
+    if (getSliderEncoderTicks() <= 11){
+      isBack = true;
+    }
+    else{
+      isBack = false;
+    }
     slider.set(speed);
   }
-  //returns the position to go to based on D-pad input
-  public SliderPositions choosePosition(int dPadInput){
-    switch (dPadInput){
-      case 270://Left on aux D-Pad
-      position = SliderPositions.FIRST_POSITION;
-      break;
-
-      case 0://Up on aux D Pad
-      position = SliderPositions.SECOND_POSITION;
-      break;
-
-      /*case 90://Right on aux D-Pad
-      position = SliderPositions.THIRD_POSITION;
-      break;*/
-
-    }
-
-    return position;
-  }
-    
-  public enum SliderPositions {
-    FIRST_POSITION,
-    SECOND_POSITION
-    //THIRD_POSITION
-
-  }
+  
 
 
   
@@ -100,7 +87,8 @@ public class SliderSubsystem extends SubsystemBase {
   }*/
 
   public static boolean isSliderBack(){
-    return rearSliderLimitSwitch.isPressed();
+    return isBack;
+    
   }
 
 
@@ -112,6 +100,8 @@ public class SliderSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
+    
+    
   }
 }

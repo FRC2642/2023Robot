@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.ClawCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
@@ -15,6 +16,7 @@ public class ClawIntakeCommand extends CommandBase {
   ClawIntakeSubsystem intake;
   XboxController mainControl;
   XboxController auxControl;
+  
   /** Creates a new RunIntakeCommand. */
   public ClawIntakeCommand(ClawIntakeSubsystem intake, XboxController mainControl, XboxController auxControl) {
     this.intake = intake;
@@ -30,20 +32,27 @@ public class ClawIntakeCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    double speed = 0;
     if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
-      double speed = mainControl.getRightTriggerAxis();
-      if (mainControl.getStartButton()){
+      
+      speed = mainControl.getRightTriggerAxis();
+      if (mainControl.getStartButtonPressed()){
         intake.intakeMode = !intake.intakeMode;
+      }
+      if (!ClawPneumaticSubsystem.isExtended()){
+        speed *= 0.3;
       }
       intake.move(speed);
     }
     else{
-      double speed = 0;
       if (auxControl.getRightTriggerAxis() >= 0.1){
-        speed = auxControl.getRightTriggerAxis();
+        speed = -auxControl.getRightTriggerAxis();
       }
       else if (auxControl.getLeftTriggerAxis() >= 0.1){
-        speed = -auxControl.getLeftTriggerAxis();
+        speed = auxControl.getLeftTriggerAxis();
+      }
+      if (!ClawPneumaticSubsystem.isExtended()){
+        speed *= 0.3;
       }
       intake.move(speed);
     }

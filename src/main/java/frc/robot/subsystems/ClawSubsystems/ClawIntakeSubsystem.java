@@ -24,19 +24,23 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   public void move(double speed) {
     if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
       if (intakeMode){
-        intake.set(speed * .8);
+        intake.set(speed);
       }
       else{
-        intake.set(speed * .8);
+        intake.set(speed);
       }
+      
       
     }
     else{
-      if (speed < -0.1){
-        intake.set(speed * .8);
+      if (speed <= -0.1){
+        intake.set(speed);
       }
-      else if (speed > 0.1){
-        intake.set(speed * .8);
+      else if (speed >= 0.1){
+        intake.set(speed);
+      }
+      else{
+        intake.set(0);
       }
     }
   }

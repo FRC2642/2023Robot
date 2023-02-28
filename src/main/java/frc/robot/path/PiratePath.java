@@ -73,10 +73,9 @@ public class PiratePath extends TreeSet<PiratePoint> {
                     h = Math.toRadians(point.get("holonomicRotation").asDouble());
                 }
                 else{
-                    double distance = translation.get("x").asDouble() - 26;
-                    x = 26 - distance;
+                    x = (54d + (1d/12d)) - translation.get("x").asDouble();
                     y = translation.get("y").asDouble();
-                    h = Math.toRadians(point.get("holonomicRotation").asDouble() - 180);
+                    h = -1* Math.toRadians(point.get("holonomicRotation").asDouble());
                 }
 
 

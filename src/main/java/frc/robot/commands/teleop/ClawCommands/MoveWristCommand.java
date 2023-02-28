@@ -34,7 +34,13 @@ public class MoveWristCommand extends CommandBase {
       }
     }*/
 
-    double speed = control.getLeftX();
+    double speed = 0;
+    if (control.getLeftStickButton()){
+      speed = -0.3;
+    }
+    else if (control.getRightBumper()){
+      speed = 0.3;
+    }
 
     wrist.move(speed);
     

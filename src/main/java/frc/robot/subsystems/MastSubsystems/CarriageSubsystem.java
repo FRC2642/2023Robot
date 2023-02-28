@@ -24,7 +24,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   /** Creates a new CarriageSubsystem. */
   public CarriageSubsystem() {
-    //carriageEncoder = carriage.getEncoder();
+    carriageEncoder = carriage.getEncoder();
     carriageFrontLimitSwitch = carriage.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     carriageBackLimitSwitch = carriage.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
@@ -34,10 +34,10 @@ public class CarriageSubsystem extends SubsystemBase {
   //moves the carriage unless its touching limit switches
   public void move(double speed){
     //make sure robot wont pull claw into sliders
-    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
-      (ShoulderSubsystem.getEncoderTicks() > 170 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
+      (ShoulderSubsystem.getEncoderTicks() > 170 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
       
-        if (speed >= 0.1){
+      if (speed >= 0.1){
         if (CarriageSubsystem.isCarriageFullyExtended()){
           carriage.set(0);
         }
@@ -58,7 +58,7 @@ public class CarriageSubsystem extends SubsystemBase {
         carriage.set(0);
       }
     }*/
-    carriage.set(speed*0.5);
+    //carriage.set(speed);
   }
 
   //tells what position the carriage is out
@@ -83,6 +83,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //System.out.println("encoder: "+carriageEncoder.getPosition());
     // This method will be called once per scheduler run
   }
 }

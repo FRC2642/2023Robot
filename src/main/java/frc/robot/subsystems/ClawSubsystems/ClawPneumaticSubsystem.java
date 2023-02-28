@@ -12,8 +12,8 @@ import frc.robot.Constants;
 
 public class ClawPneumaticSubsystem extends SubsystemBase {
   /** Creates a new ClawPneumaticSubsystem. */
-  PneumaticHub pneumatics = new PneumaticHub(32);
-  Solenoid gripperSolenoid = pneumatics.makeSolenoid(Constants.GRIPPER_SOLENOID_CHANNEL);
+  private static PneumaticHub pneumatics = new PneumaticHub(32);
+  public static Solenoid gripperSolenoid = pneumatics.makeSolenoid(Constants.GRIPPER_SOLENOID_CHANNEL);
   public ClawPneumaticSubsystem() {
 
   }
@@ -26,7 +26,7 @@ public class ClawPneumaticSubsystem extends SubsystemBase {
     gripperSolenoid.set(false);
   }
 
-  public boolean isExtended(){
+  public static boolean isExtended(){
     return gripperSolenoid.get();
   }
 

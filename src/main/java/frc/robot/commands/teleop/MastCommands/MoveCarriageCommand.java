@@ -29,8 +29,8 @@ public class MoveCarriageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = control.getRightX();
-    carriage.move(speed);
+    double speed = control.getRightY();
+    carriage.move(-speed*0.5);
   }
 
   // Called once the command ends or is interrupted.
