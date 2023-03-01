@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.RelativeEncoder;
@@ -41,9 +42,12 @@ public class SwerveModule {
     this.position = VectorR.fromCartesian(info.X, info.Y);
     this.absEncoder = new CANCoder(info.ENCODER_ID);
     this.turnEncoder = new CANCoder(info.ENCODER_ID);
+    angleMotor.setNeutralMode(NeutralMode.Brake);
+    driveMotor.setNeutralMode(NeutralMode.Brake);
 
     //angleMotor.configClosedloopRamp(0);
     //driveMotor.configClosedloopRamp(0);
+    turnEncoder.setPosition(0);
     driveMotor.setSelectedSensorPosition(0);
 
     
@@ -81,7 +85,7 @@ public class SwerveModule {
   }
 
   public double getWheelPositionWithoutDrift(){
-    return getWheelPosition() + (Constants.DRIFT_PER_DEGREE * totalDegreesTurned);
+    return getWheelPosition() - (Constants.DRIFT_PER_DEGREE * totalDegreesTurned);
   }
 
   
@@ -105,7 +109,7 @@ public class SwerveModule {
     return VectorR.fromPolar(increment, getWheelHeadingRadians());
   }
   private void updateIncrementMeasurement() {
-    double pos = getWheelPosition();
+    double pos = getWheelPositionWithoutDrift();
     
     increment = pos - lastWheelPosition;
     lastWheelPosition = pos;
