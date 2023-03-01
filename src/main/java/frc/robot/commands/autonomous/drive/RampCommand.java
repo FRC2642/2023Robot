@@ -59,15 +59,31 @@ public class RampCommand extends CommandBase {
         drive.move(VectorR.fromPolar(movement, 0), turnPower);
     }
 
-    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+    if (vector.getAngle() == 0.0){
       maxTilt = (DriveSubsystem.getRoll() <= maxTilt)?DriveSubsystem.getRoll():maxTilt;
+    }
+    else if (vector.getAngle() == Math.PI){
+      maxTilt = (DriveSubsystem.getRoll() >= maxTilt)?DriveSubsystem.getRoll():maxTilt;
+    }
+    else if (vector.getAngle() == 3*Math.PI/2){
+      maxTilt = (DriveSubsystem.getPitch() >= maxTilt)?DriveSubsystem.getPitch():maxTilt;
     }
     else{
       maxTilt = (DriveSubsystem.getPitch() <= maxTilt)?DriveSubsystem.getPitch():maxTilt;
     }
     
-    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+    if (vector.getAngle() == 0.0){
       if (DriveSubsystem.getRoll() <= -15){
+        climbingRamp = true;
+      }
+    }
+    else if (vector.getAngle() == Math.PI){
+      if (DriveSubsystem.getRoll() >= 15){
+        climbingRamp = true;
+      }
+    }
+    else if (vector.getAngle() == 3*Math.PI/2){
+      if (DriveSubsystem.getPitch() >= 15){
         climbingRamp = true;
       }
     }
@@ -77,8 +93,18 @@ public class RampCommand extends CommandBase {
       }
     }
     
-    if (vector.getAngle() == 0.0 || vector.getAngle() == Math.PI){
+    if (vector.getAngle() == 0.0){
       if (DriveSubsystem.getRoll() >= maxTilt + 10 && climbingRamp){
+        onRamp = true;
+      }
+    }
+    else if (vector.getAngle() == Math.PI){
+      if (DriveSubsystem.getRoll() <= maxTilt - 10 && climbingRamp){
+        onRamp = true;
+      }
+    }
+    else if (DriveSubsystem.getPitch() <= maxTilt - 10 && climbingRamp){
+      if (DriveSubsystem.getPitch() <= maxTilt - 10 && climbingRamp){
         onRamp = true;
       }
     }

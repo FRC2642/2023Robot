@@ -66,13 +66,6 @@ public class RobotContainer {
     }
     var subs = testPath.getSubPaths();
     
-    /*testPathFollowCommand = new SequentialCommandGroup(
-      new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(0))),
-      new WaitFor(drive, 2),
-      new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(1))),
-      new WaitFor(drive, 2),
-      new FollowPathCommand(drive, subs.get(2))
-    );*/
 
     testPathFollowCommand = new SequentialCommandGroup(
       /*new FollowPathCommand(drive, subs.get(0)),
@@ -109,7 +102,6 @@ public class RobotContainer {
     }
     
   public Command getAutonomousCommand() {
-    return testPathFollowCommand;// FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), testPathFollowCommand);
-
+    return testPathFollowCommand;
   }
 }
