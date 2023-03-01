@@ -15,34 +15,22 @@ import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 public class ClawIntakeSubsystem extends SubsystemBase {
   CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
   DigitalInput intakeLimitSwitch = new DigitalInput(0);
-  public boolean intakeMode = true;
   
   public ClawIntakeSubsystem() {
 
   }
 
   public void move(double speed) {
-    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
-      if (intakeMode){
-        intake.set(speed);
-      }
-      else{
-        intake.set(speed);
-      }
-      
-      
+    if (speed <= -0.1){
+      intake.set(speed);
+    }
+    else if (speed >= 0.1){
+      intake.set(speed);
     }
     else{
-      if (speed <= -0.1){
-        intake.set(speed);
-      }
-      else if (speed >= 0.1){
-        intake.set(speed);
-      }
-      else{
-        intake.set(0);
-      }
+      intake.set(0);
     }
+    
   }
 
 

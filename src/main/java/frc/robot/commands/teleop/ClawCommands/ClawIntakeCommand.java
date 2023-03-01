@@ -33,29 +33,18 @@ public class ClawIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     double speed = 0;
-    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
-      
-      speed = mainControl.getRightTriggerAxis();
-      if (mainControl.getStartButtonPressed()){
-        intake.intakeMode = !intake.intakeMode;
-      }
-      if (!ClawPneumaticSubsystem.isExtended()){
-        speed *= 0.3;
-      }
-      intake.move(speed);
+
+    if (auxControl.getRightTriggerAxis() >= 0.1){
+      speed = -auxControl.getRightTriggerAxis();
     }
-    else{
-      if (auxControl.getRightTriggerAxis() >= 0.1){
-        speed = -auxControl.getRightTriggerAxis();
-      }
-      else if (auxControl.getLeftTriggerAxis() >= 0.1){
-        speed = auxControl.getLeftTriggerAxis();
-      }
-      if (!ClawPneumaticSubsystem.isExtended()){
-        speed *= 0.3;
-      }
-      intake.move(speed);
+    else if (auxControl.getLeftTriggerAxis() >= 0.1){
+      speed = auxControl.getLeftTriggerAxis();
     }
+    if (!ClawPneumaticSubsystem.isExtended()){
+      speed *= 0.3;
+    }
+    intake.move(speed);
+    
     
   }
 

@@ -4,14 +4,18 @@
 
 package frc.robot.commands.teleop.ClawCommands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.utils.MathR;
 
 
 public class MoveWristCommand extends CommandBase {
   private XboxController control;
   private ClawWristSubsystem wrist;
+  private PIDController pid = new PIDController(0.2, 0, 0);
+  private String direction = "center";
   /** Creates a new ClawWristDirection. */
   public MoveWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
     this.control = auxControl;
@@ -35,12 +39,27 @@ public class MoveWristCommand extends CommandBase {
     }*/
 
     double speed = 0;
-    if (control.getLeftStickButton()){
-      speed = -0.3;
+    if (control.getPOV() == 0){
+      direction = "center";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 0), -0.8, 0.8);
     }
-    else if (control.getRightBumper()){
-      speed = 0.3;
+    else if (control.getPOV() == 90){
+      direction = "right";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 10), -0.8, 0.8);
     }
+    else if (control.getPOV() == 270){
+      direction = "left";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -10), -0.8, 0.8);
+    }
+    else if (control.getPOV() == 45){
+      direction = "topRight";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 5), -0.8, 0.8);
+    }
+    else if (control.getPOV() == 315){
+      direction = "topLeft";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -5), -0.8, 0.8);
+    }
+
 
     wrist.move(speed);
     
