@@ -7,24 +7,22 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 
 
 public class MoveCarriageCommand extends CommandBase {
 
   //imports
-  private XboxController aux;
+  private XboxController control;
   private CarriageSubsystem carriage;
   public PIDController carriagePID = new PIDController(.01, 0, 0);
   private boolean extended = false;
 
   /** Creates a new CarriageMoveCommand. */
-  public MoveCarriageCommand(CarriageSubsystem carriage, XboxController aux) {
-    this.aux = aux;
+  public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {
+    this.control = auxControl;
+    this.carriage = carriage;
     addRequirements(carriage);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
@@ -35,24 +33,24 @@ public class MoveCarriageCommand extends CommandBase {
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if (aux.getXButtonPressed()) {
+    if (control.getXButtonPressed()) {
       extended = !extended;
     }
     
 
     if (extended){
-      carriage.moveCarriage(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18/*ish*/));
+      carriage.move(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18/*ish*/));
     }
     else {
-      carriage.moveCarriage(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/));
+      carriage.move(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/));
     } 
     
 
-    if (aux.getRightY() != 0){
-        carriage.moveCarriage(aux.getRightY());
+    if (control.getRightY() != 0){
+        carriage.move(control.getRightY());
      }
       else {
-        carriage.moveCarriage(0);
+        carriage.move(0);
       }
       
 

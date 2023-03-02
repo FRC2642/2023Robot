@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems.swerve;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.revrobotics.RelativeEncoder;
+
 import frc.robot.Constants;
 import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
@@ -21,12 +24,14 @@ public class SwerveModule {
   public final WPI_TalonFX angleMotor;
   public final WPI_TalonFX driveMotor;
   public final CANCoder absEncoder;
+  public final CANCoder turnEncoder;
 
   // INFORMATION
   public final SwerveModuleInfo info;
   private final double absMaxValue;
   private final double absStraightValue;
   public final VectorR position;
+  private double totalDegreesTurned;
 
   public SwerveModule(SwerveModuleInfo info) {
     this.info = info;
@@ -36,9 +41,13 @@ public class SwerveModule {
     this.absStraightValue = info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
     this.position = VectorR.fromCartesian(info.X, info.Y);
     this.absEncoder = new CANCoder(info.ENCODER_ID);
+    this.turnEncoder = new CANCoder(info.ENCODER_ID);
+    angleMotor.setNeutralMode(NeutralMode.Brake);
+    driveMotor.setNeutralMode(NeutralMode.Brake);
 
     //angleMotor.configClosedloopRamp(0);
     //driveMotor.configClosedloopRamp(0);
+    turnEncoder.setPosition(0);
     driveMotor.setSelectedSensorPosition(0);
 
     
@@ -57,6 +66,10 @@ public class SwerveModule {
     return absEncoder.getAbsolutePosition();
   }
 
+  public double getRelativeTurnEncoderValue(){
+    return turnEncoder.getPosition();
+  }
+
   //RESET METHODS
   public void resetDriveEncoder() {
     setEncoderValue(0.0);
@@ -69,6 +82,10 @@ public class SwerveModule {
 
   private double getWheelPosition() {
     return getEncoderValue() * Constants.FEET_PER_DISPLACEMENT;
+  }
+
+  public double getWheelPositionWithoutDrift(){
+    return getWheelPosition() - (Constants.DRIFT_PER_DEGREE * totalDegreesTurned);
   }
 
   
@@ -92,10 +109,14 @@ public class SwerveModule {
     return VectorR.fromPolar(increment, getWheelHeadingRadians());
   }
   private void updateIncrementMeasurement() {
-    double pos = getWheelPosition();
+    double pos = getWheelPositionWithoutDrift();
     
     increment = pos - lastWheelPosition;
     lastWheelPosition = pos;
+  }
+
+  public void updateTotalDegreesTurned(){
+    totalDegreesTurned = turnEncoder.getPosition();
   }
 
   // MODULE SPEEDS CALCULATIONS
@@ -139,6 +160,7 @@ public class SwerveModule {
     driveMotor.set(speed_power);
     angleMotor.set(angle_power);
 
+    updateTotalDegreesTurned();
     updateIncrementMeasurement();
   }
 

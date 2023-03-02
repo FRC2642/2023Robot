@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 
 /** Makes it easier to access swerve modules */
 public class SwerveModules implements Iterable<SwerveModule> {
@@ -55,6 +57,9 @@ public class SwerveModules implements Iterable<SwerveModule> {
     SmartDashboard.putNumber("FL heading", Math.toDegrees(frontLeft.getWheelHeadingRadians()));
     SmartDashboard.putNumber("BR heading", Math.toDegrees(backRight.getWheelHeadingRadians()));
     SmartDashboard.putNumber("BL heading", Math.toDegrees(backLeft.getWheelHeadingRadians()));
+
+
+    SmartDashboard.putNumber("FL Turn Encoder", frontLeft.getRelativeTurnEncoderValue());
   } 
 
   // get a list of the modules for looping through (iterating)

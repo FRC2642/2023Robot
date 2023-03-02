@@ -53,7 +53,7 @@ public class ClawWristCommand extends CommandBase {
         }else if (ClawWristSubsystem.getEncoderTicks() < 0 && aux.getLeftX() > 0) {
           wrist.setWrist(aux.getLeftX());
         }else {
-          wrist.stopWrist();
+          wrist.stop();
         }
       }
     } else if (!wrist.clawInRobot()) {

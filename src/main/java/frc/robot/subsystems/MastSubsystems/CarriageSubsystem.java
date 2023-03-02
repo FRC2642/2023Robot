@@ -6,6 +6,8 @@ package frc.robot.subsystems.MastSubsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
@@ -30,23 +32,33 @@ public class CarriageSubsystem extends SubsystemBase {
   //motor direction not known must TEST!!!!1!11!1!!
 
   //moves the carriage unless its touching limit switches
-  public void moveCarriage(double speed){
-    if (speed > 0){
-      if (carriageFrontLimitSwitch.isPressed()){
-        carriage.set(0);
+  public void move(double speed){
+    //make sure robot wont pull claw into sliders
+    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
+      (ShoulderSubsystem.getEncoderTicks() > 170 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
+      
+      if (speed >= 0.1){
+        if (CarriageSubsystem.isCarriageFullyExtended()){
+          carriage.set(0);
+        }
+        else {
+          carriage.set(speed);
+        }
+      }
+      
+      else if (speed <= -0.1){
+        if (CarriageSubsystem.isCarriageFullyRetracted()){
+            carriage.set(0);
+        }
+        else {
+          carriage.set(speed);
+        }
       }
       else {
-        carriage.set(speed);
-      }
-    }
-    else {
-      if (carriageBackLimitSwitch.isPressed()){
         carriage.set(0);
       }
-      else {
-        carriage.set(speed);
-      }
-    }
+    }*/
+    //carriage.set(speed);
   }
 
   //tells what position the carriage is out
@@ -71,6 +83,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    //System.out.println("encoder: "+carriageEncoder.getPosition());
     // This method will be called once per scheduler run
   }
 }

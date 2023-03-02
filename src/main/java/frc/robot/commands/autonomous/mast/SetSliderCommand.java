@@ -2,26 +2,19 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.teleop.MastCommands;
+package frc.robot.commands.autonomous.mast;
 
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
-import frc.robot.utils.MathR;
 
-public class MoveSliderCommand extends CommandBase {
-  /** Creates a new MoveMainSliderCommand. */
-  SliderSubsystem slider;
-  XboxController control;
-  PIDController pid = new PIDController(0.2, 0, 0);
-  boolean extending = false;
-
-  public MoveSliderCommand(SliderSubsystem slider, XboxController auxControl) {
-    this.slider = slider;
-    this.control = auxControl;
-    
-    addRequirements(slider);
+public class SetSliderCommand extends CommandBase {
+  /** Creates a new SetSliderCommand. */
+  SliderSubsystem sliders;
+  boolean extend;
+  public SetSliderCommand(SliderSubsystem sliders, boolean extend) {
+    this.sliders = sliders;
+    this.extend = extend;
+    addRequirements(sliders);
   }
 
   // Called when the command is initially scheduled.
@@ -31,12 +24,7 @@ public class MoveSliderCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     if (control.getAButtonPressed()){
-        extending = !extending;
-     }
-
-     slider.move(extending);
-    
+    sliders.move(extend);
   }
 
   // Called once the command ends or is interrupted.
@@ -46,6 +34,6 @@ public class MoveSliderCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

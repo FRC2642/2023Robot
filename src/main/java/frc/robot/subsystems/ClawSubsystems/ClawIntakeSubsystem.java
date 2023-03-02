@@ -9,23 +9,30 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 public class ClawIntakeSubsystem extends SubsystemBase {
-  CANSparkMax gripperMotor = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
-  DigitalInput gripperLimitSwitch = new DigitalInput(0);
-  public boolean intakeMode = true;
+  CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
+  DigitalInput intakeLimitSwitch = new DigitalInput(0);
   
   public ClawIntakeSubsystem() {
 
   }
 
-  public void runGripperIntake(double speed) {
-    gripperMotor.set(speed *.25);
+  public void move(double speed) {
+    if (speed <= -0.1){
+      intake.set(speed);
+    }
+    else if (speed >= 0.1){
+      intake.set(speed);
+    }
+    else{
+      intake.set(0);
+    }
+    
   }
 
-  public void outtakeGripperIntake(double speed){
-    gripperMotor.set(-speed*.25);
-  }
 
   @Override
   public void periodic() {

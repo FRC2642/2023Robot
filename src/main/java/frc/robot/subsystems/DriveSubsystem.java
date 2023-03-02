@@ -17,7 +17,7 @@ public class DriveSubsystem extends SubsystemBase{
   
 
   // COMPONENTS
-  private final SwerveModules modules;
+  public final SwerveModules modules;
   private static AHRS gyro;
   
 
@@ -71,6 +71,7 @@ public class DriveSubsystem extends SubsystemBase{
       double angle = wheelPull.getAngle();
 
       module.update(speed, angle);
+      
 
       //position tracking
       var increment = module.getPositionIncrement();
