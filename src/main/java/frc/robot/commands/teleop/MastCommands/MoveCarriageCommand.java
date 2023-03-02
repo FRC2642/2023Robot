@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.utils.MathR;
 import edu.wpi.first.math.controller.PIDController;
 
 
@@ -56,13 +57,13 @@ public class MoveCarriageCommand extends CommandBase {
 
         //Slows carriage down if approaching the back of the robot
         if (control.getRightY() < 0){
-          dampen = carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0);
+          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0), -.9, .9);
           carriage.move(control.getRightY() * dampen);
         }
 
         //Slows carriage down if approaching the front of the robot
         else{
-          dampen = carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18);
+          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -.9, .9);
           carriage.move(control.getRightY() * dampen);
         }
      }
