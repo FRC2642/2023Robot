@@ -48,7 +48,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
       
 
       leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
-      leftJoystick.rotate(Math.toRadians(-90));
+      leftJoystick.rotate(Math.toRadians(90));
       rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
       rightJoystick.rotate(Math.toRadians(-90));
 

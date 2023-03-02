@@ -2,24 +2,20 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.teleop.MastCommands;
+package frc.robot.commands.autonomous.claw;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import edu.wpi.first.wpilibj.XboxController;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 
-
-public class MoveCarriageCommand extends CommandBase {
-
-  //imports
-  private XboxController control;
-  private CarriageSubsystem carriage;
-
-  /** Creates a new CarriageMoveCommand. */
-  public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {
-    this.control = auxControl;
-    this.carriage = carriage;
-    addRequirements(carriage);
+public class ManageClawPneumaticCommand extends CommandBase {
+  /** Creates a new ManageClawPneumaticCommand. */
+  ClawPneumaticSubsystem pneumatics;
+  boolean open;
+  public ManageClawPneumaticCommand(ClawPneumaticSubsystem pneumatics, boolean open) {
+    // Use addRequirements() here to declare subsystem dependencies.
+    this.pneumatics = pneumatics;
+    this.open = open;
+    addRequirements(pneumatics);
   }
 
   // Called when the command is initially scheduled.
@@ -29,8 +25,12 @@ public class MoveCarriageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = control.getRightY();
-    carriage.move(-speed*0.5);
+    if (open){
+      pneumatics.gripperRetract();
+    }
+    else{
+      pneumatics.gripperExtend();
+    }
   }
 
   // Called once the command ends or is interrupted.
@@ -40,6 +40,6 @@ public class MoveCarriageCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

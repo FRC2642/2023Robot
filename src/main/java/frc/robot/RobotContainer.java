@@ -15,7 +15,7 @@ import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
-import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
+import frc.robot.commands.teleop.ClawCommands.MoveWristCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
@@ -24,6 +24,7 @@ import frc.robot.commands.teleop.MastCommands.MoveSliderCommand;
 import frc.robot.commands.teleop.MastCommands.MoveShoulder;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
+import frc.robot.commands.teleop.resetters.ResetTurnEncoderCommand;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -65,34 +66,29 @@ public class RobotContainer {
     }
     var subs = testPath.getSubPaths();
     
-    /*testPathFollowCommand = new SequentialCommandGroup(
-      new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(0))),
-      new WaitFor(drive, 2),
-      new FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), new FollowPathCommand(drive, subs.get(1))),
-      new WaitFor(drive, 2),
-      new FollowPathCommand(drive, subs.get(2))
-    );*/
 
     testPathFollowCommand = new SequentialCommandGroup(
-      new FollowPathCommand(drive, subs.get(0)),
+      /*new FollowPathCommand(drive, subs.get(0)),
       new WaitFor(drive, 2),
       new FollowPathCommand(drive, subs.get(1)),
       new WaitFor(drive, 2),
-      new FollowPathCommand(drive, subs.get(2))
+      new FollowPathCommand(drive, subs.get(2))*/
+      new FollowPathCommand(drive, testPath)
     );
     
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));//.alongWith(new RecenterDisplacementCommand(limelight)));
-    //clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
+    clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
     carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
     intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
     slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
     shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
-    wrist.setDefaultCommand(new RunCommand(() -> {wrist.moveWrist(auxControl.getRightY()*0.15);},wrist));
+    //wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
 
     configureButtonBindings();
   }
 
   private void configureButtonBindings() {
+    SmartDashboard.putData(new ResetTurnEncoderCommand(drive));
     SmartDashboard.putData(new ResetGyro(drive));
     SmartDashboard.putData(new ResetDisplacementCommand(drive));
 
@@ -106,7 +102,6 @@ public class RobotContainer {
     }
     
   public Command getAutonomousCommand() {
-    return testPathFollowCommand;// FollowPathVisionRecenterCommand(new RecenterDisplacementCommand(limelight), testPathFollowCommand);
-
+    return testPathFollowCommand;
   }
 }

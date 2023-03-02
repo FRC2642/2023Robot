@@ -9,11 +9,13 @@ import java.util.HashMap;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.MathUtil;
+
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.utils.MathR;
+
 import com.revrobotics.SparkMaxLimitSwitch;
 
 
@@ -21,72 +23,46 @@ public class SliderSubsystem extends SubsystemBase {
   /** Creates a new SliderSubsystem. */
   
   //Unsure whether or not the motor is inverted, make changes accordingly
-  CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
-  RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
+  CANSparkMax slider = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
+  RelativeEncoder sliderEncoder = slider.getEncoder();
 
 
   public static SparkMaxLimitSwitch frontSliderLimitSwitch;
   public static SparkMaxLimitSwitch rearSliderLimitSwitch;
-  
 
-  
-  PIDController pid = new PIDController(0, 0, 0);
-
-  
-  
-
-  public final HashMap <SliderPositions, Double> positions = new HashMap<SliderPositions, Double>();
-  SliderPositions position;
+  private PIDController pid = new PIDController(0.05, 0, 0);
+  private static boolean isBack = true;
 
   public SliderSubsystem() {
-    positions.put(SliderPositions.FIRST_POSITION, 0.0);//Left on aux D-pad
-    positions.put(SliderPositions.SECOND_POSITION, 10.0);//Up on aux D-pad
+    
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
 
-    frontSliderLimitSwitch = sliderMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    rearSliderLimitSwitch = sliderMotor.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    frontSliderLimitSwitch = slider.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    rearSliderLimitSwitch = slider.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    sliderEncoder.setPosition(0);
   }
 
   
-  public void moveSlider(XboxController control){
-    //Using the enum value it gets the targeted encoder value from the hashmap
-    //double targetEncoderPosition = positions.get(position); 
+  public void move(boolean extend){
+    double speed;
     
-    //The speed of the slider motor
-    //double speed = MathUtil.clamp(pid.calculate(sliderEncoder.getPosition(), targetEncoderPosition), -1, 1);
-    if (control.getLeftX() >= 0.1 || control.getLeftX() <= -0.1){
-      sliderMotor.set(control.getLeftX()*0.8);
+    
+    if (extend){
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 250), -0.9, 0.9);
     }
     else{
-      sliderMotor.set(0);
-    }
-  }
-  //returns the position to go to based on D-pad input
-  public SliderPositions choosePosition(int dPadInput){
-    switch (dPadInput){
-      case 270://Left on aux D-Pad
-      position = SliderPositions.FIRST_POSITION;
-      break;
-
-      case 0://Up on aux D Pad
-      position = SliderPositions.SECOND_POSITION;
-      break;
-
-      /*case 90://Right on aux D-Pad
-      position = SliderPositions.THIRD_POSITION;
-      break;*/
-
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 10), -0.9, 0.9);
     }
 
-    return position;
+    if (getSliderEncoderTicks() <= 11){
+      isBack = true;
+    }
+    else{
+      isBack = false;
+    }
+    slider.set(speed);
   }
-    
-  public enum SliderPositions {
-    FIRST_POSITION,
-    SECOND_POSITION
-    //THIRD_POSITION
-
-  }
+  
 
 
   
@@ -111,7 +87,8 @@ public class SliderSubsystem extends SubsystemBase {
   }*/
 
   public static boolean isSliderBack(){
-    return rearSliderLimitSwitch.isPressed();
+    return isBack;
+    
   }
 
 
@@ -123,6 +100,8 @@ public class SliderSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    
+    
+    
   }
 }

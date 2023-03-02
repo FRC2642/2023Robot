@@ -16,15 +16,14 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 public class ClawWristSubsystem extends SubsystemBase {
 
-  public CANSparkMax clawWristMotor;
+  public CANSparkMax wrist = new CANSparkMax(24, MotorType.kBrushed);
   public static RelativeEncoder wristEncoder;
   public static SparkMaxLimitSwitch wristLimitSwitch;
 
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
-    clawWristMotor = new CANSparkMax(24, MotorType.kBrushed);
-    //wristEncoder = clawWristMotor.getEncoder();
-    wristLimitSwitch = clawWristMotor.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+    //wristEncoder = wrist.getEncoder();
+    wristLimitSwitch = wrist.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     
   }
 
@@ -40,16 +39,28 @@ public class ClawWristSubsystem extends SubsystemBase {
   public static double getEncoderTicks() {
     return wristEncoder.getPosition();
   }
-  public void stopWrist() {
-    clawWristMotor.set(0);
+  public void stop() {
+    wrist.set(0);
   }
-  public void moveWrist(double speed) {
-    if (speed >= 0.1 || speed <= -0.1){
-      clawWristMotor.set(speed);
-    }
-    else{
-      clawWristMotor.set(0);
-    }
+  public void move(double speed) {
+    // If limit switch is hit, prevents wrist from moving wrist in the same direction further
+    //if (wrist.getLimitSwitchState() == false) {
+      // prevents wrist from twisting inside of robot
+      if (!clawInRobot()){
+        if (ClawWristSubsystem.getEncoderTicks() > -180 && speed <= -0.1) {
+          wrist.set(speed);
+        }
+        else if (ClawWristSubsystem.getEncoderTicks() < 180 && speed >= 0.1) {
+          wrist.set(speed);
+        }
+        else {
+          stop();
+        }
+      }
+      else{
+        stop();
+      }
+    //} 
   }
   public boolean getLimitSwitchState() {
     return wristLimitSwitch.isPressed();
@@ -57,8 +68,8 @@ public class ClawWristSubsystem extends SubsystemBase {
 
   public boolean clawInRobot(){
     //checks if claw is inside sliders /*no number are correct*/
-    return ((ShoulderSubsystem.getEncoderTicks() < 10 & ((CarriageSubsystem.getCarriageEncoder() > 90 ) || (!SliderSubsystem.isSliderBack()))) || 
-    (ShoulderSubsystem.getEncoderTicks() > 170 & ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
+    return ((ShoulderSubsystem.getEncoderTicks() < 10 && ((CarriageSubsystem.getCarriageEncoder() > 90 ) || (!SliderSubsystem.isSliderBack()))) || 
+    (ShoulderSubsystem.getEncoderTicks() > 170 && ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
   }
 
 }
