@@ -61,10 +61,13 @@ public class CarriageSubsystem extends SubsystemBase {
     //carriage.set(speed);
   }
 
+  
+
   //tells what position the carriage is out
   public static double getCarriageEncoder() {
     return carriageEncoder.getPosition();
   }
+
 
   //tests if carriage is at the end
   public static boolean isCarriageFullyExtended (){
