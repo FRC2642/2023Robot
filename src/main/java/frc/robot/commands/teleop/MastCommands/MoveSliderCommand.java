@@ -50,10 +50,7 @@ public class MoveSliderCommand extends CommandBase {
 
   // Returns true when the command should end.
   @Override
-  public boolean isFinished() {
-    double targetEncoderValue = slider.positions.get(slider.choosePosition(auxController.getPOV()));
-    double currentEncoderValue = slider.getSliderEncoderTicks();
-    
-    return Math.abs(currentEncoderValue - targetEncoderValue) < .1;
+  public boolean isFinished() {    
+    return false;
   }
 }

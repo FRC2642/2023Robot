@@ -9,6 +9,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
+import edu.wpi.first.math.controller.PIDController;
 
 
 public class MoveCarriageCommand extends CommandBase {
@@ -16,6 +17,8 @@ public class MoveCarriageCommand extends CommandBase {
   //imports
   private XboxController aux;
   private CarriageSubsystem carriage;
+  public PIDController carriagePID = new PIDController(.01, 0, 0);
+  private boolean extended = false;
 
   /** Creates a new CarriageMoveCommand. */
   public MoveCarriageCommand(CarriageSubsystem carriage, XboxController aux) {
@@ -32,15 +35,28 @@ public class MoveCarriageCommand extends CommandBase {
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if ((ShoulderSubsystem.getEncoderTicks() < 10 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
-      (ShoulderSubsystem.getEncoderTicks() > 170 & (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
-      if (aux.getRightX() != 0){
-        carriage.moveCarriage(aux.getRightX());
+    if (aux.getXButtonPressed()) {
+      extended = !extended;
+    }
+    
+
+    if (extended){
+      carriage.moveCarriage(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18/*ish*/));
+    }
+    else {
+      carriage.moveCarriage(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/));
+    } 
+    
+
+    if (aux.getRightY() != 0){
+        carriage.moveCarriage(aux.getRightY());
      }
       else {
         carriage.moveCarriage(0);
       }
-    }
+      
+
+    
   }
 
   // Called once the command ends or is interrupted.
