@@ -57,13 +57,13 @@ public class MoveCarriageCommand extends CommandBase {
 
         //Slows carriage down if approaching the back of the robot
         if (control.getRightY() < 0){
-          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0), -.9, .9);
+          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0), 0, .9);
           carriage.move(control.getRightY() * dampen);
         }
 
         //Slows carriage down if approaching the front of the robot
         else{
-          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -.9, .9);
+          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), 0, .9);
           carriage.move(control.getRightY() * dampen);
         }
      }
