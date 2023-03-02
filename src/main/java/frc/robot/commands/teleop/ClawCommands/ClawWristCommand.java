@@ -4,25 +4,22 @@
 
 package frc.robot.commands.teleop.ClawCommands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
-import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.utils.MathR;
 
 
 public class ClawWristCommand extends CommandBase {
-  private XboxController aux;
+  private XboxController control;
   private ClawWristSubsystem wrist;
-  //double position;
-  //double speed;
+  private PIDController pid = new PIDController(0.2, 0, 0);
+  private String direction = "center";
   /** Creates a new ClawWristDirection. */
-  public ClawWristCommand(XboxController aux, ClawWristSubsystem wrist, double position, double speed) {
-    this.aux = aux;
+  public ClawWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
+    this.control = auxControl;
     this.wrist = wrist;
-    //this.position = position;
-    //this.speed = speed;
     addRequirements(wrist);
   }
 
@@ -35,30 +32,37 @@ public class ClawWristCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (aux.getXButtonPressed() && !wrist.clawInRobot()){
-      wrist.flipClaw();
-    }
     /*if (limelight.getDetectionType() == "CONE"){
       if (limelight.getWidth() - limelight.getHeight() <= 1){
         wrist.moveWrist(-1);
       }
     }*/
 
-    // If limit switch is hit, prevents wrist from moving wrist in the same direction further
-    if (wrist.getLimitSwitchState() == true) {
-      // prevents wrist from twisting inside of robot
-      if (CarriageSubsystem.isCarriageFullyRetracted() && SliderSubsystem.isSliderBack() && ShoulderSubsystem.isShoulderBack()){
-        if (ClawWristSubsystem.getEncoderTicks() > 0 && aux.getLeftX() < 0) {
-          wrist.setWrist(aux.getLeftX());
-        }else if (ClawWristSubsystem.getEncoderTicks() < 0 && aux.getLeftX() > 0) {
-          wrist.setWrist(aux.getLeftX());
-        }else {
-          wrist.stop();
-        }
-      }
-    } else if (!wrist.clawInRobot()) {
-      wrist.setWrist(aux.getLeftX());
+    double speed = 0;
+    if (control.getPOV() == 0){
+      direction = "center";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 0), -0.8, 0.8);
     }
+    else if (control.getPOV() == 90){
+      direction = "right";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 10), -0.8, 0.8);
+    }
+    else if (control.getPOV() == 270){
+      direction = "left";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -10), -0.8, 0.8);
+    }
+    else if (control.getPOV() == 45){
+      direction = "topRight";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 5), -0.8, 0.8);
+    }
+    else if (control.getPOV() == 315){
+      direction = "topLeft";
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -5), -0.8, 0.8);
+    }
+
+
+    wrist.move(speed);
+    
   } 
 
   // Called once the command ends or is interrupted.

@@ -8,7 +8,6 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
-import frc.robot.utils.MathR;
 
 public class MoveSliderCommand extends CommandBase {
   /** Creates a new MoveMainSliderCommand. */

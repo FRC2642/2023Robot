@@ -30,16 +30,6 @@ public class ClawPneumaticCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (CarriageSubsystem.isCarriageFullyRetracted() && SliderSubsystem.isSliderBack()){
-      if (mainControl.getRightBumper()) {
-        pneumatics.gripperExtend();
-      }
-  
-      else if (mainControl.getLeftBumper()) {
-        pneumatics.gripperRetract();
-      }
-    }
-    else{
       if (auxControl.getRightBumper()) {
         pneumatics.gripperExtend();
       }
@@ -47,7 +37,7 @@ public class ClawPneumaticCommand extends CommandBase {
       else if (auxControl.getLeftBumper()) {
         pneumatics.gripperRetract();
       }
-    }
+    
     
      
     // if (/*pipeline == CONE & */ !pneumatics.isExtended()) {

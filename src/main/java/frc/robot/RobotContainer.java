@@ -15,7 +15,6 @@ import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
-import frc.robot.commands.teleop.ClawCommands.MoveWristCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
