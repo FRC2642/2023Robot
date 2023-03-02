@@ -109,7 +109,7 @@ public class SwerveModule {
     return VectorR.fromPolar(increment, getWheelHeadingRadians());
   }
   private void updateIncrementMeasurement() {
-    double pos = getWheelPositionWithoutDrift();
+    double pos = getWheelPosition();
     
     increment = pos - lastWheelPosition;
     lastWheelPosition = pos;
@@ -157,7 +157,7 @@ public class SwerveModule {
     double angle_power = 1 * MathR
         .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngleRadians(getWheelHeadingRadians(), desiredAngle()), -1, 1);
 
-    driveMotor.set(speed_power);
+    driveMotor.set(speed_power); 
     angleMotor.set(angle_power);
 
     updateTotalDegreesTurned();

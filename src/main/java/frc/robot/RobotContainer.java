@@ -18,6 +18,7 @@ import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
 import frc.robot.commands.teleop.ClawCommands.MoveWristCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
+import frc.robot.commands.teleop.DriveCommands.TurnTowardsGamePieceCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
 import frc.robot.commands.teleop.MastCommands.MoveCarriageCommand;
 import frc.robot.commands.teleop.MastCommands.MoveSliderCommand;
@@ -30,6 +31,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.subsystems.LimelightSubsystem.DetectionType;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.utils.VectorR;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
@@ -44,7 +46,7 @@ public class RobotContainer {
   private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
 
   private final DriveSubsystem drive = new DriveSubsystem();
-  //private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final ClawPneumaticSubsystem clawPneumatics = new ClawPneumaticSubsystem();
   public static final CarriageSubsystem carriage = new CarriageSubsystem();
   private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
@@ -102,6 +104,11 @@ public class RobotContainer {
     new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
     new POVButton(mainControl, 180).whileTrue(new RampCommand(drive, VectorR.fromCartesian(0, 0), true));
     new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
+    new POVButton(mainControl, 90).whileTrue(new RecenterDisplacementCommand(limelight));
+
+    new JoystickButton(mainControl, Button.kB.value).whileTrue(new TurnTowardsGamePieceCommand(drive, limelight, DetectionType.CONE));
+    new JoystickButton(mainControl, Button.kA.value).whileTrue(new TurnTowardsGamePieceCommand(drive, limelight, DetectionType.CUBE));
+    new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, limelight, DetectionType.RETROREFLECTIVE));
     //new JoystickButton(mainControl, Button.kA.value).whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
     //new JoystickButton(mainControl, Button.kB.value).whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
     //new JoystickButton(mainControl, Button.kX.value).whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));

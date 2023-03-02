@@ -190,6 +190,8 @@ public class DriveSubsystem extends SubsystemBase{
 
     SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
     SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
+
+    SmartDashboard.putNumber("FrontRightPosCorrectedDrift", modules.frontRight.getWheelPositionWithoutDrift());
     // SmartDashboard.putNumber("angle [degrees]",
     // Math.toDegrees(getRelativeFieldPosition().getAngle()));
     // SmartDashboard.putNumber("speed [ft/s]",
