@@ -10,6 +10,7 @@ import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import edu.wpi.first.math.controller.PIDController;
 
 
+
 public class MoveCarriageCommand extends CommandBase {
 
   //imports
@@ -17,6 +18,7 @@ public class MoveCarriageCommand extends CommandBase {
   private CarriageSubsystem carriage;
   public PIDController carriagePID = new PIDController(.01, 0, 0);
   private boolean extended = false;
+  private double dampen;
 
   /** Creates a new CarriageMoveCommand. */
   public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {
@@ -49,10 +51,22 @@ public class MoveCarriageCommand extends CommandBase {
     } 
     
 
-    if (control.getRightY() != 0){
-        carriage.move(control.getRightY());
+    if (Math.abs(control.getRightY()) > .1){
+        //carriage.move(control.getRightY());
+
+        //Slows carriage down if approaching the back of the robot
+        if (control.getRightY() < 0){
+          dampen = carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0);
+          carriage.move(control.getRightY() * dampen);
+        }
+
+        //Slows carriage down if approaching the front of the robot
+        else{
+          dampen = carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18);
+          carriage.move(control.getRightY() * dampen);
+        }
      }
-      else {
+    else {
         carriage.move(0);
       }
       
