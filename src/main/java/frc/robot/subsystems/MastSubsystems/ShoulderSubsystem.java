@@ -15,8 +15,8 @@ public class ShoulderSubsystem extends SubsystemBase {
   /** Creates a new ShoulderSubsystem. */
   CANSparkMax shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
 
-  SparkMaxLimitSwitch frontShoulderLimitSwitch;
-  SparkMaxLimitSwitch rearShoulderLimitSwitch;
+  private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
+  private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
   static RelativeEncoder shoulderEncoder;
 
@@ -54,9 +54,13 @@ public class ShoulderSubsystem extends SubsystemBase {
       
   }
 
-  public static double getEncoderTicks(){
-    return shoulderEncoder.getPosition();
-  }
+    public static boolean isShoulderBack(){
+      return rearShoulderLimitSwitch.isPressed();
+    }
+
+    public static double getEncoderTicks(){
+      return shoulderEncoder.getPosition();
+    }
 
   public void resetEncoder(){
     shoulderEncoder.setPosition(0);

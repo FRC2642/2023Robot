@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import edu.wpi.first.math.controller.PIDController;
 
 
 public class MoveCarriageCommand extends CommandBase {
@@ -14,6 +15,8 @@ public class MoveCarriageCommand extends CommandBase {
   //imports
   private XboxController control;
   private CarriageSubsystem carriage;
+  public PIDController carriagePID = new PIDController(.01, 0, 0);
+  private boolean extended = false;
 
   /** Creates a new CarriageMoveCommand. */
   public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {
@@ -32,8 +35,29 @@ public class MoveCarriageCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = control.getRightY();
-    carriage.move(-speed*0.5);
+    //make sure robot wont pull claw into sliders
+    if (control.getXButtonPressed()) {
+      extended = !extended;
+    }
+    
+
+    if (extended){
+      carriage.move(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18/*ish*/));
+    }
+    else {
+      carriage.move(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/));
+    } 
+    
+
+    if (control.getRightY() != 0){
+        carriage.move(control.getRightY());
+     }
+      else {
+        carriage.move(0);
+      }
+      
+
+    
   }
 
   // Called once the command ends or is interrupted.
