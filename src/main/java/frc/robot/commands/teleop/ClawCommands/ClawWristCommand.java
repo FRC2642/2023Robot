@@ -39,30 +39,49 @@ public class ClawWristCommand extends CommandBase {
     }*/
 
     double speed = 0;
+
     if (control.getPOV() == 0){
       direction = "center";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 0), -0.8, 0.8);
-    }
+      }
+
     else if (control.getPOV() == 90){
       direction = "right";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 10), -0.8, 0.8);
-    }
+      }
+
     else if (control.getPOV() == 270){
       direction = "left";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -10), -0.8, 0.8);
-    }
+      }
+
     else if (control.getPOV() == 45){
       direction = "topRight";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 5), -0.8, 0.8);
-    }
+      }
+
     else if (control.getPOV() == 315){
       direction = "topLeft";
+      }
+
+    if (direction.equals("center")){
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 0), -.8, .8);
+    }
+
+    else if (direction.equals("right")){
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 10), -0.8, 0.8);
+    }
+    
+
+    else if (direction.equals("left")){
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -10), -0.8, 0.8);
+    }
+
+    else if (direction.equals("topRight")){
+      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 5), -0.8, 0.8);
+    }
+
+    else if (direction.equals("topLeft")){
       speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -5), -0.8, 0.8);
     }
 
-
     wrist.move(speed);
-    
   } 
 
   // Called once the command ends or is interrupted.
