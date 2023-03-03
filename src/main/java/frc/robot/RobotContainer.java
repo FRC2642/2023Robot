@@ -2,8 +2,10 @@ package frc.robot;
 
 import java.io.IOException;
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -15,6 +17,7 @@ import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
+import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
@@ -54,6 +57,7 @@ public class RobotContainer {
   PiratePath testPath;
   Command testPathFollowCommand;
 
+  SendableChooser<Command> chooser = new SendableChooser<Command>();
   public RobotContainer() {
 
     try {
@@ -64,6 +68,9 @@ public class RobotContainer {
       e.printStackTrace();
     }
     var subs = testPath.getSubPaths();
+
+    
+    chooser.addOption("drive command", new JoystickOrientedDriveCommand(drive, auxControl));
     
 
     testPathFollowCommand = new SequentialCommandGroup(
@@ -81,7 +88,8 @@ public class RobotContainer {
     intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
     slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
     shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
-    //wrist.setDefaultCommand(new MoveWristCommand(wrist, auxControl));
+    wrist.setDefaultCommand(new ClawWristCommand(wrist, auxControl));
+    
 
     configureButtonBindings();
   }
@@ -90,6 +98,7 @@ public class RobotContainer {
     SmartDashboard.putData(new ResetTurnEncoderCommand(drive));
     SmartDashboard.putData(new ResetGyro(drive));
     SmartDashboard.putData(new ResetDisplacementCommand(drive));
+    
 
     new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
     new POVButton(mainControl, 180).whileTrue(new RampCommand(drive, VectorR.fromCartesian(0, 0), true));

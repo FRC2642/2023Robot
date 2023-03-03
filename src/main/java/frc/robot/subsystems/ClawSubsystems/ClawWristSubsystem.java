@@ -34,13 +34,13 @@ public class ClawWristSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run
   }
 
-  public void resetEncoder() {
+  /*public void resetEncoder() {
     wristEncoder.setPosition(0);
-  }
+  }*/
 
-  public static double getEncoderTicks() {
+  /*public static double getEncoderTicks() {
     return wristEncoder.getPosition();
-  }
+  }*/
   public void stop() {
     wrist.set(0);
   }
@@ -48,7 +48,7 @@ public class ClawWristSubsystem extends SubsystemBase {
     // If limit switch is hit, prevents wrist from moving wrist in the same direction further
     //if (wrist.getLimitSwitchState() == false) {
       // prevents wrist from twisting inside of robot
-      if (!clawInRobot()){
+      /*if (!clawInRobot()){
         if (ClawWristSubsystem.getEncoderTicks() > -180 && speed <= -0.1) {
           wrist.set(speed);
         }
@@ -61,10 +61,11 @@ public class ClawWristSubsystem extends SubsystemBase {
       }
       else{
         stop();
-      }
+      }*/
+      wrist.set(speed);
     //} 
   }
-  public boolean getLimitSwitchState() {
+  /*public boolean getLimitSwitchState() {
     return wristLimitSwitch.isPressed();
   }
 
@@ -90,12 +91,12 @@ public class ClawWristSubsystem extends SubsystemBase {
     } else{
       move(wristPID.calculate(getEncoderTicks(), 90));
     }
-  }
+  }*/
 
-  public boolean clawInRobot(){
-    //checks if claw is inside sliders /*no number are correct*/
+  /*public boolean clawInRobot(){
+    //checks if claw is inside sliders /*no number are correct
     return ((ShoulderSubsystem.getEncoderTicks() < 10 && ((CarriageSubsystem.getCarriageEncoder() > 90 ) || (!SliderSubsystem.isSliderBack()))) || 
     (ShoulderSubsystem.getEncoderTicks() > 170 && ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
-  }
+  }*/
 
 }

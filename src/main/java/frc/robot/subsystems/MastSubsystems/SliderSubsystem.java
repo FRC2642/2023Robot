@@ -48,10 +48,10 @@ public class SliderSubsystem extends SubsystemBase {
     
     
     if (extend){
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 250), -0.9, 0.9);
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -240), -0.9, 0.9);
     }
     else{
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 10), -0.9, 0.9);
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -10), -0.9, 0.9);
     }
 
     if (getSliderEncoderTicks() <= 11){

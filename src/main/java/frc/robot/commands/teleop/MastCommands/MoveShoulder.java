@@ -27,13 +27,6 @@ public class MoveShoulder extends CommandBase {
   @Override
   public void execute() {
     double speed = control.getLeftY();
-    //Future changes
-    /*if (ShoulderSubsystem.getEncoderTicks() < -5){
-      shoulder.move(speed); 
-    }
-    else if (ShoulderSubsystem.getEncoderTicks() > 5){
-      shoulder.move(-speed);
-    }*/
     shoulder.move(speed);
        
   }

@@ -26,7 +26,7 @@ public class ClawWristCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    wrist.resetEncoder();
+    //wrist.resetEncoder();
   } 
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,7 +39,7 @@ public class ClawWristCommand extends CommandBase {
     }*/
 
     double speed = 0;
-    if (control.getPOV() == 0){
+    /*if (control.getPOV() == 0){
       direction = "center";
       speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 0), -0.8, 0.8);
     }
@@ -58,6 +58,12 @@ public class ClawWristCommand extends CommandBase {
     else if (control.getPOV() == 315){
       direction = "topLeft";
       speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -5), -0.8, 0.8);
+    }*/
+    if (control.getXButton()){
+      speed = 0.4;
+    }
+    else if (control.getYButton()){
+      speed = -0.4;
     }
 
 

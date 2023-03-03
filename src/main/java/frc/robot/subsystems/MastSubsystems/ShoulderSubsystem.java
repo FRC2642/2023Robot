@@ -5,8 +5,13 @@
 package frc.robot.subsystems.MastSubsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.EncoderType;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAlternateEncoder.Type;
+
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -18,10 +23,10 @@ public class ShoulderSubsystem extends SubsystemBase {
   private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
   private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
-  static RelativeEncoder shoulderEncoder;
+  static Encoder shoulderEncoder;
 
   public ShoulderSubsystem() {
-    //shoulderEncoder = shoulderMotor.getEncoder();
+    shoulderEncoder = new Encoder(7, 5);
     frontShoulderLimitSwitch = shoulder.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     rearShoulderLimitSwitch = shoulder.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
@@ -59,15 +64,18 @@ public class ShoulderSubsystem extends SubsystemBase {
     }
 
     public static double getEncoderTicks(){
-      return shoulderEncoder.getPosition();
+      return shoulderEncoder.getDistance();
     }
 
   public void resetEncoder(){
-    shoulderEncoder.setPosition(0);
+    shoulderEncoder.reset();
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Shoulder encoder", getEncoderTicks());
+    
+
+    
   }
 }

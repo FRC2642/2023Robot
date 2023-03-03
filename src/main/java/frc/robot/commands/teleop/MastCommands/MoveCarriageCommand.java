@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.utils.MathR;
 import edu.wpi.first.math.controller.PIDController;
 
 
@@ -44,10 +45,10 @@ public class MoveCarriageCommand extends CommandBase {
     
 
     if (extended){
-      carriage.move(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18/*ish*/));
+      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1/*ish*/));
     }
     else {
-      carriage.move(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/));
+      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/), -1, 1));
     } 
     
 
@@ -55,16 +56,17 @@ public class MoveCarriageCommand extends CommandBase {
         //carriage.move(control.getRightY());
 
         //Slows carriage down if approaching the back of the robot
-        if (control.getRightY() < 0){
-          dampen = carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0);
+        /*if (control.getRightY() < 0){
+          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0), -1, 1);
           carriage.move(control.getRightY() * dampen);
         }
 
         //Slows carriage down if approaching the front of the robot
         else{
-          dampen = carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18);
+          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1);
           carriage.move(control.getRightY() * dampen);
-        }
+        }*/
+        carriage.move(control.getRightY());
      }
     else {
         carriage.move(0);

@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
@@ -58,7 +59,7 @@ public class CarriageSubsystem extends SubsystemBase {
         carriage.set(0);
       }
     }*/
-    //carriage.set(speed);
+    carriage.set(speed);
   }
 
   
@@ -86,7 +87,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //System.out.println("encoder: "+carriageEncoder.getPosition());
+    SmartDashboard.putNumber("carriage encoder: ",carriageEncoder.getPosition());
     // This method will be called once per scheduler run
   }
 }
