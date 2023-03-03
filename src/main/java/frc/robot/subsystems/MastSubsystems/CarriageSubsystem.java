@@ -4,9 +4,11 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 
 import com.revrobotics.CANSparkMax;
@@ -21,6 +23,7 @@ public class CarriageSubsystem extends SubsystemBase {
   public static SparkMaxLimitSwitch carriageFrontLimitSwitch;
   public static SparkMaxLimitSwitch carriageBackLimitSwitch;
   public static RelativeEncoder carriageEncoder;
+  private Solenoid brake = ClawPneumaticSubsystem.pneumatics.makeSolenoid(1);
 
 
   /** Creates a new CarriageSubsystem. */
@@ -59,7 +62,15 @@ public class CarriageSubsystem extends SubsystemBase {
         carriage.set(0);
       }
     }*/
-    carriage.set(speed);
+    if (Math.abs(speed) < 0.2){
+      //brake.set(false);
+      carriage.set(0);
+    }
+    else{
+      //brake.set(true);
+      carriage.set(speed);
+    }
+    
   }
 
   

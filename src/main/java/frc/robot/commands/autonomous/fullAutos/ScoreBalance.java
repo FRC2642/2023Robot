@@ -7,6 +7,7 @@ package frc.robot.commands.autonomous.fullAutos;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autonomous.claw.ManageClawPneumaticCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.drive.FollowVectorCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.mast.SetSliderCommand;
 import frc.robot.path.PiratePath;
@@ -26,11 +27,11 @@ public class ScoreBalance extends SequentialCommandGroup {
     addCommands(
       //new CarriageAutoCommand(carriage, encoderTick).alongWith(new SetSliderCommand(sliders, true)),
       //new ShoulderAutoCommand(shoulder, encoderTick),
-      new ManageClawPneumaticCommand(pneumatics, true),
+      //new ManageClawPneumaticCommand(pneumatics, true),
       //new ShoulderAutoCommand(shoulder, encoderTick),
       //new CarriageAutoCommand(carriage, encoderTick).alongWith(new SetSliderCommand(sliders, false))
-      new FollowPathCommand(drive, path),
-      new RampCommand(drive, VectorR.fromCartesian(0, 0), false)
+      //new FollowPathCommand(drive, path),
+      new RampCommand(drive, VectorR.fromPolar(1, 0), false)
 
     );
   }

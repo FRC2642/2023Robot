@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
+import frc.robot.commands.autonomous.fullAutos.ScoreBalance;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
@@ -46,7 +47,7 @@ public class RobotContainer {
   private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
 
   private final DriveSubsystem drive = new DriveSubsystem();
-  //private final LimelightSubsystem limelight = new LimelightSubsystem();
+  private final LimelightSubsystem limelight = new LimelightSubsystem();
   private final ClawPneumaticSubsystem clawPneumatics = new ClawPneumaticSubsystem();
   public static final CarriageSubsystem carriage = new CarriageSubsystem();
   private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
@@ -110,6 +111,6 @@ public class RobotContainer {
     }
     
   public Command getAutonomousCommand() {
-    return testPathFollowCommand;
+    return new ScoreBalance(slider, clawPneumatics, drive, carriage, shoulder, testPath);
   }
 }

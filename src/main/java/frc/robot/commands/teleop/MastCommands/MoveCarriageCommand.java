@@ -5,6 +5,7 @@
 package frc.robot.commands.teleop.MastCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.utils.MathR;
@@ -44,12 +45,12 @@ public class MoveCarriageCommand extends CommandBase {
     }
     
 
-    if (extended){
-      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1/*ish*/));
+    /*if (extended){
+      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1/*ish));
     }
     else {
-      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably*/), -1, 1));
-    } 
+      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably), -1, 1));
+    } */
     
 
     if (Math.abs(control.getRightY()) > .1){

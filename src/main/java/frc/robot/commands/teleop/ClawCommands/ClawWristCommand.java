@@ -60,10 +60,10 @@ public class ClawWristCommand extends CommandBase {
       speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -5), -0.8, 0.8);
     }*/
     if (control.getXButton()){
-      speed = 0.4;
+      speed = 0.2;
     }
     else if (control.getYButton()){
-      speed = -0.4;
+      speed = -0.2;
     }
 
 

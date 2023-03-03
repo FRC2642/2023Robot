@@ -5,8 +5,10 @@
 package frc.robot.subsystems.MastSubsystems;
 
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.EncoderType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAlternateEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAlternateEncoder.Type;
 
@@ -23,10 +25,10 @@ public class ShoulderSubsystem extends SubsystemBase {
   private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
   private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
-  static Encoder shoulderEncoder;
+  static SparkMaxAnalogSensor shoulderEncoder;
 
   public ShoulderSubsystem() {
-    shoulderEncoder = new Encoder(7, 5);
+    shoulderEncoder = shoulder.getAnalog(Mode.kRelative);
     frontShoulderLimitSwitch = shoulder.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     rearShoulderLimitSwitch = shoulder.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
@@ -40,7 +42,7 @@ public class ShoulderSubsystem extends SubsystemBase {
   }
 
   public void move(double speed){
-    if(!getFrontShoulderLimitSwitch() && !getRearShoulderLimitSwitch() && Math.abs(speed) >= 0.1){
+    /*if(!getFrontShoulderLimitSwitch() && !getRearShoulderLimitSwitch() && Math.abs(speed) >= 0.1){
       //Move if limit switches are false
       shoulder.set(speed);
     }
@@ -55,8 +57,10 @@ public class ShoulderSubsystem extends SubsystemBase {
     else{
       //Stop
       shoulder.set(speed);
-    }
+    }*/
+    shoulder.set(speed);
       
+
   }
 
     public static boolean isShoulderBack(){
@@ -64,12 +68,9 @@ public class ShoulderSubsystem extends SubsystemBase {
     }
 
     public static double getEncoderTicks(){
-      return shoulderEncoder.getDistance();
+      return shoulderEncoder.getPosition();
     }
 
-  public void resetEncoder(){
-    shoulderEncoder.reset();
-  }
 
   @Override
   public void periodic() {

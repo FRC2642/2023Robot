@@ -27,7 +27,7 @@ public class MoveShoulder extends CommandBase {
   @Override
   public void execute() {
     double speed = control.getLeftY();
-    shoulder.move(speed);
+    shoulder.move(-speed);
        
   }
 

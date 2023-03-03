@@ -6,41 +6,45 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
+
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class ClawWristSubsystem extends SubsystemBase {
 
   public CANSparkMax wrist = new CANSparkMax(24, MotorType.kBrushed);
-  public static RelativeEncoder wristEncoder;
+  public static SparkMaxAnalogSensor wristEncoder;
   public static SparkMaxLimitSwitch wristLimitSwitch;
   private PIDController wristPID = new PIDController(0.2, 0, 0);
 
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
-    //wristEncoder = wrist.getEncoder();
+    wristEncoder = wrist.getAnalog(Mode.kRelative);
     wristLimitSwitch = wrist.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
     
   }
 
   @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("wrist encoder", getEncoderTicks());
   }
 
-  /*public void resetEncoder() {
-    wristEncoder.setPosition(0);
-  }*/
+ 
 
-  /*public static double getEncoderTicks() {
+  public static double getEncoderTicks() {
     return wristEncoder.getPosition();
-  }*/
+  }
   public void stop() {
     wrist.set(0);
   }
@@ -98,5 +102,7 @@ public class ClawWristSubsystem extends SubsystemBase {
     return ((ShoulderSubsystem.getEncoderTicks() < 10 && ((CarriageSubsystem.getCarriageEncoder() > 90 ) || (!SliderSubsystem.isSliderBack()))) || 
     (ShoulderSubsystem.getEncoderTicks() > 170 && ((CarriageSubsystem.getCarriageEncoder() < 90) || SliderSubsystem.isSliderBack())));
   }*/
+
+  
 
 }

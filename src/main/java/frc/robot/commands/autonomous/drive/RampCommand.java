@@ -19,7 +19,7 @@ public class RampCommand extends CommandBase {
   boolean climbingRamp = false;
   double maxTilt = 0;
   double lockAngle = 0;
-  double maxSpeed = 1;
+  double maxSpeed = 0.2;
   Timer timer = new Timer();
   boolean timerStarted = false;
   PIDController pid = new PIDController(0.2, 0, 0);
