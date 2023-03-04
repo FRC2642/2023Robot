@@ -31,13 +31,13 @@ public class ClawIntakeCommand extends CommandBase {
   public void execute() {
     double speed = 0;
 
-    if (auxControl.getRightTriggerAxis() > 0.5){
+    if (auxControl.getRightTriggerAxis() >= 0.2){
       speed = -auxControl.getRightTriggerAxis();
     }
-    else if (auxControl.getLeftTriggerAxis() <= 0.5){
+    else if (auxControl.getLeftTriggerAxis() >= 0.2){
       speed = auxControl.getLeftTriggerAxis();
     }
-    if (ClawPneumaticSubsystem.isExtended()){
+    if (ClawPneumaticSubsystem.isExtended() && speed < 0){
       speed *= 0.3;
     }
     intake.move(speed);

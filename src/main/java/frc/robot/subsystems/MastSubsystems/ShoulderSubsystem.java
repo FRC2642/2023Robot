@@ -6,13 +6,15 @@ package frc.robot.subsystems.MastSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxAnalogSensor.Mode;
+import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAlternateEncoder.Type;
 
+import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.CounterBase.EncodingType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -25,21 +27,34 @@ public class ShoulderSubsystem extends SubsystemBase {
   private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
   private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
-  static SparkMaxAnalogSensor shoulderEncoder;
 
-  public ShoulderSubsystem() {
-    shoulderEncoder = shoulder.getAnalog(Mode.kRelative);
-    frontShoulderLimitSwitch = shoulder.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    rearShoulderLimitSwitch = shoulder.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  
+  public boolean protectionEnabled = false;
+  public boolean maxedOut = false;
+
+  static RelativeEncoder shoulderEncoderRelative1;
+//5 MAX, 4.22 START, 0 MIN
+  public static void resetShoulderEncoder() {
+    shoulderEncoderRelative1.setPosition(4.22);
   }
 
+  public ShoulderSubsystem() {
+   
+    //shoulderEncoderAnalog = shoulder.get(Mode.kRelative);
+    shoulderEncoderRelative1 = shoulder.getEncoder(Type.kQuadrature, 4096);
+    resetShoulderEncoder();
+    //shoulderEncoderRelative1 = shoulder.getAlternateEncoder(Type.kQuadrature, 4);
+   // frontShoulderLimitSwitch = shoulder.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+   // rearShoulderLimitSwitch = shoulder.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
+  }
+/* 
   public boolean getFrontShoulderLimitSwitch(){
-    return frontShoulderLimitSwitch.isPressed();
+    return false;//rontShoulderLimitSwitch.isPressed();
   }
 
   public boolean getRearShoulderLimitSwitch(){
-    return rearShoulderLimitSwitch.isPressed();
-  }
+    return false;//rearShoulderLimitSwitch.isPressed();
+  }*/
 
   public void move(double speed){
     /*if(!getFrontShoulderLimitSwitch() && !getRearShoulderLimitSwitch() && Math.abs(speed) >= 0.1){
@@ -58,8 +73,25 @@ public class ShoulderSubsystem extends SubsystemBase {
       //Stop
       shoulder.set(speed);
     }*/
-    shoulder.set(speed);
-      
+   /*  if (protectionEnabled) {
+      if (shoulderEncoderRelative1.getPosition() > 4.9 && speed <= -0.2){
+        shoulder.set(speed);
+       }
+  
+      else if (shoulderEncoderRelative1.getPosition() < 0.1 && speed >= 0.2) {
+        shoulder.set(speed);
+      }
+      else if(Math.abs(speed) <= 0.1){
+        shoulder.set(0.0);
+      } 
+      else{*/
+        shoulder.set(speed);
+    //  }
+  //  }
+   // else {
+  //    shoulder.set(speed);
+  //  }
+   
 
   }
 
@@ -68,13 +100,18 @@ public class ShoulderSubsystem extends SubsystemBase {
     }
 
     public static double getEncoderTicks(){
-      return shoulderEncoder.getPosition();
+      return 0.0;//shoulderEncoder.getPosition();
     }
 
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Shoulder encoder", getEncoderTicks());
+    
+   // SmartDashboard.putBoolean("shoulderProtected", protectionEnabled);
+   // if (shoulderEncoderAnalog != null) SmartDashboard.putNumber("Shoulder encoder analog", shoulderEncoderAnalog.getPosition());
+    if (shoulderEncoderRelative1 != null) SmartDashboard.putNumber("Shoulder encoder relative 1", shoulderEncoderRelative1.getPosition());
+ //   if (shoulderEncoderRelative2 != null) SmartDashboard.putNumber("Shoulder encoder relative 2", shoulderEncoderRelative2.getPosition());
+   // SmartDashboard.putNumber("Shoulder current", shoulder.getOutputCurrent());
     
 
     

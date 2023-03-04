@@ -15,6 +15,7 @@ public class ClawPneumaticSubsystem extends SubsystemBase {
   public static PneumaticHub pneumatics = new PneumaticHub(32);
   public static Solenoid gripperSolenoid = pneumatics.makeSolenoid(Constants.GRIPPER_SOLENOID_CHANNEL);
   public ClawPneumaticSubsystem() {
+    pneumatics.enableCompressorAnalog(100, 120);
 
   }
 

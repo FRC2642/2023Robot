@@ -48,7 +48,7 @@ public class SwerveModules implements Iterable<SwerveModule> {
 
    
   public void debugSmartDashboard() {
-    SmartDashboard.putNumber("FR", frontRight.driveMotor.getSelectedSensorPosition());
+   /*  SmartDashboard.putNumber("FR", frontRight.driveMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("FL", frontLeft.driveMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("BR", backRight.driveMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("BL", backLeft.driveMotor.getSelectedSensorPosition());
@@ -59,7 +59,7 @@ public class SwerveModules implements Iterable<SwerveModule> {
     SmartDashboard.putNumber("BL heading", Math.toDegrees(backLeft.getWheelHeadingRadians()));
 
 
-    SmartDashboard.putNumber("FL Turn Encoder", frontLeft.getRelativeTurnEncoderValue());
+    SmartDashboard.putNumber("FL Turn Encoder", frontLeft.getRelativeTurnEncoderValue());*/
   } 
 
   // get a list of the modules for looping through (iterating)

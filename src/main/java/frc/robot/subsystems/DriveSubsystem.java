@@ -181,6 +181,9 @@ public class DriveSubsystem extends SubsystemBase{
   public void periodic() {
     // modules.debugSmartDashboard();
     modules.debugSmartDashboard();
+
+    SmartDashboard.putNumber("pitch:",getPitch());
+    SmartDashboard.putNumber("roll:",getRoll());
     
 
     SmartDashboard.putNumber("x field", displacement.getX());
