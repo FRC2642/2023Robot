@@ -27,8 +27,6 @@ public class ShoulderSubsystem extends SubsystemBase {
   private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
   private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
-
-  
   public boolean protectionEnabled = false;
   public boolean maxedOut = false;
 
@@ -73,31 +71,41 @@ public class ShoulderSubsystem extends SubsystemBase {
       //Stop
       shoulder.set(speed);
     }*/
-   /*  if (protectionEnabled) {
-      if (shoulderEncoderRelative1.getPosition() > 4.9 && speed <= -0.2){
-        shoulder.set(speed);
-       }
+     if (protectionEnabled) {
+      if (shoulderEncoderRelative1.getPosition() >= 4.9){
+        System.out.println("speed"+speed);
+        if (speed <= -0.1){
+          shoulder.set(speed);
+        }
+        else{
+          shoulder.set(0.0);
+        }
+      }
   
-      else if (shoulderEncoderRelative1.getPosition() < 0.1 && speed >= 0.2) {
+      else if (shoulderEncoderRelative1.getPosition() <= 0.1) {
+        if (speed >= 0.1){
+          shoulder.set(speed);
+        }
+        else{
+          shoulder.set(0.0);
+        }
+      }
+      else{
         shoulder.set(speed);
       }
-      else if(Math.abs(speed) <= 0.1){
-        shoulder.set(0.0);
-      } 
-      else{*/
-        shoulder.set(speed);
-    //  }
-  //  }
-   // else {
-  //    shoulder.set(speed);
-  //  }
+      
+    }
+   else {
+      shoulder.set(speed);
+    }
    
 
   }
 
-    public static boolean isShoulderBack(){
-      return rearShoulderLimitSwitch.isPressed();
-    }
+   /*  public static boolean isShoulderBack(){
+      return rearShoulderLim
+      itSwitch.isPressed();
+    } */
 
     public static double getEncoderTicks(){
       return 0.0;//shoulderEncoder.getPosition();
@@ -107,7 +115,7 @@ public class ShoulderSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     
-   // SmartDashboard.putBoolean("shoulderProtected", protectionEnabled);
+    SmartDashboard.putBoolean("shoulderProtected", protectionEnabled);
    // if (shoulderEncoderAnalog != null) SmartDashboard.putNumber("Shoulder encoder analog", shoulderEncoderAnalog.getPosition());
     if (shoulderEncoderRelative1 != null) SmartDashboard.putNumber("Shoulder encoder relative 1", shoulderEncoderRelative1.getPosition());
  //   if (shoulderEncoderRelative2 != null) SmartDashboard.putNumber("Shoulder encoder relative 2", shoulderEncoderRelative2.getPosition());

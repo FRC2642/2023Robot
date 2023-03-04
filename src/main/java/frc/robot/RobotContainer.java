@@ -110,7 +110,7 @@ public class RobotContainer {
 
   private void configureButtonBindings() {
     SmartDashboard.putData(autoChooser);
-   // SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
+    SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
     SmartDashboard.putData(new ResetAllEncodersCommand(carriage, shoulder, slider));
     SmartDashboard.putData(new ResetGyro(drive));
     SmartDashboard.putData(new ResetDisplacementCommand(drive));
