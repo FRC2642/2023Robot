@@ -27,7 +27,7 @@ public class ShoulderSubsystem extends SubsystemBase {
   private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
   private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
 
-  public boolean protectionEnabled = false;
+  public boolean protectionEnabled = true;
   public boolean maxedOut = false;
 
   static RelativeEncoder shoulderEncoderRelative1;
@@ -71,22 +71,24 @@ public class ShoulderSubsystem extends SubsystemBase {
       //Stop
       shoulder.set(speed);
     }*/
+    maxedOut = false;
      if (protectionEnabled) {
-      if (shoulderEncoderRelative1.getPosition() >= 4.9){
-        System.out.println("speed"+speed);
+      if (shoulderEncoderRelative1.getPosition() >= 5){
         if (speed <= -0.1){
           shoulder.set(speed);
         }
         else{
+          maxedOut = true;
           shoulder.set(0.0);
         }
       }
   
-      else if (shoulderEncoderRelative1.getPosition() <= 0.1) {
+      else if (shoulderEncoderRelative1.getPosition() < 0.05) {
         if (speed >= 0.1){
           shoulder.set(speed);
         }
         else{
+          maxedOut = true;
           shoulder.set(0.0);
         }
       }
@@ -98,6 +100,8 @@ public class ShoulderSubsystem extends SubsystemBase {
    else {
       shoulder.set(speed);
     }
+
+    SmartDashboard.putBoolean("maxed", maxedOut);
    
 
   }
@@ -117,7 +121,7 @@ public class ShoulderSubsystem extends SubsystemBase {
     
     SmartDashboard.putBoolean("shoulderProtected", protectionEnabled);
    // if (shoulderEncoderAnalog != null) SmartDashboard.putNumber("Shoulder encoder analog", shoulderEncoderAnalog.getPosition());
-    if (shoulderEncoderRelative1 != null) SmartDashboard.putNumber("Shoulder encoder relative 1", shoulderEncoderRelative1.getPosition());
+    if (shoulderEncoderRelative1 != null) SmartDashboard.putNumber("Shoulder encoder", shoulderEncoderRelative1.getPosition());
  //   if (shoulderEncoderRelative2 != null) SmartDashboard.putNumber("Shoulder encoder relative 2", shoulderEncoderRelative2.getPosition());
    // SmartDashboard.putNumber("Shoulder current", shoulder.getOutputCurrent());
     

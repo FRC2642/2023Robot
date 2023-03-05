@@ -6,6 +6,7 @@ package frc.robot.commands.teleop.ClawCommands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.utils.MathR;
@@ -14,7 +15,7 @@ import frc.robot.utils.MathR;
 public class ClawWristCommand extends CommandBase {
   private XboxController control;
   private ClawWristSubsystem wrist;
-  private PIDController pid = new PIDController(0.2, 0, 0);
+  private PIDController pid = new PIDController(0.01, 0, 0.0);
   private String direction = "center";
   /** Creates a new ClawWristDirection. */
   public ClawWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
@@ -26,7 +27,8 @@ public class ClawWristCommand extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    //wrist.resetEncoder();
+    wrist.resetWristEncoder();
+    pid.setSetpoint(180);
   } 
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -37,36 +39,45 @@ public class ClawWristCommand extends CommandBase {
         wrist.moveWrist(-1);
       }
     }*/
-
-    double speed = 0;
-    /*if (control.getPOV() == 0){
+    
+    if (control.getPOV() == 0){
       direction = "center";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 0), -0.8, 0.8);
+      pid.setSetpoint(180);
     }
-    else if (control.getPOV() == 90){
+    else if (control.getPOV() == 90
+    ){
       direction = "right";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 10), -0.8, 0.8);
+      pid.setSetpoint(92);
     }
     else if (control.getPOV() == 270){
       direction = "left";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -10), -0.8, 0.8);
+      pid.setSetpoint(270);
     }
     else if (control.getPOV() == 45){
       direction = "topRight";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), 5), -0.8, 0.8);
+      pid.setSetpoint(125);
     }
     else if (control.getPOV() == 315){
       direction = "topLeft";
-      speed = MathR.limit(pid.calculate(ClawWristSubsystem.getEncoderTicks(), -5), -0.8, 0.8);
-    }*/
-    if (control.getXButton()){
+      pid.setSetpoint(225);
+    }
+    else if (control.getPOV() == 180){
+      direction = "bottom";
+      pid.setSetpoint(360);
+    }
+    
+   /*  if (control.getXButton()){
       speed = 0.4;
     }
     else if (control.getYButton()){
       speed = -0.4;
-    }
+    }*/
+    
+    System.out.println("direction " + direction);
 
-
+    //wrist.move(speed);
+    double speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);
+    //SmartDashboard.putNumber("power wrist", speed);
     wrist.move(speed);
     
   } 

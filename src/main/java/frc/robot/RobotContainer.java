@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.autonomous.claw.ManageClawPneumaticCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
@@ -28,7 +29,7 @@ import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
 import frc.robot.commands.teleop.MastCommands.MoveCarriageCommand;
 import frc.robot.commands.teleop.MastCommands.MoveSliderCommand;
 import frc.robot.commands.teleop.MastCommands.MoveShoulder;
-import frc.robot.commands.teleop.resetters.ResetAllEncodersCommand;
+import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
 import frc.robot.commands.teleop.resetters.ResetShoulderEncoderCommand;
@@ -64,6 +65,7 @@ public class RobotContainer {
 
   PiratePath autoPath1;
   PiratePath autoPath2;
+  PiratePath autoPath3;
   Command autonomous;
 
   //SendableChooser<Command> chooser = new SendableChooser<Command>();
@@ -79,20 +81,25 @@ public class RobotContainer {
 
     autoPath1 = new PiratePath();
     autoPath1.add(new PiratePoint(0, 0, 0, 0, false));
-    autoPath1.add(new PiratePoint(-15, 0, 0, 8, false));
+    autoPath1.add(new PiratePoint(-13, 0, 0, 8, false));
     autoPath1.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
 
     
     autoPath2 = new PiratePath();
     autoPath2.add(new PiratePoint(0, 0, 0, 0, false));
-    autoPath2.add(new PiratePoint(-15, 0, 0, 8, false));
-    autoPath1.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
-
+    autoPath2.add(new PiratePoint(-13, 0, 0, 8, false));
+    autoPath2.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
+    
+    autoPath3 = new PiratePath();
+    autoPath3.add(new PiratePoint(0, 0, 0, 0, false));
+    autoPath3.add(new PiratePoint(-8, 0, 0, 5, false));
+    autoPath3.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
 
     autoChooser.addOption("score and taxi right", new ScoreAndTaxiAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath1));
     autoChooser.addOption("score and taxi left", new ScoreAndTaxiAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath2));
     autoChooser.addOption("score and balance", new ScoreAndBalanceAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath1));
-
+    autoChooser.addOption("move out of the way", new FollowPathCommand(drive, autoPath3));
+    autoChooser.addOption("open claw", new ManageClawPneumaticCommand(clawPneumatics, true));
     //chooser.addOption("drive command", new JoystickOrientedDriveCommand(drive, auxControl));
     
     
@@ -111,7 +118,7 @@ public class RobotContainer {
   private void configureButtonBindings() {
     SmartDashboard.putData(autoChooser);
     SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
-    SmartDashboard.putData(new ResetAllEncodersCommand(carriage, shoulder, slider));
+    SmartDashboard.putData(new ResetWristEncoderCommand(wrist));
     SmartDashboard.putData(new ResetGyro(drive));
     SmartDashboard.putData(new ResetDisplacementCommand(drive));
     SmartDashboard.putData(new ResetShoulderEncoderCommand());

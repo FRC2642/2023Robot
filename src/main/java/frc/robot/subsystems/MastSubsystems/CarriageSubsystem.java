@@ -77,6 +77,9 @@ public class CarriageSubsystem extends SubsystemBase {
       if (lagTimer.get() > 0.2) {
         carriage.set(-speed);
       }
+      else {
+        carriage.set(0);
+      }
     }
     
   }

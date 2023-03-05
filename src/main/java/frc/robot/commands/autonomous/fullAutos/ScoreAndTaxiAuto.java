@@ -10,6 +10,7 @@ import frc.robot.commands.autonomous.claw.ManageClawPneumaticCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.FollowVectorCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
+import frc.robot.commands.autonomous.mast.MoveShoulderAutoCommand;
 import frc.robot.commands.autonomous.mast.SetSliderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
@@ -28,7 +29,7 @@ public class ScoreAndTaxiAuto extends SequentialCommandGroup {
     addCommands(
       new ManageClawPneumaticCommand(pneumatics, true),
       new WaitCommand(2),
-      new FollowPathCommand(drive, path)
+      new FollowPathCommand(drive, path).alongWith(new MoveShoulderAutoCommand(shoulder))
       //new CarriageAutoCommand(carriage, encoderTick).alongWith(new SetSliderCommand(sliders, true)),
       //new ShoulderAutoCommand(shoulder, encoderTick),
       //new ManageClawPneumaticCommand(pneumatics, true),

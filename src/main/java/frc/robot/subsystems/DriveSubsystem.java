@@ -186,13 +186,13 @@ public class DriveSubsystem extends SubsystemBase{
     SmartDashboard.putNumber("roll:",getRoll());
     
 
-    SmartDashboard.putNumber("x field", displacement.getX());
-    SmartDashboard.putNumber("y field", displacement.getY());
+    //SmartDashboard.putNumber("x field", displacement.getX());
+    //SmartDashboard.putNumber("y field", displacement.getY());
 
     SmartDashboard.putNumber("gyro", getYawDegrees());
 
-    SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
-    SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
+    //SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
+    //SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
     // SmartDashboard.putNumber("angle [degrees]",
     // Math.toDegrees(getRelativeFieldPosition().getAngle()));
     // SmartDashboard.putNumber("speed [ft/s]",
