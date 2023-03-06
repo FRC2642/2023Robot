@@ -34,7 +34,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   // JOYSTICK ORIENTED CONTROLLER
   //final PIDController pid = new PIDController(0.95, 0.0, 0.0);
-  final double TURN_KP = 1.0;
+  final double TURN_KP = 0.8;
   private boolean isLocked = false;
   private double lockedHeading = 0;
 
