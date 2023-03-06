@@ -81,13 +81,13 @@ public class RobotContainer {
 
     autoPath1 = new PiratePath();
     autoPath1.add(new PiratePoint(0, 0, 0, 0, false));
-    autoPath1.add(new PiratePoint(-13, 0, 0, 8, false));
+    autoPath1.add(new PiratePoint(-18, 0, 0, 8, false));
     autoPath1.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
 
     
     autoPath2 = new PiratePath();
     autoPath2.add(new PiratePoint(0, 0, 0, 0, false));
-    autoPath2.add(new PiratePoint(-13, 0, 0, 8, false));
+    autoPath2.add(new PiratePoint(-18, 0, 0, 8, false));
     autoPath2.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
     
     autoPath3 = new PiratePath();

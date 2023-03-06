@@ -22,7 +22,7 @@ public class RampCommand extends CommandBase {
   double maxSpeed = 0.3;
   Timer timer = new Timer();
   boolean timerStarted = false;
-  PIDController pid = new PIDController(0.2, 0, 0);
+  PIDController pid = new PIDController(0.1, 0, 0);
   PIDController anglePid = new PIDController(0.02, 0, 0);
   public RampCommand(DriveSubsystem drive, VectorR vector, boolean onRamp) {
     this.drive = drive;
@@ -50,7 +50,7 @@ public class RampCommand extends CommandBase {
     else{
       double movement;
       
-      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.13, 0.13);
+      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12);
       drive.move(VectorR.fromPolar(-movement, 0), turnPower);
     }
 
