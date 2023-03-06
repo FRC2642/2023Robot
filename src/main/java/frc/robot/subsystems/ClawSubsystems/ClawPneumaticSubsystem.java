@@ -11,9 +11,10 @@ import frc.robot.Constants;
 
 public class ClawPneumaticSubsystem extends SubsystemBase {
   /** Creates a new ClawPneumaticSubsystem. */
-  private static PneumaticHub pneumatics = new PneumaticHub(32);
+  public static PneumaticHub pneumatics = new PneumaticHub(32);
   public static Solenoid gripperSolenoid = pneumatics.makeSolenoid(Constants.GRIPPER_SOLENOID_CHANNEL);
   public ClawPneumaticSubsystem() {
+    pneumatics.enableCompressorAnalog(100, 120);
 
   }
 

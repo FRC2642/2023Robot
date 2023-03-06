@@ -27,11 +27,11 @@ public class ClawPneumaticCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-      if (auxControl.getRightBumper()) {
+      if (auxControl.getLeftBumper()) {
         pneumatics.gripperExtend();
       }
   
-      else if (auxControl.getLeftBumper()) {
+      else if (auxControl.getRightBumper()) {
         pneumatics.gripperRetract();
       }
     

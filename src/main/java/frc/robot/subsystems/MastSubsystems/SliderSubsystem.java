@@ -29,6 +29,10 @@ public class SliderSubsystem extends SubsystemBase {
   private PIDController pid = new PIDController(0.05, 0, 0);
   private static boolean isBack = true;
 
+  public void resetSliderEncoder() {
+    sliderEncoder.setPosition(0.0);
+  }
+
   public SliderSubsystem() {
     
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
@@ -44,10 +48,10 @@ public class SliderSubsystem extends SubsystemBase {
     
     
     if (extend){
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 250), -0.9, 0.9);
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -240), -0.9, 0.9);
     }
     else{
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 10), -0.9, 0.9);
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -10), -0.9, 0.9);
     }
 
     if (getSliderEncoderTicks() <= 11){
