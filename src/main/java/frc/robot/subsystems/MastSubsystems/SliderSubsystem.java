@@ -60,7 +60,12 @@ public class SliderSubsystem extends SubsystemBase {
     else{
       isBack = false;
     }
-    slider.set(speed);
+    if (Math.abs(speed) <= 0.1){
+      slider.set(0);
+    }
+    else{
+      slider.set(speed);
+    }
   }
   
 
