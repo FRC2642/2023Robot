@@ -4,8 +4,12 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 
 import com.revrobotics.CANSparkMax;
@@ -20,6 +24,9 @@ public class CarriageSubsystem extends SubsystemBase {
   public static SparkMaxLimitSwitch carriageFrontLimitSwitch;
   public static SparkMaxLimitSwitch carriageBackLimitSwitch;
   public static RelativeEncoder carriageEncoder;
+  public Solenoid brake = ClawPneumaticSubsystem.pneumatics.makeSolenoid(1);
+
+  Timer lagTimer = new Timer();
 
 
   /** Creates a new CarriageSubsystem. */
@@ -58,7 +65,23 @@ public class CarriageSubsystem extends SubsystemBase {
         carriage.set(0);
       }
     }*/
-    //carriage.set(speed);
+    if (Math.abs(speed) < 0.2){
+      lagTimer.stop();
+      lagTimer.reset();
+      brake.set(false);
+      carriage.set(0);
+    }
+    else{
+      lagTimer.start();
+      brake.set(true);
+      if (lagTimer.get() > 0.2) {
+        carriage.set(-speed);
+      }
+      else {
+        carriage.set(0);
+      }
+    }
+    
   }
 
   
@@ -86,7 +109,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-    //System.out.println("encoder: "+carriageEncoder.getPosition());
+    SmartDashboard.putNumber("carriage encoder: ",carriageEncoder.getPosition());
     // This method will be called once per scheduler run
   }
 }

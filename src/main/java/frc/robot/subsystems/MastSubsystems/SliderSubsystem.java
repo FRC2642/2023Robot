@@ -4,16 +4,12 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
-import java.util.HashMap;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.utils.MathR;
 
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -33,6 +29,10 @@ public class SliderSubsystem extends SubsystemBase {
   private PIDController pid = new PIDController(0.05, 0, 0);
   private static boolean isBack = true;
 
+  public void resetSliderEncoder() {
+    sliderEncoder.setPosition(0.0);
+  }
+
   public SliderSubsystem() {
     
     //positions.put(SliderPositions.THIRD_POSITION, 10.0);//Right on aux D-pad
@@ -48,10 +48,10 @@ public class SliderSubsystem extends SubsystemBase {
     
     
     if (extend){
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 250), -0.9, 0.9);
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -240), -0.9, 0.9);
     }
     else{
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), 10), -0.9, 0.9);
+      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -10), -0.9, 0.9);
     }
 
     if (getSliderEncoderTicks() <= 11){
@@ -60,7 +60,12 @@ public class SliderSubsystem extends SubsystemBase {
     else{
       isBack = false;
     }
-    slider.set(speed);
+    if (Math.abs(speed) <= 0.1){
+      slider.set(0);
+    }
+    else{
+      slider.set(speed);
+    }
   }
   
 

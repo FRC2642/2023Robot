@@ -2,20 +2,16 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autonomous.claw;
+package frc.robot.commands.teleop.resetters;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
-public class ManageClawPneumaticCommand extends CommandBase {
-  /** Creates a new ManageClawPneumaticCommand. */
-  ClawPneumaticSubsystem pneumatics;
-  boolean open;
-  public ManageClawPneumaticCommand(ClawPneumaticSubsystem pneumatics, boolean open) {
-    // Use addRequirements() here to declare subsystem dependencies.
-    this.pneumatics = pneumatics;
-    this.open = open;
-    addRequirements(pneumatics);
+public class ResetShoulderEncoderCommand extends CommandBase {
+  /** Creates a new ResetShoulderEncoderCommand. */
+
+  public ResetShoulderEncoderCommand() {
+    
   }
 
   // Called when the command is initially scheduled.
@@ -25,12 +21,7 @@ public class ManageClawPneumaticCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if (!open){
-      pneumatics.gripperRetract();
-    }
-    else{
-      pneumatics.gripperExtend();
-    }
+    ShoulderSubsystem.resetShoulderEncoder();
   }
 
   // Called once the command ends or is interrupted.

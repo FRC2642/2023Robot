@@ -185,12 +185,12 @@ public class LimelightSubsystem extends SubsystemBase {
 
   public LimelightSubsystem() {
 
-    visiontype.setDefaultOption("cones", LimelightSubsystem.DetectionType.CONE);
-    visiontype.addOption("cubes", LimelightSubsystem.DetectionType.CUBE);
-    visiontype.addOption("fiducial", LimelightSubsystem.DetectionType.FIDUCIAL);
-    visiontype.addOption("tape", LimelightSubsystem.DetectionType.RETROREFLECTIVE);
+    //visiontype.setDefaultOption("cones", LimelightSubsystem.DetectionType.CONE);
+    //visiontype.addOption("cubes", LimelightSubsystem.DetectionType.CUBE);
+    //visiontype.addOption("fiducial", LimelightSubsystem.DetectionType.FIDUCIAL);
+    //visiontype.addOption("tape", LimelightSubsystem.DetectionType.RETROREFLECTIVE);
 
-    SmartDashboard.putData(visiontype);
+    //SmartDashboard.putData(visiontype);
   }
 
   @Override
@@ -203,11 +203,11 @@ public class LimelightSubsystem extends SubsystemBase {
 
    // setDetectionType(visiontype.getSelected());
 
-    SmartDashboard.putNumber("confidence", confidence());
-    SmartDashboard.putNumber("x vision", x);
-    SmartDashboard.putNumber("y vision", y);
-    SmartDashboard.putNumber("botpose x", botposeX);
-    SmartDashboard.putNumber("botpose y", botposeY);
-    SmartDashboard.putString("vision status", detectionError.toString());
+   // SmartDashboard.putNumber("confidence", confidence());
+   // SmartDashboard.putNumber("x vision", x);
+  //  SmartDashboard.putNumber("y vision", y);
+   // SmartDashboard.putNumber("botpose x", botposeX);
+   // SmartDashboard.putNumber("botpose y", botposeY);
+   // SmartDashboard.putString("vision status", detectionError.toString());
   }
 }
