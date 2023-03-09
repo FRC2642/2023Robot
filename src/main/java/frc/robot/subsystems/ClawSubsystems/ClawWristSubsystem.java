@@ -27,7 +27,6 @@ public class ClawWristSubsystem extends SubsystemBase {
   public CANSparkMax wrist = new CANSparkMax(24, MotorType.kBrushed);
   public RelativeEncoder wristEncoder = wrist.getEncoder(Type.kQuadrature, 4);
   //public static SparkMaxLimitSwitch wristLimitSwitch;
-  private PIDController wristPID = new PIDController(0.2, 0, 0);
   public static double DEGREES_PER_TICK = 180d/22d;
 
   /** Creates a new ClawWristSubsystem. */

@@ -24,6 +24,7 @@ public class RampCommand extends CommandBase {
   boolean timerStarted = false;
   PIDController pid = new PIDController(0.1, 0, 0);
   PIDController anglePid = new PIDController(0.02, 0, 0);
+  Timer totalTimer = new Timer(); 
   public RampCommand(DriveSubsystem drive, VectorR vector, boolean onRamp) {
     this.drive = drive;
     this.vector = vector;
@@ -37,6 +38,7 @@ public class RampCommand extends CommandBase {
     DriveSubsystem.resetGyro(0.0);
     lockAngle = DriveSubsystem.getYawDegrees();
     vector.mult(maxSpeed);
+    totalTimer.start();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -49,8 +51,13 @@ public class RampCommand extends CommandBase {
     }
     else{
       double movement;
-      
-      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12);
+      System.out.println(totalTimer.get());
+      if (timer.get() >= 1){
+      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12) / (Math.pow(totalTimer.get(), 3));
+      }
+      else{
+        movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12);
+      }
       drive.move(VectorR.fromPolar(-movement, 0), turnPower);
     }
 
@@ -67,7 +74,7 @@ public class RampCommand extends CommandBase {
     
     
     
-    if (DriveSubsystem.getRoll() >= maxTilt + 5 && climbingRamp){
+    if (DriveSubsystem.getRoll() >= maxTilt + 2 && climbingRamp){
       onRamp = true;
     }
     
