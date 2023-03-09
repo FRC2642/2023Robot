@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 public class MoveSliderCommand extends CommandBase {
@@ -14,7 +15,7 @@ public class MoveSliderCommand extends CommandBase {
   SliderSubsystem slider;
   XboxController control;
   PIDController pid = new PIDController(0.2, 0, 0);
-  boolean extending = false;
+  boolean extended = false;
 
   public MoveSliderCommand(SliderSubsystem slider, XboxController auxControl) {
     this.slider = slider;
@@ -30,14 +31,20 @@ public class MoveSliderCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-     if (control.getAButtonPressed()){
-        extending = !extending;
+    //moves slider if A button is pressed
+    if (control.getAButtonPressed()){
+      //dont move illegaly moving down
+      if (ShoulderSubsystem.getEncoderTicks() < 90 && extended){
+        extended = !extended;
+      //dont move illegaly moving up
+     } else if (ShoulderSubsystem.getEncoderTicks() > 90 && !extended){
+        extended = !extended;
      }
 
-     slider.move(extending);
-    
+     //move slider
+     slider.move(extended);
+    }
   }
-
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {}

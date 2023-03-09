@@ -73,7 +73,7 @@ public class ClawWristCommand extends CommandBase {
       speed = -0.4;
     }*/
     
-    System.out.println("direction " + direction);
+    //System.out.println("direction " + direction);
 
     //wrist.move(speed);
     double speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);

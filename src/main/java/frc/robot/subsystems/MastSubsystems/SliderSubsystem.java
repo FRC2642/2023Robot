@@ -4,16 +4,12 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
-import java.util.HashMap;
-
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.utils.MathR;
 
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -64,7 +60,12 @@ public class SliderSubsystem extends SubsystemBase {
     else{
       isBack = false;
     }
-    slider.set(speed);
+    if (Math.abs(speed) <= 0.1){
+      slider.set(0);
+    }
+    else{
+      slider.set(speed);
+    }
   }
   
 
