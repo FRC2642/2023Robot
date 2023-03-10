@@ -76,11 +76,11 @@ public class ClawWristCommand extends CommandBase {
     }
     
     if (control.getXButton()){
-      speed = 0.4;
+      speed = 0.6;
       override = true;
     }
     else if (control.getYButton()){
-      speed = -0.4;
+      speed = -0.6;
       override = true;
     }
     else{
@@ -94,7 +94,7 @@ public class ClawWristCommand extends CommandBase {
     //wrist.move(speed);
     //SmartDashboard.putNumber("power wrist", speed);
     
-    if (Math.abs(speed) <= 0.08){
+    if (Math.abs(speed) <= 0.2){
       wrist.move(0.0);
     }
     else{

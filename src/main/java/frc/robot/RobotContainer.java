@@ -18,6 +18,7 @@ import frc.robot.commands.autonomous.claw.ManageClawPneumaticCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
+import frc.robot.commands.autonomous.fullAutos.BalanceRampCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndBalanceAuto;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
 import frc.robot.commands.autonomous.waiters.WaitFor;
@@ -100,6 +101,7 @@ public class RobotContainer {
     autoChooser.addOption("score and balance", new ScoreAndBalanceAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath1));
     autoChooser.addOption("move out of the way", new FollowPathCommand(drive, autoPath3));
     autoChooser.addOption("open claw", new ManageClawPneumaticCommand(clawPneumatics, true));
+    autoChooser.addOption("balance", new BalanceRampCommand(drive));
     //chooser.addOption("drive command", new JoystickOrientedDriveCommand(drive, auxControl));
     
     
@@ -107,9 +109,9 @@ public class RobotContainer {
     clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
     carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
     intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
-    slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
+    //slider.setDefaultCommand(new MoveSliderCommand(slider, auxControl));
     shoulder.setDefaultCommand(new MoveShoulder(shoulder, auxControl));
-    wrist.setDefaultCommand(new ClawWristCommand(wrist, auxControl));
+    //wrist.setDefaultCommand(new ClawWristCommand(wrist, auxControl));
     
 
     configureButtonBindings();

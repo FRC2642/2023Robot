@@ -53,10 +53,10 @@ public class RampCommand extends CommandBase {
       double movement;
       System.out.println(totalTimer.get());
       if (timer.get() >= 1){
-      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12) / (Math.pow(totalTimer.get(), 3));
+      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.15, 0.15) / (Math.pow(totalTimer.get(), 3));
       }
       else{
-        movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12);
+        movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.15, 0.15);
       }
       drive.move(VectorR.fromPolar(-movement, 0), turnPower);
     }

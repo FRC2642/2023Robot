@@ -175,6 +175,10 @@ public class DriveSubsystem extends SubsystemBase{
     yawOffsetDegrees = yawDegrees;
   }
 
+  public static void calibrateGyro(){
+    gyro.calibrate();
+  }
+
 
 
   @Override
