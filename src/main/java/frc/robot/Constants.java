@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import java.util.ArrayList;
+
 import frc.robot.subsystems.swerve.SwerveModuleInfo;
 
 public final class Constants {
@@ -58,7 +60,8 @@ public final class Constants {
         public static final int GRIPPER_SOLENOID_CHANNEL = 0;
 
     //Other
-    public static final String TEST_PATH = "New New New Path.wpilib.json";
+    public static final ArrayList<String> AUTO_PATHS = new ArrayList<String>();
+
 
 
 }

@@ -15,12 +15,14 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.claw.ManageClawPneumaticCommand;
+import frc.robot.commands.autonomous.claw.RunIntakeSecondsCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.fullAutos.BalanceRampCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndBalanceAuto;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
+import frc.robot.commands.autonomous.mast.SetSliderCommand;
 import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
@@ -72,13 +74,19 @@ public class RobotContainer {
   //SendableChooser<Command> chooser = new SendableChooser<Command>();
   public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   public RobotContainer() {
-  /*  try {
-      autoPath1 = new PiratePath(Constants.TEST_PATH, DriverStation.getAlliance() == Alliance.Red);
+    try {
+      autoPath3 = new PiratePath(Constants.AUTO_PATHS.get(0), DriverStation.getAlliance() == Alliance.Red);
     } catch (JsonProcessingException e) {
       e.printStackTrace();
     } catch (IOException e) {
       e.printStackTrace();
-    } */ 
+    } 
+
+    Constants.AUTO_PATHS.add("1 left high cube and cone + balance.wpilib.json");
+    Constants.AUTO_PATHS.add("1 right high cube + 2 right high cones.wpilib.json");
+    Constants.AUTO_PATHS.add("2 right high and mid cubes.wpilib.json");
+    Constants.AUTO_PATHS.add("2 center high cones + balance.wpilib.json");
+    Constants.AUTO_PATHS.add("2 left high cubes + balance.wpilib.json");
 
     autoPath1 = new PiratePath();
     autoPath1.add(new PiratePoint(0, 0, 0, 0, false));
@@ -88,20 +96,25 @@ public class RobotContainer {
     
     autoPath2 = new PiratePath();
     autoPath2.add(new PiratePoint(0, 0, 0, 0, false));
-    autoPath2.add(new PiratePoint(-18, 0, 0, 8, false));
+    autoPath2.add(new PiratePoint(-8, 0, 0, 5, false));
     autoPath2.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
-    
-    autoPath3 = new PiratePath();
-    autoPath3.add(new PiratePoint(0, 0, 0, 0, false));
-    autoPath3.add(new PiratePoint(-8, 0, 0, 5, false));
-    autoPath3.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
+
 
     autoChooser.addOption("score and taxi right", new ScoreAndTaxiAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath1));
-    autoChooser.addOption("score and taxi left", new ScoreAndTaxiAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath2));
-    autoChooser.addOption("score and balance", new ScoreAndBalanceAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath1));
-    autoChooser.addOption("move out of the way", new FollowPathCommand(drive, autoPath3));
+    autoChooser.addOption("score and taxi left", new ScoreAndTaxiAuto(slider, clawPneumatics, drive, carriage, shoulder, autoPath1));
+    autoChooser.addOption("score and balance", new ScoreAndBalanceAuto(slider, clawPneumatics, drive, carriage, shoulder));
+    autoChooser.addOption("move out of the way", new FollowPathCommand(drive, autoPath2));
     autoChooser.addOption("open claw", new ManageClawPneumaticCommand(clawPneumatics, true));
-    autoChooser.addOption("balance", new BalanceRampCommand(drive));
+    autoChooser.addOption("2 left high cubes + balance", new SequentialCommandGroup(
+      new SetSliderCommand(slider, true)/*.alongWith(new SetCarriageCommand(carriage, true)).alongWith(new SetShoulderCommand(shoulder, 60 degrees))*/,
+      new ManageClawPneumaticCommand(clawPneumatics, true),
+      new SetSliderCommand(slider, false)/*.alongWith(new SetCarriageCommand(carriage, false)).alongWith(new SetShoulderCommand(shoulder, 80 degrees))*/,
+      new FollowPathCommand(drive, autoPath1)/*.alongWith(new SetShoulderCommand(shoulder, 230 degrees)*/,
+      new RunIntakeSecondsCommand(intake, 2, true)
+      //NOT DONE
+
+      
+    ));
     //chooser.addOption("drive command", new JoystickOrientedDriveCommand(drive, auxControl));
     
     

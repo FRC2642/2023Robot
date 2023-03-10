@@ -24,7 +24,7 @@ import frc.robot.utils.VectorR;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class ScoreAndBalanceAuto extends SequentialCommandGroup {
   /** Creates a new ScoreBalance. */
-  public ScoreAndBalanceAuto(SliderSubsystem sliders, ClawPneumaticSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ShoulderSubsystem shoulder, PiratePath path) {
+  public ScoreAndBalanceAuto(SliderSubsystem sliders, ClawPneumaticSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ShoulderSubsystem shoulder) {
     addCommands(
       new ManageClawPneumaticCommand(pneumatics, true),
       new WaitCommand(2),
