@@ -181,17 +181,18 @@ public class DriveSubsystem extends SubsystemBase{
   public void periodic() {
     // modules.debugSmartDashboard();
     modules.debugSmartDashboard();
+
+    SmartDashboard.putNumber("pitch:",getPitch());
+    SmartDashboard.putNumber("roll:",getRoll());
     
 
-    SmartDashboard.putNumber("x field", displacement.getX());
-    SmartDashboard.putNumber("y field", displacement.getY());
+    //SmartDashboard.putNumber("x field", displacement.getX());
+    //SmartDashboard.putNumber("y field", displacement.getY());
 
     SmartDashboard.putNumber("gyro", getYawDegrees());
 
-    SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
-    SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
-
-    SmartDashboard.putNumber("FrontRightPosCorrectedDrift", modules.frontRight.getWheelPositionWithoutDrift());
+    //SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
+    //SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
     // SmartDashboard.putNumber("angle [degrees]",
     // Math.toDegrees(getRelativeFieldPosition().getAngle()));
     // SmartDashboard.putNumber("speed [ft/s]",

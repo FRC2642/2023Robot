@@ -8,9 +8,6 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
-
 
 public class ClawIntakeCommand extends CommandBase {
   ClawIntakeSubsystem intake;
@@ -33,29 +30,18 @@ public class ClawIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     double speed = 0;
-    if (SliderSubsystem.isSliderBack() && CarriageSubsystem.isCarriageFullyRetracted()){
-      
-      speed = mainControl.getRightTriggerAxis();
-      if (mainControl.getStartButtonPressed()){
-        intake.intakeMode = !intake.intakeMode;
-      }
-      if (!ClawPneumaticSubsystem.isExtended()){
-        speed *= 0.3;
-      }
-      intake.move(speed);
+
+    if (auxControl.getRightTriggerAxis() >= 0.2){
+      speed = -auxControl.getRightTriggerAxis();
     }
-    else{
-      if (auxControl.getRightTriggerAxis() >= 0.1){
-        speed = -auxControl.getRightTriggerAxis();
-      }
-      else if (auxControl.getLeftTriggerAxis() >= 0.1){
-        speed = auxControl.getLeftTriggerAxis();
-      }
-      if (!ClawPneumaticSubsystem.isExtended()){
-        speed *= 0.3;
-      }
-      intake.move(speed);
+    else if (auxControl.getLeftTriggerAxis() >= 0.2){
+      speed = auxControl.getLeftTriggerAxis();
     }
+    if (ClawPneumaticSubsystem.isExtended() && speed < 0){
+      speed *= 0.3;
+    }
+    intake.move(speed);
+    
     
   }
 
