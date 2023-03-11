@@ -74,6 +74,13 @@ public class RobotContainer {
   //SendableChooser<Command> chooser = new SendableChooser<Command>();
   public static SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   public RobotContainer() {
+
+    Constants.AUTO_PATHS.add("1 left high cube and cone + balance.wpilib.json");
+    Constants.AUTO_PATHS.add("1 right high cube + 2 right high cones.wpilib.json");
+    Constants.AUTO_PATHS.add("2 right high and mid cubes.wpilib.json");
+    Constants.AUTO_PATHS.add("2 center high cones + balance.wpilib.json");
+    Constants.AUTO_PATHS.add("2 left high cubes + balance.wpilib.json");
+    
     try {
       autoPath3 = new PiratePath(Constants.AUTO_PATHS.get(0), DriverStation.getAlliance() == Alliance.Red);
     } catch (JsonProcessingException e) {
@@ -82,11 +89,7 @@ public class RobotContainer {
       e.printStackTrace();
     } 
 
-    Constants.AUTO_PATHS.add("1 left high cube and cone + balance.wpilib.json");
-    Constants.AUTO_PATHS.add("1 right high cube + 2 right high cones.wpilib.json");
-    Constants.AUTO_PATHS.add("2 right high and mid cubes.wpilib.json");
-    Constants.AUTO_PATHS.add("2 center high cones + balance.wpilib.json");
-    Constants.AUTO_PATHS.add("2 left high cubes + balance.wpilib.json");
+    
 
     autoPath1 = new PiratePath();
     autoPath1.add(new PiratePoint(0, 0, 0, 0, false));

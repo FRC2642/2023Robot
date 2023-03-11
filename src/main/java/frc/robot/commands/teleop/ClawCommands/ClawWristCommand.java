@@ -18,6 +18,7 @@ public class ClawWristCommand extends CommandBase {
   private PIDController pid = new PIDController(0.01, 0.04, 2e-4);
   private String direction = "center";
   private boolean override = false;
+  private boolean reachedEnd = false;
   /** Creates a new ClawWristDirection. */
   public ClawWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
     this.control = auxControl;
@@ -46,45 +47,55 @@ public class ClawWristCommand extends CommandBase {
     if (control.getPOV() == 0){
       direction = "center";
       override = false;
+      reachedEnd = false;
       pid.setSetpoint(180);
     }
     else if (control.getPOV() == 90
     ){
       direction = "right";
       override = false;
+      reachedEnd = false;
       pid.setSetpoint(92);
     }
     else if (control.getPOV() == 270){
       direction = "left";
       override = false;
+      reachedEnd = false;
       pid.setSetpoint(270);
     }
     else if (control.getPOV() == 45){
       direction = "topRight";
       override = false;
+      reachedEnd = false;
       pid.setSetpoint(125);
     }
     else if (control.getPOV() == 315){
       direction = "topLeft";
       override = false;
+      reachedEnd = false;
       pid.setSetpoint(225);
     }
     else if (control.getPOV() == 180){
       direction = "bottom";
       override = false;
+      reachedEnd = false;
       pid.setSetpoint(360);
+    }
+
+    if (Math.abs(pid.getSetpoint() - wrist.getEncoderTicks()) <= 10){
+      reachedEnd = true;
     }
     
     if (control.getXButton()){
-      speed = 0.6;
+      speed = 0.4;
       override = true;
     }
     else if (control.getYButton()){
-      speed = -0.6;
+      speed = -0.4;
       override = true;
     }
     else{
-      if (override == false){
+      if (override == false && !reachedEnd){
         speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);
       }
     }
@@ -94,12 +105,8 @@ public class ClawWristCommand extends CommandBase {
     //wrist.move(speed);
     //SmartDashboard.putNumber("power wrist", speed);
     
-    if (Math.abs(speed) <= 0.2){
-      wrist.move(0.0);
-    }
-    else{
-      wrist.move(speed);
-    }
+    wrist.move(speed);
+    
     
   } 
 

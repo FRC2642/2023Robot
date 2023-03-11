@@ -44,15 +44,27 @@ public class SliderSubsystem extends SubsystemBase {
 
   
   public void move(boolean extend){
-    double speed;
+    double speed = 0;
     
     
     if (extend){
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -240), -0.9, 0.9);
+      if (Math.abs(getSliderEncoderTicks() + 240) <= 10){
+        speed = 0.0;
+      }
+      else{
+        speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -240), -0.9, 0.9);
+      }
     }
     else{
-      speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -10), -0.9, 0.9);
+      if (Math.abs(getSliderEncoderTicks() + 10) <= 10){
+        speed = 0.0;
+      }
+      else{
+        speed = MathR.limit(pid.calculate(getSliderEncoderTicks(), -10), -0.9, 0.9);
+      }
     }
+
+    
 
     if (getSliderEncoderTicks() <= 11){
       isBack = true;
@@ -60,12 +72,10 @@ public class SliderSubsystem extends SubsystemBase {
     else{
       isBack = false;
     }
-    if (Math.abs(speed) <= 0.1){
-      slider.set(0);
-    }
-    else{
-      slider.set(speed);
-    }
+    
+    
+    slider.set(speed);
+    
   }
   
 
