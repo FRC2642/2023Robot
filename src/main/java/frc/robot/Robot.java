@@ -63,7 +63,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-
+  public static boolean testMode = false;
   private RobotContainer m_robotContainer;
 
   /**
@@ -105,6 +105,7 @@ public class Robot extends TimedRobot {
   /** This function is called once each time the robot enters Disabled mode. */
   @Override
   public void disabledInit() {
+    
   }
 
   @Override
@@ -118,6 +119,7 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    testMode = false;
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -139,6 +141,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+
+    testMode = false;
   }
 
   /** This function is called periodically during operator control. */
@@ -151,11 +155,17 @@ public class Robot extends TimedRobot {
   public void testInit() {
     // Cancels all running commands at the start of test mode.
     CommandScheduler.getInstance().cancelAll();
+    testMode=true;
+  }
+
+  public static Boolean isOnTestMode(){
+    return testMode;
   }
 
   /** This function is called periodically during test mode. */
   @Override
   public void testPeriodic() {
+    
   }
 
   /** This function is called once when the robot is first started up. */

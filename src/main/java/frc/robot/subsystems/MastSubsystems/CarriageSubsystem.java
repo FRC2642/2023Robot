@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.ClawSubsystems.ClawPneumaticSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.utils.MathR;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -27,8 +29,9 @@ public class CarriageSubsystem extends SubsystemBase {
   public Solenoid brake = ClawPneumaticSubsystem.pneumatics.makeSolenoid(1);
 
   Timer lagTimer = new Timer();
-
-
+  double speed;
+  PIDController pid = new PIDController(0, 0, 0);
+  Boolean isBack = true;
   /** Creates a new CarriageSubsystem. */
   public CarriageSubsystem() {
     carriageEncoder = carriage.getEncoder();
@@ -37,10 +40,38 @@ public class CarriageSubsystem extends SubsystemBase {
   }
 
   //motor direction not known must TEST!!!!1!11!1!!
-
+  //Motor Encoders not known, find them out !!!
   //moves the carriage unless its touching limit switches
-  public void move(double speed){
-    //make sure robot wont pull claw into sliders
+
+    //Carriage goes down if either A or X are pressed twice
+  public void move(Boolean extend, Boolean setToMiddle){
+    
+      if (setToMiddle){
+        speed = MathR.limit(pid.calculate(getCarriageEncoder(), -110), -0.9, 0.9);
+      }
+      else{
+        if (extend && setToMiddle){
+          speed = MathR.limit(pid.calculate(getCarriageEncoder(), -240), -0.9, 0.9);
+        }
+        else if (extend && !setToMiddle){
+          speed = MathR.limit(pid.calculate(getCarriageEncoder(), -10), -0.9, 0.9);
+        }
+      }
+    
+      
+
+
+
+
+      if (Math.abs(speed) <= 0.1){
+        carriage.set(0);
+      }
+      else{
+        carriage.set(speed);
+      }
+
+
+    //make sure robot wont pull claw into carriages
     /*if ((ShoulderSubsystem.getEncoderTicks() < 10 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
       (ShoulderSubsystem.getEncoderTicks() > 170 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
       
@@ -65,26 +96,18 @@ public class CarriageSubsystem extends SubsystemBase {
         carriage.set(0);
       }
     }*/
-    if (Math.abs(speed) < 0.2){
-      lagTimer.stop();
-      lagTimer.reset();
-      brake.set(false);
-      carriage.set(0);
-    }
-    else{
-      lagTimer.start();
-      brake.set(true);
-      if (lagTimer.get() > 0.2) {
-        carriage.set(-speed);
-      }
-      else {
-        carriage.set(0);
-      }
-    }
+    
     
   }
 
-  
+  public void testMove(double speed){
+    if (Math.abs(speed) > .1){
+      carriage.set(speed);
+    }
+    else{
+      carriage.set(0);
+    }
+  }
 
   //tells what position the carriage is out
   public static double getCarriageEncoder() {

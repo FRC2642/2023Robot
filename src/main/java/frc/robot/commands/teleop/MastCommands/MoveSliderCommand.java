@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
@@ -32,18 +33,24 @@ public class MoveSliderCommand extends CommandBase {
   @Override
   public void execute() {
     //moves slider if A button is pressed
+
+    if (Robot.isOnTestMode()){
+      slider.testMove(control.getRightX() * .5);
+    }
+    else{
     if (control.getAButtonPressed()){
       //dont move illegaly moving down
       if (ShoulderSubsystem.getEncoderTicks() < 90 && extended){
         extended = !extended;
       //dont move illegaly moving up
-     } else if (ShoulderSubsystem.getEncoderTicks() > 90 && !extended){
+     } else if (ShoulderSubsystem.getEncoderTicks() > -90 && !extended){
         extended = !extended;
      }
 
      //move slider
      slider.move(extended);
     }
+  }
   }
   // Called once the command ends or is interrupted.
   @Override

@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Robot;
 import frc.robot.utils.MathR;
 
 import com.revrobotics.SparkMaxLimitSwitch;
@@ -25,6 +26,7 @@ public class SliderSubsystem extends SubsystemBase {
 
   public static SparkMaxLimitSwitch frontSliderLimitSwitch;
   public static SparkMaxLimitSwitch rearSliderLimitSwitch;
+  Boolean testMode = Robot.isOnTestMode();
 
   private PIDController pid = new PIDController(0.05, 0, 0);
   private static boolean isBack = true;
@@ -68,6 +70,15 @@ public class SliderSubsystem extends SubsystemBase {
     }
   }
   
+  public void testMove(double speed){
+    if (Math.abs(speed) > .1){
+    slider.set(speed);
+    }
+
+    else{
+      slider.set(0);
+    }
+  }
 
 
   
