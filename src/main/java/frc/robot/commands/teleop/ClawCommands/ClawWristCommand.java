@@ -63,13 +63,13 @@ public class ClawWristCommand extends CommandBase {
       reachedEnd = false;
       pid.setSetpoint(270);
     }
-    else if (control.getPOV() == 45){
+    else if (control.getRawButtonPressed(8)){
       direction = "topRight";
       override = false;
       reachedEnd = false;
       pid.setSetpoint(125);
     }
-    else if (control.getPOV() == 315){
+    else if (control.getRawButtonPressed(7)){
       direction = "topLeft";
       override = false;
       reachedEnd = false;
