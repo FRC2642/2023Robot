@@ -48,19 +48,13 @@ public class ClawWristCommand extends CommandBase {
       direction = "center";
       override = false;
       reachedEnd = false;
-      pid.setSetpoint(180);
+      pid.setSetpoint(0);
     }
     else if (control.getPOV() == 90){
       direction = "right";
       override = false;
       reachedEnd = false;
-      pid.setSetpoint(92);
-    }
-    else if (control.getPOV() == 270){
-      direction = "left";
-      override = false;
-      reachedEnd = false;
-      pid.setSetpoint(270);
+      pid.setSetpoint(90);
     }
     else if (control.getRawButtonPressed(8)){
       direction = "topRight";
@@ -72,13 +66,13 @@ public class ClawWristCommand extends CommandBase {
       direction = "topLeft";
       override = false;
       reachedEnd = false;
-      pid.setSetpoint(225);
+      pid.setSetpoint(135);
     }
     else if (control.getPOV() == 180){
       direction = "bottom";
       override = false;
       reachedEnd = false;
-      pid.setSetpoint(360);
+      pid.setSetpoint(180);
     }
 
     if (Math.abs(pid.getSetpoint() - wrist.getEncoderTicks()) <= 10){

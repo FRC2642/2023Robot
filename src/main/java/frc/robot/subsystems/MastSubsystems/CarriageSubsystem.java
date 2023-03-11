@@ -21,8 +21,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
   //creates motos and limit switches
   public CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
-  public static SparkMaxLimitSwitch carriageFrontLimitSwitch;
-  public static SparkMaxLimitSwitch carriageBackLimitSwitch;
+  
   public static RelativeEncoder carriageEncoder;
   public Solenoid brake = ClawPneumaticSubsystem.pneumatics.makeSolenoid(1);
 
@@ -32,55 +31,19 @@ public class CarriageSubsystem extends SubsystemBase {
   /** Creates a new CarriageSubsystem. */
   public CarriageSubsystem() {
     carriageEncoder = carriage.getEncoder();
-    carriageFrontLimitSwitch = carriage.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-    carriageBackLimitSwitch = carriage.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
   }
 
-  //motor direction not known must TEST!!!!1!11!1!!
 
   //moves the carriage unless its touching limit switches
   public void move(double speed){
-    //make sure robot wont pull claw into sliders
-    /*if ((ShoulderSubsystem.getEncoderTicks() < 10 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))  ||
-      (ShoulderSubsystem.getEncoderTicks() > 170 && (Math.abs(ClawWristSubsystem.getEncoderTicks()) > 95) || (Math.abs(ClawWristSubsystem.getEncoderTicks()) < 85))){
-      
-      if (speed >= 0.1){
-        if (CarriageSubsystem.isCarriageFullyExtended()){
-          carriage.set(0);
-        }
-        else {
-          carriage.set(speed);
-        }
-      }
-      
-      else if (speed <= -0.1){
-        if (CarriageSubsystem.isCarriageFullyRetracted()){
-            carriage.set(0);
-        }
-        else {
-          carriage.set(speed);
-        }
-      }
-      else {
-        carriage.set(0);
-      }
-    }*/
-    if (Math.abs(speed) < 0.2){
-      lagTimer.stop();
-      lagTimer.reset();
-      brake.set(false);
+    /*if (Math.abs(speed) < 0.2){
       carriage.set(0);
     }
     else{
-      lagTimer.start();
-      brake.set(true);
-      if (lagTimer.get() > 0.2) {
-        carriage.set(-speed);
-      }
-      else {
-        carriage.set(0);
-      }
-    }
+      carriage.set(-speed);
+    }*/
+    carriage.set(0.0);
+    
     
   }
 
@@ -89,17 +52,6 @@ public class CarriageSubsystem extends SubsystemBase {
   //tells what position the carriage is out
   public static double getCarriageEncoder() {
     return carriageEncoder.getPosition();
-  }
-
-
-  //tests if carriage is at the end
-  public static boolean isCarriageFullyExtended (){
-    return carriageFrontLimitSwitch.isPressed();
-  }
-  
-  //tests if carriage is at the begining
-  public static boolean isCarriageFullyRetracted(){
-    return carriageBackLimitSwitch.isPressed();
   }
 
   //reset the carriage position

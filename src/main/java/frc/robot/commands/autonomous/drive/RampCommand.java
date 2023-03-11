@@ -51,7 +51,6 @@ public class RampCommand extends CommandBase {
     }
     else{
       double movement;
-      System.out.println(totalTimer.get());
       if (timer.get() >= 1){
       movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.15, 0.15) / (Math.pow(totalTimer.get(), 3));
       }

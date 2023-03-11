@@ -12,40 +12,45 @@ import frc.robot.utils.VectorR;
 
 public class GoToTiltCommand extends CommandBase {
   /** Creates a new GoToTiltCommand. */
-  DriveSubsystem drive;
-  double movement = 0;
-  PIDController pid = new PIDController(0.1, 0, 0);
-  public GoToTiltCommand(DriveSubsystem drive) {
+  private final DriveSubsystem drive;
+  private final double speed;
+  private double startHeading = 0.0;
+  private final double angle;
+  private final boolean greaterThan;
+
+  private PIDController headingController = new PIDController(0.01, 0, 0);
+  private PIDController YController = new PIDController(0.2, 0, 0);
+
+  public GoToTiltCommand(DriveSubsystem drive, double speed, double angle, boolean greaterThan) {
     this.drive = drive;
+    this.speed = speed;
+    this.angle = angle;
+    this.greaterThan = greaterThan;
     addRequirements(drive);
     // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    startHeading = DriveSubsystem.getYawDegrees();
+    headingController.setSetpoint(startHeading);
+    YController.setSetpoint(DriveSubsystem.getRelativeFieldPosition().getY());
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double angle = 0;
+    // double angle = Math.PI;
     
-    if (DriveSubsystem.getRoll() > 0){
-      angle = 0;
-    }
-    else if (DriveSubsystem.getRoll() < 0){
-      angle = Math.PI;
-    }
     
    
-    if (angle == 0){
-      movement = MathR.limit(pid.calculate(DriveSubsystem.getRoll(), 2), -0.2, 0.2);
-    }
-    else if (angle == Math.PI){
-      movement = MathR.limit(pid.calculate(DriveSubsystem.getRoll(), -2), -0.2, 0.2);
-    }
-    System.out.println(movement);
-    drive.move(VectorR.fromPolar(movement, angle), 0);
+    
+    
+    // movement = MathR.limit(pid.calculate(DriveSubsystem.getRoll(), 0), -0.3, 0.3) * 0.4;
+    
+    // System.out.println(movement);
+    drive.move(VectorR.fromCartesian(-speed, YController.calculate(DriveSubsystem.getRelativeFieldPosition().getY())), headingController.calculate(DriveSubsystem.getYawDegrees()));
   }
 
   // Called once the command ends or is interrupted.
@@ -55,6 +60,7 @@ public class GoToTiltCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return movement <= 0.1;
+   // System.out.println("ROLL: " + DriveSubsystem.getRoll() + " COND: " + (DriveSubsystem.getRoll() >= -8));
+    return greaterThan ? DriveSubsystem.getRoll() >= angle : DriveSubsystem.getRoll() <= angle;
   }
 }

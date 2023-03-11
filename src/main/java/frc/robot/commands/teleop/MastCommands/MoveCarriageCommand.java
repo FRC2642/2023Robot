@@ -9,6 +9,9 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.utils.MathR;
+
+import com.revrobotics.SparkMaxLimitSwitch;
+
 import edu.wpi.first.math.controller.PIDController;
 
 
@@ -20,7 +23,7 @@ public class MoveCarriageCommand extends CommandBase {
   private CarriageSubsystem carriage;
   public PIDController carriagePID = new PIDController(.01, 0, 0);
   private boolean extended = false;
-  private double dampen;
+  private boolean override = true;
 
   /** Creates a new CarriageMoveCommand. */
   public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {
@@ -40,43 +43,25 @@ public class MoveCarriageCommand extends CommandBase {
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if (control.getXButtonPressed()) {
+    if (control.getAButtonPressed() || control.getBButtonPressed()) {
       extended = !extended;
+      override = false;
+    }
+
+    if (extended){
+      carriage.move(-0.5);
+    }
+    else{
+      carriage.move(0.5);
     }
     
-
-    /*if (extended){
-      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1/*ish));
-    }
-    else {
-      carriage.move(MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0/*probably), -1, 1));
-    } */
-    
-
     if (Math.abs(control.getRightY()) > .1){
-        //carriage.move(control.getRightY());
-
-        //Slows carriage down if approaching the back of the robot
-        /*if (control.getRightY() < 0){
-          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 0), -1, 1);
-          carriage.move(control.getRightY() * dampen);
-        }
-
-        //Slows carriage down if approaching the front of the robot
-        else{
-          dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1);
-          carriage.move(control.getRightY() * dampen);
-        }*/
-        carriage.move(control.getRightY()*0.6);
-     }
-    else {
-        carriage.move(0);
-      }
-      
-
-
-
-    
+      carriage.move(control.getRightY()*0.6);
+      override = true;
+    }
+    else if (Math.abs(control.getRightY()) <= 0.1 && override){
+      carriage.move(0);
+    }
   }
 
   // Called once the command ends or is interrupted.
