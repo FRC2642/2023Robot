@@ -7,6 +7,7 @@ package frc.robot.commands.teleop.MastCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 
 public class MoveShoulder extends CommandBase {
   ShoulderSubsystem shoulder;
@@ -22,14 +23,14 @@ public class MoveShoulder extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shoulder.resetShoulderEncoder();
+    shoulder.resetShoulderEncoder(ShoulderPosition.STARTING_CONFIG);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     double speed = control.getLeftY();
-    shoulder.move(-speed);
+    shoulder.set(-speed, false);
        
   }
 

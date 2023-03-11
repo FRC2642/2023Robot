@@ -14,12 +14,10 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   double maxSpeed = 0.25;
 
-  final DriveSubsystem drive;
-
-  // CONTROLLER DATA
-  final XboxController control;
-  final VectorR leftJoystick = new VectorR();
-  final VectorR rightJoystick = new VectorR();
+  private final DriveSubsystem drive;
+  private final XboxController control;
+  private final VectorR leftJoystick = new VectorR();
+  private final VectorR rightJoystick = new VectorR();
 
   public JoystickOrientedDriveCommand(DriveSubsystem drive, XboxController control) {
     this.drive = drive;
@@ -32,15 +30,13 @@ public class JoystickOrientedDriveCommand extends CommandBase {
     DriveSubsystem.resetGyro(0.0);
   }
 
-  // JOYSTICK ORIENTED CONTROLLER
-  //final PIDController pid = new PIDController(0.95, 0.0, 0.0);
   final double TURN_KP = 1.0;
   private boolean isLocked = false;
   private double lockedHeading = 0;
 
   @Override
   public void execute() {
-    if (DriveSubsystem.getPitch() <= 5 || DriveSubsystem.getRoll() <= 5){
+    if (DriveSubsystem.getPitchDegrees() <= 5 || DriveSubsystem.getRollDegrees() <= 5){
     
       maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
 
@@ -80,26 +76,21 @@ public class JoystickOrientedDriveCommand extends CommandBase {
       drive.move(leftJoystick, turnPower * maxSpeed);
     }
     else{
-      if (DriveSubsystem.getPitch() <= -5){
+      if (DriveSubsystem.getPitchDegrees() <= -5){
         drive.move(VectorR.fromPolar(0.6, Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
       }
-      else if (DriveSubsystem.getPitch() >= 5){
+      else if (DriveSubsystem.getPitchDegrees() >= 5){
         drive.move(VectorR.fromPolar(0.6, Math.PI + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
       }
-      else if (DriveSubsystem.getRoll() <= -5){
+      else if (DriveSubsystem.getRollDegrees() <= -5){
         drive.move(VectorR.fromPolar(0.6, (Math.PI/2) + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
       }
-      else if (DriveSubsystem.getRoll() >= 5){
+      else if (DriveSubsystem.getRollDegrees() >= 5){
         drive.move(VectorR.fromPolar(0.6, (3*Math.PI/2) + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
       }
     }
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

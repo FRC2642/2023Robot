@@ -9,24 +9,21 @@ import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-public class ClawPneumaticSubsystem extends SubsystemBase {
-  /** Creates a new ClawPneumaticSubsystem. */
+public class ClawGripperSubsystem extends SubsystemBase {
+  
   public static PneumaticHub pneumatics = new PneumaticHub(32);
   public static Solenoid gripperSolenoid = pneumatics.makeSolenoid(Constants.GRIPPER_SOLENOID_CHANNEL);
-  public ClawPneumaticSubsystem() {
+
+  public ClawGripperSubsystem() {
     pneumatics.enableCompressorAnalog(100, 120);
 
   }
 
-  public void gripperExtend() {
-    gripperSolenoid.set(true);
-  }
-  
-  public void gripperRetract() {
-    gripperSolenoid.set(false);
+  public void set(boolean open) {
+    gripperSolenoid.set(!open);
   }
 
-  public static boolean isExtended(){
+  public static boolean isOpen(){
     return gripperSolenoid.get();
   }
 

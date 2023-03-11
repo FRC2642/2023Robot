@@ -27,15 +27,11 @@ public class VectorR implements Cloneable {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    // constructor
     public VectorR() {
         x = 0;
         y = 0;
     }
 
-    // helper functions
-
-    // adds a vector to this vector
     public void add(VectorR... vector) {
         for (var vec : vector) {
             x += vec.x;
@@ -73,18 +69,15 @@ public class VectorR implements Cloneable {
         return v3;
     }
 
+    /*
+     * Subtracts the following vectors from the first vector
+     */
     public static VectorR subVectors(VectorR... vectors) {
         VectorR v3 = vectors[0].clone();
         
         for (int i = 1; i < vectors.length; i++){
             v3.sub(vectors[i]);
         }
-        return v3;
-    }
-    
-    public static VectorR subVectors(VectorR v1, VectorR v2) {
-        var v3 = v1.clone();
-        v3.sub(v2);
         return v3;
     }
 
@@ -119,7 +112,6 @@ public class VectorR implements Cloneable {
         y = v.y;
     }
 
-    // ALWAYS NEGATIVE MAGNITUDE
     public double getTerminalMagnitude() {
         return getMagnitude() * -1;
     }
@@ -128,10 +120,6 @@ public class VectorR implements Cloneable {
         return getAngle() + Math.PI;
     }
 
-    @Override
-    public VectorR clone() {
-        return fromCartesian(x, y);
-    }
 
     public static VectorR fromPolar(double distance, double radians) {
         VectorR v = new VectorR();
@@ -148,45 +136,10 @@ public class VectorR implements Cloneable {
     public void rotate(double angle) {
         setAngle(getAngle() + angle);
     }
-
-    public static boolean compareVectors(VectorR vector1, VectorR vector2){
-        boolean magCheck = false;
-        boolean angleCheck = false;
-
-        //0.25 speed auto
-        //if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 1){
-        //    magCheck = true;
-        //}
-        //0.5 speed auto
-        //if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 2){
-        //    magCheck = true;
-        //}
-        //0.75 speed auto
-        if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 5){
-            magCheck = true;
-        }
-
-        /*if (Math.abs(MathR.halfOptimize(vector1.getAngle(), vector2.getAngle(), Math.toRadians(360))-vector2.getAngle()) <= Math.toRadians(10)){
-            angleCheck = true;
-        }*/
-
-        if (Math.abs(vector1.getAngle() - vector2.getAngle()) <= 5){
-            angleCheck = true;
-        }
-        
-        System.out.println("v1 mag: "+vector1.getMagnitude());
-        System.out.println("v2 mag: "+vector2.getMagnitude());
-
-        
-        System.out.println("magnitude check: "+magCheck);
-        System.out.println("angle check: "+angleCheck);
-        
-        if (magCheck && angleCheck){
-            return true;
-        }
-        else{
-            return false;
-        }
+    
+    @Override
+    public VectorR clone() {
+        return fromCartesian(x, y);
     }
 
     @Override

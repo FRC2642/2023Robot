@@ -11,7 +11,7 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 public class MoveSliderCommand extends CommandBase {
-  /** Creates a new MoveMainSliderCommand. */
+  
   SliderSubsystem slider;
   XboxController control;
   PIDController pid = new PIDController(0.2, 0, 0);
@@ -24,32 +24,16 @@ public class MoveSliderCommand extends CommandBase {
     addRequirements(slider);
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    //moves slider if A button is pressed
+    
     if (control.getAButtonPressed()){
-      //dont move illegaly moving down
-      if (ShoulderSubsystem.getEncoderTicks() < 90 && extended){
         extended = !extended;
-      //dont move illegaly moving up
-     } else if (ShoulderSubsystem.getEncoderTicks() > 90 && !extended){
-        extended = !extended;
-     }
 
-     //move slider
-     slider.move(extended);
+     slider.set(extended ? SliderSubsystem.SliderPosition.EXTENDED : SliderSubsystem.SliderPosition.RETRACTED);
     }
   }
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
+  
   @Override
   public boolean isFinished() {
     return false;

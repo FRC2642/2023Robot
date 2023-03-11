@@ -6,103 +6,74 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAnalogSensor;
-
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
-import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
-import com.revrobotics.SparkMaxLimitSwitch;
+import frc.robot.subsystems.interfaces.IPositionable;
+
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAnalogSensor.Mode;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
-public class ClawWristSubsystem extends SubsystemBase {
-
-  public CANSparkMax wrist = new CANSparkMax(24, MotorType.kBrushed);
-  public RelativeEncoder wristEncoder = wrist.getEncoder(Type.kQuadrature, 4);
-  //public static SparkMaxLimitSwitch wristLimitSwitch;
-  private PIDController wristPID = new PIDController(0.2, 0, 0);
+public class ClawWristSubsystem extends SubsystemBase implements IPositionable<ClawWristSubsystem.WristPosition> {
+  
   public static double DEGREES_PER_TICK = 180d/22d;
+  public static double MAX_DEGREES = 280d;
+  public static double MIN_DEGREES = 27d;
 
+  private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
+  private final RelativeEncoder wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
+  
+  private final PIDController wristPIDController = new PIDController(0.2, 0, 0);
+  private WristPosition currentSetPosition = WristPosition.MANUAL;
+  
+  public enum WristPosition {
+    MANUAL(-1),
+    HORIZONTAL1(180),
+    HORIZONTAL2(360),
+    VERTICAL1(90),
+    VERTICAL2(270);
+
+    public double angle;
+
+    private WristPosition(double angle) {
+      this.angle = angle;
+    }
+  }
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
     wristEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
   }
 
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("wrist encoder", getEncoderTicks());
-    //SmartDashboard.putNumber("wrist encoder deg", getEncoderTicks() * DEGREES_PER_TICK);
-
-  }
-
- 
-
-  public double getEncoderTicks() {
+  public double getWristAngle() {
     return wristEncoder.getPosition();
   }
-  public void stop() {
-    wrist.set(0);
-  }
+
   public void resetWristEncoder() {
     wristEncoder.setPosition(180.0);
-
   }
-  public void move(double speed) {
-    
+
+  public void set(double speed) {
+    currentSetPosition = WristPosition.MANUAL;
+    wristMotor.set(speed);
+  }
+
+  public void set(WristPosition pos) {
+    currentSetPosition = pos;
+    wristMotor.set(wristPIDController.calculate(getWristAngle(), pos.angle));
+  }
+
+  public boolean atSetPosition() {
+    return wristPIDController.atSetpoint();
+  }
+
+  public WristPosition getSetPosition() {
+    return currentSetPosition;
+  }
       
-  /*   if (getEncoderTicks() >= -180) {
-      if (speed <= -0.1){
-        wrist.set(speed);
-      }
-      else{
-        wrist.set(0.0);
-      }
-    }
-    else if (getEncoderTicks() < 180) {
-      if (speed >= 0.1){
-        wrist.set(speed);
-      }
-      else{
-        wrist.set(0.0);
-      }
-    }
-    else {*/
-      wrist.set(speed);
- //   }
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Wrist Angle", getWristAngle());
   }
- 
-
-  /*public void flipClaw(){
-    //Uh oh button
-    if (Math.abs(getEncoderTicks()) > 100 && !clawInRobot()){
-      move(wristPID.calculate(getEncoderTicks(), 0));
-    }
-    else if (Math.abs(getEncoderTicks()) < 25 && !clawInRobot()){
-      move(wristPID.calculate(getEncoderTicks(), 180));
-    }
-  }
-
-  public void setWrist(double speed){
-    if (speed == -1){
-      move(wristPID.calculate(getEncoderTicks(), -90));
-    } else if (speed <= -.2){
-      move(wristPID.calculate(getEncoderTicks(), -45));
-    } else if (speed < .2){
-      move(wristPID.calculate(getEncoderTicks(), 0));
-    } else if (speed < 1){
-      move(wristPID.calculate(getEncoderTicks(), 45));
-    } else{
-      move(wristPID.calculate(getEncoderTicks(), 90));
-    }
-  }*/
-
-  
-
 }

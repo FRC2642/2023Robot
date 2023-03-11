@@ -29,7 +29,7 @@ public class ToggleProtectShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    shoulder.protectionEnabled = !shoulder.protectionEnabled;
+   // shoulder.protectionEnabled = !shoulder.protectionEnabled;
   }
 
   // Called once the command ends or is interrupted.

@@ -140,7 +140,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
         }
     }
 
-    public double getDuration() {
+    public double getLastTime() {
         return last().time;
     }
 

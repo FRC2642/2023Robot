@@ -11,7 +11,7 @@ import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
 public class FollowVectorCommand extends CommandBase {
-  /** Creates a new FollowVectorCommand. */
+  
   private DriveSubsystem drive;
   private VectorR velocity;
   private double faceDegree;
@@ -30,21 +30,19 @@ public class FollowVectorCommand extends CommandBase {
   }
 
   public void setPeriodOrigin(){
-    initVector = drive.getDisplacement().clone();
+    initVector = DriveSubsystem.getRelativeFieldPosition();
   }
 
   public void setPeriodVector(){
-    periodVector = VectorR.subVectors(drive.getDisplacement().clone(), initVector);
+    periodVector = VectorR.subVectors(DriveSubsystem.getRelativeFieldPosition(), initVector);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     DriveSubsystem.resetDisplacement(VectorR.fromCartesian(0, 0));
     initVector.setFromCartesian(0, 0);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     if (set_period == false){
@@ -55,7 +53,7 @@ public class FollowVectorCommand extends CommandBase {
     double reference = 0;
     double turnWheelSpeed = 0;
       
-    reference = MathR.halfOptimize(DriveSubsystem.getYawDegrees(), faceDegree, 360);
+    reference = Math.toDegrees(MathR.getDistanceToAngleRadians(Math.toRadians(DriveSubsystem.getYawDegrees()), Math.toRadians(faceDegree)));
     
     //0.25 speed auto
     //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 400;
@@ -70,13 +68,8 @@ public class FollowVectorCommand extends CommandBase {
     setPeriodVector();
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return VectorR.compareVectors(periodVector, velocity);
+    return false; //??????????
   }
 }

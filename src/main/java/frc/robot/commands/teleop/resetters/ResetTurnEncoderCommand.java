@@ -23,7 +23,7 @@ public class ResetTurnEncoderCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.modules.frontLeft.turnEncoder.setPosition(0);
+  //  drive.modules.frontLeft.turnEncoder.setPosition(0);
   }
 
   // Called once the command ends or is interrupted.

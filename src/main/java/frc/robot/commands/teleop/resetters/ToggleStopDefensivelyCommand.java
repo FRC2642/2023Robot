@@ -18,7 +18,7 @@ public class ToggleStopDefensivelyCommand extends CommandBase {
 
   @Override
   public void execute() {
-    drive.setDefensiveMode(!drive.defenseActivated);
+    drive.setDefensiveMode(!drive.getDefensiveMode());
   }
 
   @Override

@@ -67,10 +67,10 @@ public class MoveCarriageCommand extends CommandBase {
           dampen = MathR.limit(carriagePID.calculate(CarriageSubsystem.getCarriageEncoder(), 18), -1, 1);
           carriage.move(control.getRightY() * dampen);
         }*/
-        carriage.move(control.getRightY()*0.6);
+        carriage.set(control.getRightY()*0.6);
      }
     else {
-        carriage.move(0);
+        carriage.set(0);
       }
       
 

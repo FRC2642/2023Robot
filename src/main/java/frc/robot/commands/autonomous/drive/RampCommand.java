@@ -12,7 +12,7 @@ import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
 public class RampCommand extends CommandBase {
-  /** Creates a new RampCommand. */
+  
   DriveSubsystem drive;
   VectorR vector;
   boolean onRamp = false;
@@ -50,24 +50,24 @@ public class RampCommand extends CommandBase {
     else{
       double movement;
       
-      movement = MathR.limit((pid.calculate(DriveSubsystem.getRoll(), 0) * 1), -0.12, 0.12);
+      movement = MathR.limit((pid.calculate(DriveSubsystem.getRollDegrees(), 0) * 1), -0.12, 0.12);
       drive.move(VectorR.fromPolar(-movement, 0), turnPower);
     }
 
     
-    maxTilt = (DriveSubsystem.getRoll() <= maxTilt)?DriveSubsystem.getRoll():maxTilt;
+    maxTilt = (DriveSubsystem.getRollDegrees() <= maxTilt)?DriveSubsystem.getRollDegrees():maxTilt;
     
     
     
     
-    if (DriveSubsystem.getRoll() <= -15){
+    if (DriveSubsystem.getRollDegrees() <= -15){
       climbingRamp = true;
     }
     
     
     
     
-    if (DriveSubsystem.getRoll() >= maxTilt + 5 && climbingRamp){
+    if (DriveSubsystem.getRollDegrees() >= maxTilt + 5 && climbingRamp){
       onRamp = true;
     }
     
@@ -87,10 +87,10 @@ public class RampCommand extends CommandBase {
       timer.start();
     }
     
-    if (DriveSubsystem.getRoll() >= -5 && DriveSubsystem.getRoll() <= 5 && onRamp && timer.get() >= 3){
+    if (DriveSubsystem.getRollDegrees() >= -5 && DriveSubsystem.getRollDegrees() <= 5 && onRamp && timer.get() >= 3){
       return true;
     }
-    else if (DriveSubsystem.getRoll() >= -5 && DriveSubsystem.getRoll() <= 5 && onRamp){
+    else if (DriveSubsystem.getRollDegrees() >= -5 && DriveSubsystem.getRollDegrees() <= 5 && onRamp){
       drive.stop();
       return false;
     }

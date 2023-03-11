@@ -13,34 +13,32 @@ import frc.robot.utils.MathR;
 
 
 public class ClawWristCommand extends CommandBase {
-  private XboxController control;
-  private ClawWristSubsystem wrist;
-  private PIDController pid = new PIDController(0.01, 0, 0.0);
+  private final XboxController auxControl;
+  private final ClawWristSubsystem wrist;
   private String direction = "center";
-  /** Creates a new ClawWristDirection. */
+  
   public ClawWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
-    this.control = auxControl;
+    this.auxControl = auxControl;
     this.wrist = wrist;
     addRequirements(wrist);
   }
 
-  // Called when the command is initially scheduled.
+  
   @Override
   public void initialize() {
     wrist.resetWristEncoder();
-    pid.setSetpoint(180);
   } 
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    wrist.set(0);
     /*if (limelight.getDetectionType() == "CONE"){
       if (limelight.getWidth() - limelight.getHeight() <= 1){
         wrist.moveWrist(-1);
       }
     }*/
-    
-    if (control.getPOV() == 0){
+    /*if (control.getPOV() == 0){
       direction = "center";
       pid.setSetpoint(180);
     }
@@ -64,7 +62,8 @@ public class ClawWristCommand extends CommandBase {
     else if (control.getPOV() == 180){
       direction = "bottom";
       pid.setSetpoint(360);
-    }
+    } */
+    
     
    /*  if (control.getXButton()){
       speed = 0.4;
@@ -76,19 +75,12 @@ public class ClawWristCommand extends CommandBase {
     //System.out.println("direction " + direction);
 
     //wrist.move(speed);
-    double speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);
+    //double speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);
     //SmartDashboard.putNumber("power wrist", speed);
-    wrist.move(speed);
+   // wrist.move(speed);
     
   } 
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {
-  
-  }
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

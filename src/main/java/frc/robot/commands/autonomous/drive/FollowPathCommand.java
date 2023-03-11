@@ -15,25 +15,22 @@ import frc.robot.path.*;
 
 public class FollowPathCommand extends CommandBase {
 
-  final double HEADING_KP = .016;
-  final double MOVEMENT_KP = .016;
-  final double PRECISION = 0.05;
+  public static final double HEADING_KP = .016;
+  public static final double MOVEMENT_KP = .016;
+  public static final double PRECISION = 0.05;
 
   private final DriveSubsystem drive;
   private final PiratePath path;
   private final Timer timer;
+  private final Iterator<PiratePoint> iterator;
 
-  final Iterator<PiratePoint> iterator;
+  private double startTime = 0.0;
 
-  double time = 0.0;
-
-
-  /** Creates a new FollowPathCommand. */
   public FollowPathCommand(DriveSubsystem drive, PiratePath path) {
     this.path = path;
     this.drive = drive;
-    timer = new Timer();
-    iterator = path.iterator();
+    this.timer = new Timer();
+    this.iterator = path.iterator();
     addRequirements(drive);
   }
 
@@ -41,28 +38,23 @@ public class FollowPathCommand extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    time = timer.get();
-    time+=path.getFirst().time;
+    startTime = path.getFirst().time;
     DriveSubsystem.resetDisplacement(path.getFirst().position);
     DriveSubsystem.resetGyro(Math.toDegrees(path.getFirst().heading));
-
   }
   
   PiratePoint nextPoint = null;
 
   @Override
   public void execute() {
+    double currentTime = timer.get() + path.getFirst().time;
+
+    while ((nextPoint == null || nextPoint.time - currentTime < PRECISION) && iterator.hasNext()) nextPoint = iterator.next();
     
-    time = timer.get() + path.getFirst().time;
-    //while ((nextPoint == null || nextPoint.time - timer.get() < PRECISION) && iterator.hasNext()) nextPoint = iterator.next();
-    while ((nextPoint == null || nextPoint.time - time < PRECISION) && iterator.hasNext()) nextPoint = iterator.next();
+    var delta_t = nextPoint.time - currentTime;
     
     var velocity = nextPoint.position.clone();
     velocity.sub(DriveSubsystem.getRelativeFieldPosition());
-
-    //var delta_t = nextPoint.time - timer.get();
-    var delta_t = nextPoint.time - time;
-
     velocity.mult(MOVEMENT_KP/delta_t);
 
     double turn = MathR.getDistanceToAngleRadians(Math.toRadians(DriveSubsystem.getYawDegrees()), nextPoint.heading)/ delta_t;
@@ -71,13 +63,7 @@ public class FollowPathCommand extends CommandBase {
   }
 
   @Override
-  public void end(boolean interrupted) {
-    timer.stop();
-  }
-
-  @Override
   public boolean isFinished() {
-    return time > (path.getDuration());
-    //return timer.get() > (path.getDuration());
+    return timer.get() + path.getFirst().time > path.getLastTime();
   }
 }
