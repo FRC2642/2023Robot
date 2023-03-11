@@ -174,13 +174,6 @@ public class VectorR implements Cloneable {
             angleCheck = true;
         }
         
-        System.out.println("v1 mag: "+vector1.getMagnitude());
-        System.out.println("v2 mag: "+vector2.getMagnitude());
-
-        
-        System.out.println("magnitude check: "+magCheck);
-        System.out.println("angle check: "+angleCheck);
-        
         if (magCheck && angleCheck){
             return true;
         }

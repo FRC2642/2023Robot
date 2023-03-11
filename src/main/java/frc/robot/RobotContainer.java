@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.claw.ManageClawPneumaticCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeSecondsCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.drive.FollowVectorCommand;
 import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.drive.RecenterDisplacementCommand;
 import frc.robot.commands.autonomous.fullAutos.BalanceRampCommand;
@@ -105,6 +106,8 @@ public class RobotContainer {
     autoChooser.addOption("score and balance", new ScoreAndBalanceAuto(slider, clawPneumatics, drive, carriage, shoulder));
     autoChooser.addOption("move out of the way", new FollowPathCommand(drive, autoPath2));
     autoChooser.addOption("open claw", new ManageClawPneumaticCommand(clawPneumatics, true));
+    autoChooser.addOption("follow vector", new FollowVectorCommand(drive, VectorR.fromPolar(1, 0), 0));
+    
     autoChooser.addOption("2 left high cubes + balance", new SequentialCommandGroup(
       new SetSliderCommand(slider, true)/*.alongWith(new SetCarriageCommand(carriage, true)).alongWith(new SetShoulderCommand(shoulder, 60 degrees))*/,
       new ManageClawPneumaticCommand(clawPneumatics, true),
@@ -112,8 +115,6 @@ public class RobotContainer {
       new FollowPathCommand(drive, autoPath1)/*.alongWith(new SetShoulderCommand(shoulder, 230 degrees)*/,
       new RunIntakeSecondsCommand(intake, 2, true)
       //NOT DONE
-
-      
     ));
     //chooser.addOption("drive command", new JoystickOrientedDriveCommand(drive, auxControl));
     
