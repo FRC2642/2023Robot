@@ -14,16 +14,18 @@ public class FollowVectorCommand extends CommandBase {
   /** Creates a new FollowVectorCommand. */
   private DriveSubsystem drive;
   private VectorR velocity;
+  private VectorR distance;
   private double faceDegree;
   public boolean set_period = false;
   private VectorR periodVector = new VectorR();
   private VectorR initVector = new VectorR();
   private PIDController autoPid = new PIDController(0.02, 0, 0);
 
-  public FollowVectorCommand(DriveSubsystem drive, VectorR velocity, double faceDegree) {
+  public FollowVectorCommand(DriveSubsystem drive, VectorR distance, VectorR velocity, double faceDegree) {
     //THIS COMMAND TAKES IN A VECTOR WITH AN ANGLE IN RADIANS AND AN ORIENTATION IN DEGREES
     this.drive = drive;
     this.velocity = velocity;
+    this.distance = distance;
     this.faceDegree = faceDegree;
     set_period = false;
     addRequirements(drive);
@@ -62,7 +64,7 @@ public class FollowVectorCommand extends CommandBase {
     //0.5 speed auto
     //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 100;
     //0.75 speed auto
-    turnWheelSpeed = MathR.limit(autoPid.calculate(reference, faceDegree), -1, 1) * 200;
+    turnWheelSpeed = MathR.limit(autoPid.calculate(reference, faceDegree), -1, 1);
     drive.move(velocity, turnWheelSpeed);
 
     
@@ -77,6 +79,9 @@ public class FollowVectorCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return VectorR.compareVectors(periodVector, velocity);
+    System.out.println("pv " + periodVector.getMagnitude());
+    System.out.println("dist " + distance.getMagnitude());
+    System.out.println(VectorR.compareVectors(periodVector, distance));
+    return VectorR.compareVectors(periodVector, distance);
   }
 }

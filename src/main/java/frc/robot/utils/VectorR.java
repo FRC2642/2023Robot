@@ -162,7 +162,7 @@ public class VectorR implements Cloneable {
         //    magCheck = true;
         //}
         //0.75 speed auto
-        if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 5){
+        if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 0.2){
             magCheck = true;
         }
 
@@ -173,13 +173,6 @@ public class VectorR implements Cloneable {
         if (Math.abs(vector1.getAngle() - vector2.getAngle()) <= 5){
             angleCheck = true;
         }
-        
-        System.out.println("v1 mag: "+vector1.getMagnitude());
-        System.out.println("v2 mag: "+vector2.getMagnitude());
-
-        
-        System.out.println("magnitude check: "+magCheck);
-        System.out.println("angle check: "+angleCheck);
         
         if (magCheck && angleCheck){
             return true;

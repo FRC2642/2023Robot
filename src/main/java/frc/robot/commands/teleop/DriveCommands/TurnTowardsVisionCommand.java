@@ -28,7 +28,8 @@ public class TurnTowardsVisionCommand extends CommandBase {
   private final RunningAverage leftAvg = new RunningAverage(20, 1.2);
   private final RunningAverage rightAvg = new RunningAverage(20, -1.2);
   /** Creates a new TurnTowardsVisionCommand. */
-  public TurnTowardsVisionCommand(DriveSubsystem drive, LimelightSubsystem limelight, XboxController xbox, LimelightSubsystem.DetectionType pipeline) {
+  public 
+  TurnTowardsVisionCommand(DriveSubsystem drive, LimelightSubsystem limelight, XboxController xbox, LimelightSubsystem.DetectionType pipeline) {
     this.drive = drive;
     this.limelight = limelight;
     this.xbox = xbox;

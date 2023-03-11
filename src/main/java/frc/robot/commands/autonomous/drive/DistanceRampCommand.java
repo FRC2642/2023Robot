@@ -46,7 +46,7 @@ public class DistanceRampCommand extends CommandBase {
   @Override
   public void execute() {
     if (timer.get() >= 1){
-      vector.div(timer.get());
+      vector.div(timer.get() * 0.795);
     }
     double turnPower = MathR.limit(anglePid.calculate(DriveSubsystem.getYawDegrees(), lockAngle), -0.5, 0.5);
     if (onRamp == false){
@@ -71,9 +71,8 @@ public class DistanceRampCommand extends CommandBase {
     if (DriveSubsystem.getRoll() <= -10){
       climbingRamp = true;
     }
-    if (climbingRamp && DriveSubsystem.getRoll() >= 0){
+    if (DriveSubsystem.getRoll() >= maxTilt + 2 && climbingRamp){
       onRamp = true;
-      
     }
     
   }

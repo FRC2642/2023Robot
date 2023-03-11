@@ -7,6 +7,9 @@ package frc.robot.commands.autonomous.fullAutos;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autonomous.drive.DistanceRampCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.drive.FollowVectorCommand;
+import frc.robot.commands.autonomous.drive.GoToTiltCommand;
+import frc.robot.commands.autonomous.waiters.WaitFor;
 import frc.robot.path.PiratePath;
 import frc.robot.path.PiratePoint;
 import frc.robot.subsystems.DriveSubsystem;
@@ -25,8 +28,10 @@ public class BalanceRampCommand extends SequentialCommandGroup {
     path.fillWithSubPointsEasing(.01, Functions.easeLinear);
 
     addCommands(
-    new DistanceRampCommand(drive, VectorR.fromPolar(0.2, Math.PI)),
-    new FollowPathCommand(drive, path)
+    new DistanceRampCommand(drive, VectorR.fromPolar(0.3, Math.PI)),
+    new WaitFor(drive, 2),
+    new GoToTiltCommand(drive),
+    new FollowVectorCommand(drive, VectorR.fromPolar(0, 0), VectorR.fromPolar(0.2, 0), 0)
     
     );
   }

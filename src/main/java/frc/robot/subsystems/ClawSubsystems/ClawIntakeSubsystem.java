@@ -6,13 +6,14 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClawIntakeSubsystem extends SubsystemBase {
   CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
-  DigitalInput intakeLimitSwitch = new DigitalInput(0);
+  
   
   public ClawIntakeSubsystem() {
 
@@ -36,5 +37,6 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    //System.out.println(intake.getForwardLimitSwitch(Type.kNormallyOpen).isPressed());
   }
 }
