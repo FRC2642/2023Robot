@@ -50,8 +50,7 @@ public class ClawWristCommand extends CommandBase {
       reachedEnd = false;
       pid.setSetpoint(180);
     }
-    else if (control.getPOV() == 90
-    ){
+    else if (control.getPOV() == 90){
       direction = "right";
       override = false;
       reachedEnd = false;

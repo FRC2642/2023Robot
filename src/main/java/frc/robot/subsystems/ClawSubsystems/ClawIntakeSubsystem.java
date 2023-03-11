@@ -37,6 +37,6 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    //System.out.println(intake.getForwardLimitSwitch(Type.kNormallyOpen).isPressed());
+    System.out.println(intake.getForwardLimitSwitch(Type.kNormallyOpen).isPressed());
   }
 }
