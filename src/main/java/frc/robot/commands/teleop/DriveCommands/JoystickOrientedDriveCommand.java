@@ -29,7 +29,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    DriveSubsystem.resetGyro(0.0);
+    //DriveSubsystem.resetGyro(0.0);
   }
 
   // JOYSTICK ORIENTED CONTROLLER

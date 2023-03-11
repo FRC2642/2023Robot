@@ -162,7 +162,7 @@ public class VectorR implements Cloneable {
         //    magCheck = true;
         //}
         //0.75 speed auto
-        if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 5){
+        if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 0.2){
             magCheck = true;
         }
 

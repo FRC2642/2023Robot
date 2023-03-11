@@ -43,7 +43,7 @@ public class ClawWristCommand extends CommandBase {
 
     double speed = 0;
     
-    if (control.getPOV() == 0){
+    /*if (control.getPOV() == 0){
       direction = "center";
       override = false;
       pid.setSetpoint(180);
@@ -73,7 +73,7 @@ public class ClawWristCommand extends CommandBase {
       direction = "bottom";
       override = false;
       pid.setSetpoint(360);
-    }
+    }*/
     
     if (control.getXButton()){
       speed = 0.6;
@@ -85,7 +85,7 @@ public class ClawWristCommand extends CommandBase {
     }
     else{
       if (override == false){
-        speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);
+        //speed =  MathR.limit(-pid.calculate(wrist.getEncoderTicks()), -0.5, 0.5);
       }
     }
     
