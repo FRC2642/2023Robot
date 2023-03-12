@@ -10,25 +10,20 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
-public class FollowVectorCommand extends CommandBase {
+public class DriveDistanceCommand extends DriveDirectionCommand {
   
-  private DriveSubsystem drive;
-  private VectorR velocity;
-  private double faceDegree;
+  private final VectorR distance;
+  
   public boolean set_period = false;
   private VectorR periodVector = new VectorR();
   private VectorR initVector = new VectorR();
-  private PIDController autoPid = new PIDController(0.02, 0, 0);
 
-  public FollowVectorCommand(DriveSubsystem drive, VectorR velocity, double faceDegree) {
-    //THIS COMMAND TAKES IN A VECTOR WITH AN ANGLE IN RADIANS AND AN ORIENTATION IN DEGREES
-    this.drive = drive;
-    this.velocity = velocity;
-    this.faceDegree = faceDegree;
+  public DriveDistanceCommand(DriveSubsystem drive, VectorR distance, VectorR velocity, double faceDegree) {
+    super(drive, velocity, faceDegree);
+    this.distance = distance;
     set_period = false;
-    addRequirements(drive);
   }
-
+  
   public void setPeriodOrigin(){
     initVector = DriveSubsystem.getRelativeFieldPosition();
   }
@@ -36,7 +31,7 @@ public class FollowVectorCommand extends CommandBase {
   public void setPeriodVector(){
     periodVector = VectorR.subVectors(DriveSubsystem.getRelativeFieldPosition(), initVector);
   }
-
+  
   @Override
   public void initialize() {
     DriveSubsystem.resetDisplacement(VectorR.fromCartesian(0, 0));
@@ -45,31 +40,19 @@ public class FollowVectorCommand extends CommandBase {
 
   @Override
   public void execute() {
+    
     if (set_period == false){
       setPeriodOrigin();
       set_period = true;
     }
-
-    double reference = 0;
-    double turnWheelSpeed = 0;
-      
-    reference = Math.toDegrees(MathR.getDistanceToAngleRadians(Math.toRadians(DriveSubsystem.getYawDegrees()), Math.toRadians(faceDegree)));
-    
-    //0.25 speed auto
-    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 400;
-    //0.5 speed auto
-    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 100;
-    //0.75 speed auto
-    turnWheelSpeed = MathR.limit(autoPid.calculate(reference, faceDegree), -1, 1) * 200;
-    drive.move(velocity, turnWheelSpeed);
-
+    super.execute();
     
     //profiler.updatePosition();
     setPeriodVector();
   }
-
+  
   @Override
   public boolean isFinished() {
-    return false; //??????????
+    return periodVector.compare(distance, 0.2, Math.toRadians(5));
   }
 }

@@ -21,10 +21,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClawWristSubsystem extends SubsystemBase implements IPositionable<ClawWristSubsystem.WristPosition> {
   
-  public static double DEGREES_PER_TICK = 180d/22d;
-  public static double MAX_DEGREES = 280d;
-  public static double MIN_DEGREES = 27d;
-  public static double AT_SETPOINT_THRESHOLD = 10d;
+  public static final double DEGREES_PER_TICK = 180d/22d;
+  public static final double MAX_DEGREES = 280d;
+  public static final double MIN_DEGREES = 27d;
+  public static final double AT_SETPOINT_THRESHOLD = 10d;
 
   private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
   private final RelativeEncoder wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
@@ -51,6 +51,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
     wristPIDController.setP(0.01);
     wristPIDController.setI(0.04);
     wristPIDController.setD(2e-4);
+    wristPIDController.setFeedbackDevice(wristEncoder);
   }
 
   public double getWristAngle() {

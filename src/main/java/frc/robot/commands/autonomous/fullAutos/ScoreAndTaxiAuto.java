@@ -8,10 +8,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
-import frc.robot.commands.autonomous.drive.FollowVectorCommand;
-import frc.robot.commands.autonomous.drive.RampCommand;
 import frc.robot.commands.autonomous.mast.SetShoulderCommand;
-import frc.robot.commands.autonomous.mast.SetSliderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
@@ -19,7 +16,6 @@ import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
-import frc.robot.utils.VectorR;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:

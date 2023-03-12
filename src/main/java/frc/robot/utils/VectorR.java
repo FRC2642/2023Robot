@@ -146,4 +146,10 @@ public class VectorR implements Cloneable {
     public String toString() {
         return "<" + x + "," + y + ">";
     }
+
+    public boolean compare(VectorR v, double distanceThreshold, double angleRadThreshold) {
+        boolean magnitude = Math.abs(getMagnitude() - v.getMagnitude()) < distanceThreshold;
+        boolean angle = Math.abs(MathR.getDistanceToAngleRadians(getAngle(), v.getAngle())) < angleRadThreshold;
+        return magnitude && angle;
+    }
 }

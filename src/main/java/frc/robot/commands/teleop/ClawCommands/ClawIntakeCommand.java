@@ -25,13 +25,16 @@ public class ClawIntakeCommand extends CommandBase {
     double speed = 0;
 
     if (auxControl.getRightTriggerAxis() >= 0.2){
-      speed = -auxControl.getRightTriggerAxis();
+      speed = Math.pow(auxControl.getRightTriggerAxis(),2);
     }
     else if (auxControl.getLeftTriggerAxis() >= 0.2){
-      speed = auxControl.getLeftTriggerAxis();
+      speed = -Math.pow(auxControl.getLeftTriggerAxis(),2);
     }
     if (ClawGripperSubsystem.isOpen() && speed < 0){
-      speed *= 0.3;
+      speed *= 0.54;
+    }
+    if (ClawGripperSubsystem.isOpen() && ClawIntakeSubsystem.objectInClaw() && auxControl.getLeftTriggerAxis() <= 0.1) {
+      speed = 0.102;
     }
     intake.set(speed);
   }

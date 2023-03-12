@@ -25,6 +25,7 @@ public class FollowPathCommand extends CommandBase {
   private final Iterator<PiratePoint> iterator;
 
   private double startTime = 0.0;
+  
 
   public FollowPathCommand(DriveSubsystem drive, PiratePath path) {
     this.path = path;

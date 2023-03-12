@@ -8,7 +8,9 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -19,14 +21,15 @@ import frc.robot.utils.MathR;
 
 public class ShoulderSubsystem extends SubsystemBase implements IPositionable<ShoulderSubsystem.ShoulderPosition> {
 
-  public static final double DEGREES_PER_TICK = 180d / 5d;
+  public static final double DEGREES_PER_TICK = 360d / 3.3d;
   public static final double INCLINE_DEGREES = 27d;
-  public static final double MAX_DEGREES = 180 + INCLINE_DEGREES;
-  public static final double MIN_DEGREES = INCLINE_DEGREES;
+  public static final double MAX_DEGREES = 90 + INCLINE_DEGREES;
+  public static final double MIN_DEGREES = -INCLINE_DEGREES;
+  public static final double OFFSET_DEGREES = 0;
 
   private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
-  private final RelativeEncoder shoulderEncoder = shoulderMotor.getEncoder(Type.kQuadrature, 4096);
   private final PIDController shoulderPIDController = new PIDController(0.2, 0.0, 0.0);
+  private final SparkMaxAnalogSensor absEncoder;
 
   ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
   // private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
@@ -52,8 +55,8 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
 
   public ShoulderSubsystem() {
-    resetShoulderEncoder(ShoulderPosition.STARTING_CONFIG);
-    shoulderEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
+    absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
+    absEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
   }
 
   //Negative = down, Positive = up
@@ -68,8 +71,9 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public void set(ShoulderPosition pos) {
     currentSetPosition = pos;
-    shoulderPIDController.setSetpoint(pos.angle);
-    shoulderMotor.set(shoulderPIDController.calculate(getShoulderAngle()));
+    double speed = MathR.limit(MathR.getDistanceToAngleRadians(getShoulderAngle(), pos.angle), -1, 1);
+    
+    shoulderMotor.set(MathR.limitWhenReached(speed, -1, 1, getShoulderAngle() <= MIN_DEGREES, getShoulderAngle() >= MAX_DEGREES));
   }
 
   public boolean atSetPosition() {
@@ -80,12 +84,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public double getShoulderAngle() {
-    return shoulderEncoder.getPosition();
-  }
-  
-  public void resetShoulderEncoder(ShoulderPosition pos) {
-    currentSetPosition = pos;
-    shoulderEncoder.setPosition(pos.angle);
+    return absEncoder.getPosition() + OFFSET_DEGREES;
   }
 
   @Override

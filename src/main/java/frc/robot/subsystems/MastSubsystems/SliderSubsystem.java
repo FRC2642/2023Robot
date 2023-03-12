@@ -8,9 +8,11 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.interfaces.IPositionable;
 
 public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
@@ -22,6 +24,8 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
 
   private final PIDController sliderPIDController = new PIDController(0.05, 0, 0);
   private SliderPosition currentSetPosition = SliderPosition.RETRACTED;
+
+  private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(1);
 
   public enum SliderPosition {
     MANUAL(-1),
@@ -43,16 +47,25 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     sliderEncoder.setPosition(0.0);
     sliderEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
     sliderMotor.setClosedLoopRampRate(0.5);
+
+    
   }
 
   public void set(SliderPosition pos) {
     currentSetPosition = pos;
     sliderPIDController.setSetpoint(pos.extension);
     sliderMotor.set(sliderPIDController.calculate(getSliderExtension()));
+    
+    if (atSetPosition()) brake.set(true);
+    else brake.set(false);
   }
 
   public void set(double speed) {
     currentSetPosition = SliderPosition.MANUAL;
+
+    if (Math.abs(speed) < 0.1) brake.set(true);
+    else brake.set(false);
+
     sliderMotor.set(speed);
   }
 

@@ -21,8 +21,8 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private final RelativeEncoder carriageEncoder = carriageMotor.getEncoder();
-  private final SparkMaxLimitSwitch bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyOpen);
-  private final SparkMaxLimitSwitch topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+  private static SparkMaxLimitSwitch bottomLimitSwitch;
+  private static SparkMaxLimitSwitch topLimitSwitch;
 
   private CarriagePosition currentSetPosition = CarriagePosition.RETRACTED;
 
@@ -34,6 +34,9 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   public CarriageSubsystem() {
     carriageMotor.setClosedLoopRampRate(0.5);
     carriageEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
+    bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+    topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyOpen);
+  
   }
   //Positive = up
   @Override
@@ -45,21 +48,30 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     carriageMotor.set(speed);
   }
 
-  public double getCarriageExtension() {
-    return carriageEncoder.getPosition();
+ /*  public static boolean getCarriageExtension() {
+    //return carriageEncoder.getPosition();
+    return topLimitSwitch.isPressed();
+  } */
+  public static boolean isCarriageUp() {
+    return topLimitSwitch.isPressed();
+  }
+  public static boolean isCarriageDown() {
+    return bottomLimitSwitch.isPressed();
   }
 
   
 
   //reset the carriage position
-  public void resetCarriageEncoder() {
+ /*  public void resetCarriageEncoder() {
     currentSetPosition = CarriagePosition.RETRACTED;
     carriageEncoder.setPosition(0);
-  }
+  }*/
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Carriage Extension",carriageEncoder.getPosition());
+    //SmartDashboard.putNumber("Carriage Extension",carriageEncoder.getPosition());
+    SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
+    SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
   }
 
   @Override

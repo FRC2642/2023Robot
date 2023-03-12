@@ -23,7 +23,6 @@ public class MoveShoulder extends CommandBase {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    shoulder.resetShoulderEncoder(ShoulderPosition.STARTING_CONFIG);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

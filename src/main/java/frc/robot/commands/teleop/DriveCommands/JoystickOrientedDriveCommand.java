@@ -36,8 +36,6 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (DriveSubsystem.getPitchDegrees() <= 5 || DriveSubsystem.getRollDegrees() <= 5){
-    
       maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
 
       //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
@@ -74,21 +72,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
       leftJoystick.mult(maxSpeed);
       drive.move(leftJoystick, turnPower * maxSpeed);
-    }
-    else{
-      if (DriveSubsystem.getPitchDegrees() <= -5){
-        drive.move(VectorR.fromPolar(0.6, Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
-      }
-      else if (DriveSubsystem.getPitchDegrees() >= 5){
-        drive.move(VectorR.fromPolar(0.6, Math.PI + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
-      }
-      else if (DriveSubsystem.getRollDegrees() <= -5){
-        drive.move(VectorR.fromPolar(0.6, (Math.PI/2) + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
-      }
-      else if (DriveSubsystem.getRollDegrees() >= 5){
-        drive.move(VectorR.fromPolar(0.6, (3*Math.PI/2) + Math.toRadians(DriveSubsystem.getYawDegrees())), 0);
-      }
-    }
+    
   }
 
   @Override
