@@ -153,7 +153,7 @@ public class SwerveModule {
     if (Math.abs(MathR.getDistanceToAngleRadians(getWheelHeadingRadians(), desiredAngle())) > Math.toRadians(90))
       reverse();
 
-    double speed_power = MathR.limit(desiredSpeed(), -1, 1);
+    double speed_power = MathR.limit(desiredSpeed(), -1.2, 1.2);
     double angle_power = 1 * MathR
         .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngleRadians(getWheelHeadingRadians(), desiredAngle()), -1, 1);
 

@@ -18,7 +18,7 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   private SparkMaxLimitSwitch intakeSwitch = intake.getForwardLimitSwitch(Type.kNormallyOpen);
   
   public ClawIntakeSubsystem() {
-
+    intake.setInverted(true);
   }
 
   public void move(double speed) {

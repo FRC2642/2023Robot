@@ -42,7 +42,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
   public void execute() {
     if (DriveSubsystem.getPitch() <= 5 || DriveSubsystem.getRoll() <= 5){
     
-      maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
+      maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.2, control.getLeftTriggerAxis());
 
       //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
       

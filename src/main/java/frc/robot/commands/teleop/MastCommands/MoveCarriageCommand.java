@@ -43,7 +43,7 @@ public class MoveCarriageCommand extends CommandBase {
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if (control.getAButtonPressed() || control.getBButtonPressed()) {
+    /*if (control.getAButtonPressed() || control.getBButtonPressed()) {
       extended = !extended;
       override = false;
     }
@@ -53,7 +53,7 @@ public class MoveCarriageCommand extends CommandBase {
     }
     else{
       carriage.move(0.5);
-    }
+    }*/
     
     if (Math.abs(control.getRightY()) > .1){
       carriage.move(control.getRightY()*0.6);

@@ -42,7 +42,7 @@ public class CarriageSubsystem extends SubsystemBase {
     else{
       carriage.set(-speed);
     }*/
-    carriage.set(0.0);
+    carriage.set(speed);
     
     
   }
