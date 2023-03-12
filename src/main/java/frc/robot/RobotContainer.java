@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -13,6 +14,7 @@ import frc.robot.commands.teleop.ClawCommands.ClawPneumaticCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
 import frc.robot.commands.teleop.ClawCommands.ClawIntakeCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
+import frc.robot.commands.teleop.DriveCommands.JoystickTurnSpeedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
 import frc.robot.commands.teleop.MastCommands.MoveCarriageCommand;
 import frc.robot.commands.teleop.MastCommands.MoveSliderCommand;
@@ -39,18 +41,17 @@ public class RobotContainer {
 
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem limelight = new LimelightSubsystem();
- // private final ClawGripperSubsystem clawPneumatics = new ClawGripperSubsystem();
-//  private final CarriageSubsystem carriage = new CarriageSubsystem();
-//  private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
-//  private final SliderSubsystem slider = new SliderSubsystem();
-//  private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
-//  private final ClawWristSubsystem wrist = new ClawWristSubsystem();
+  private final ClawGripperSubsystem clawPneumatics = new ClawGripperSubsystem();
+  private final CarriageSubsystem carriage = new CarriageSubsystem();
+  private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
+  private final SliderSubsystem slider = new SliderSubsystem();
+  private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
+  private final ClawWristSubsystem wrist = new ClawWristSubsystem();
 
   public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
   public RobotContainer() {
     // Default commands
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
   //  clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
   //  carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
   //  intake.setDefaultCommand(new ClawIntakeCommand(intake, mainControl, auxControl));
@@ -71,6 +72,59 @@ public class RobotContainer {
 
     // Button bindings
     configureButtonBindings();
+  }
+
+  public void autonomousInit() {
+    drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
+
+  }
+
+  public void teleopInit() {
+    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+
+  }
+
+  public void testInit() {
+    drive.setDefaultCommand(new JoystickTurnSpeedDriveCommand(drive, mainControl));
+
+    /* 
+    clawPneumatics.setDefaultCommand(new RunCommand(() -> {
+      if (mainControl.getLeftX() > 0.5) clawPneumatics.set(true);
+      else clawPneumatics.set(false);
+    }, clawPneumatics));
+
+
+    carriage.setDefaultCommand(new RunCommand(() -> {
+      carriage.set(mainControl.getLeftX());
+    }, carriage));
+
+
+    intake.setDefaultCommand(new RunCommand(() -> {
+      intake.set(mainControl.getLeftX());
+    }, intake));
+
+
+    slider.setDefaultCommand(new RunCommand(() -> {
+      slider.set(mainControl.getLeftX());
+    }, slider));
+
+
+    shoulder.setDefaultCommand(new RunCommand(() -> {
+      shoulder.set(mainControl.getLeftX(), false);
+    }, shoulder));
+
+    wrist.setDefaultCommand(new RunCommand(() -> {
+      wrist.set(mainControl.getLeftX());
+    }, wrist));
+
+    
+    limelight.setDefaultCommand(new RunCommand(() -> {
+
+    }, limelight));*/
+
+    new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
+
+
   }
 
   private void configureButtonBindings() {

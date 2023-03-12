@@ -18,17 +18,8 @@ public class ClawIntakeSubsystem extends SubsystemBase {
 
   }
 
-  public void move(double speed) {
-    if (speed <= -0.1){
-      intake.set(speed);
-      
-    }
-    else if (speed >= 0.1){
-      intake.set(speed);
-    }
-    else{
-      intake.set(0);
-    }
+  public void set(double speed) {
+    intake.set(speed);
     
   }
 

@@ -42,6 +42,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   public SliderSubsystem() {
     sliderEncoder.setPosition(0.0);
     sliderEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
+    sliderMotor.setClosedLoopRampRate(0.5);
   }
 
   public void set(SliderPosition pos) {

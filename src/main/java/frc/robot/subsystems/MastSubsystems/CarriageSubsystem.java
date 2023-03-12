@@ -11,14 +11,18 @@ import frc.robot.subsystems.interfaces.IPositionable;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 public class CarriageSubsystem extends SubsystemBase implements IPositionable<CarriageSubsystem.CarriagePosition> {
 
   public static final double FULL_EXTENSION_PER_TICK = 1d / 520d;
 
-  private final CANSparkMax carriage = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
-  private final RelativeEncoder carriageEncoder;
+  private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
+  private final RelativeEncoder carriageEncoder = carriageMotor.getEncoder();
+  private final SparkMaxLimitSwitch bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyClosed);
+  private final SparkMaxLimitSwitch topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyClosed);
 
   private CarriagePosition currentSetPosition = CarriagePosition.RETRACTED;
 
@@ -28,12 +32,17 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   }
 
   public CarriageSubsystem() {
-    carriageEncoder = carriage.getEncoder();
+    carriageMotor.setClosedLoopRampRate(0.5);
     carriageEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
   }
 
+  @Override
+  public void set(CarriagePosition pos) {
+    carriageMotor.set(pos == CarriagePosition.EXTENDED ? 0.5 : -0.5);
+  }
+
   public void set(double speed){
-    carriage.set(0);
+    carriageMotor.set(speed);
   }
 
   public double getCarriageExtension() {
@@ -63,9 +72,4 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     return currentSetPosition;
   }
 
-  @Override
-  public void set(CarriagePosition pos) {
-    carriage.stopMotor();
-    
-  }
 }
