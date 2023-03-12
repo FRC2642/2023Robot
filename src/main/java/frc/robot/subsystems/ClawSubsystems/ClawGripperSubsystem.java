@@ -20,7 +20,7 @@ public class ClawGripperSubsystem extends SubsystemBase {
   }
 
   public void set(boolean open) {
-    gripperSolenoid.set(!open);
+    gripperSolenoid.set(open);
   }
 
   public static boolean isOpen(){

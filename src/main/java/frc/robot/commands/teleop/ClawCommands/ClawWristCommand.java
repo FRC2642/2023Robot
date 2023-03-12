@@ -9,13 +9,13 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.utils.MathR;
 
 
 public class ClawWristCommand extends CommandBase {
   private final XboxController auxControl;
   private final ClawWristSubsystem wrist;
-  private String direction = "center";
   
   public ClawWristCommand(ClawWristSubsystem wrist, XboxController auxControl) {
     this.auxControl = auxControl;
@@ -32,7 +32,19 @@ public class ClawWristCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.set(0);
+    switch(auxControl.getPOV()) {
+      case 0: {
+        wrist.set(WristPosition.HORIZONTAL1);
+      }
+      case 270:{
+        wrist.set(WristPosition.VERTICAL1);
+      } 
+      case 180:{
+        wrist.set(WristPosition.HORIZONTAL2);
+      } 
+
+      if (wrist.atSetPosition()) wrist.set(0);
+    }
     /*if (limelight.getDetectionType() == "CONE"){
       if (limelight.getWidth() - limelight.getHeight() <= 1){
         wrist.moveWrist(-1);

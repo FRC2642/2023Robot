@@ -56,6 +56,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     shoulderEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
   }
 
+  //Negative = down, Positive = up
   public void set(double speed, boolean softLimit) {
     currentSetPosition = ShoulderPosition.MANUAL;
     if (softLimit)

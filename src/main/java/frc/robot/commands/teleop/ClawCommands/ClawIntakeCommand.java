@@ -33,7 +33,7 @@ public class ClawIntakeCommand extends CommandBase {
     if (ClawGripperSubsystem.isOpen() && speed < 0){
       speed *= 0.3;
     }
-    intake.move(speed);
+    intake.set(speed);
   }
 
   @Override

@@ -15,9 +15,10 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   DigitalInput intakeLimitSwitch = new DigitalInput(0);
   
   public ClawIntakeSubsystem() {
-
+    intake.setInverted(false);
   }
 
+  //Positive = intake, Negative = outake
   public void set(double speed) {
     intake.set(speed);
     

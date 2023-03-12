@@ -22,7 +22,6 @@ import frc.robot.commands.teleop.MastCommands.MoveShoulder;
 import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyro;
-import frc.robot.commands.teleop.resetters.ResetShoulderEncoderCommand;
 import frc.robot.commands.teleop.resetters.ToggleProtectShoulder;
 import frc.robot.commands.teleop.resetters.ToggleStopDefensivelyCommand;
 import frc.robot.subsystems.DriveSubsystem;
@@ -65,10 +64,9 @@ public class RobotContainer {
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
    // SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
-   // SmartDashboard.putData(new ResetWristEncoderCommand(wrist));
-   // SmartDashboard.putData(new ResetGyro(drive));
-   // SmartDashboard.putData(new ResetDisplacementCommand(drive));
-   // SmartDashboard.putData(new ResetShoulderEncoderCommand());
+    SmartDashboard.putData(new ResetWristEncoderCommand(wrist));
+    SmartDashboard.putData(new ResetGyro(drive));
+    SmartDashboard.putData(new ResetDisplacementCommand(drive));
 
     // Button bindings
     configureButtonBindings();
@@ -80,23 +78,18 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
-
-  }
-
-  public void testInit() {
-    drive.setDefaultCommand(new JoystickTurnSpeedDriveCommand(drive, mainControl));
-
-    /* 
-    clawPneumatics.setDefaultCommand(new RunCommand(() -> {
+    //drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+    
+    
+   /*  clawPneumatics.setDefaultCommand(new RunCommand(() -> {
       if (mainControl.getLeftX() > 0.5) clawPneumatics.set(true);
       else clawPneumatics.set(false);
-    }, clawPneumatics));
+    }, clawPneumatics)); 
 
-
+ 
     carriage.setDefaultCommand(new RunCommand(() -> {
       carriage.set(mainControl.getLeftX());
-    }, carriage));
+    }, carriage)); 
 
 
     intake.setDefaultCommand(new RunCommand(() -> {
@@ -108,21 +101,32 @@ public class RobotContainer {
       slider.set(mainControl.getLeftX());
     }, slider));
 
-
+ 
     shoulder.setDefaultCommand(new RunCommand(() -> {
       shoulder.set(mainControl.getLeftX(), false);
-    }, shoulder));
+    }, shoulder));*/
 
-    wrist.setDefaultCommand(new RunCommand(() -> {
-      wrist.set(mainControl.getLeftX());
-    }, wrist));
+  //  wrist.setDefaultCommand(new RunCommand(() -> {
+     // wrist.set(mainControl.getLeftX());
 
-    
+   // }, wrist));
+   wrist.setDefaultCommand(new ClawWristCommand(wrist, mainControl));
+
+    /*
     limelight.setDefaultCommand(new RunCommand(() -> {
 
     }, limelight));*/
 
     new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
+
+  }
+
+
+  //test mode doesnt work with controllers
+  public void testInit() {
+  //  System.out.println("TEST INIT");
+  //  drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+
 
 
   }

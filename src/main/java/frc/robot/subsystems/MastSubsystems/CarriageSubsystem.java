@@ -21,8 +21,8 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private final RelativeEncoder carriageEncoder = carriageMotor.getEncoder();
-  private final SparkMaxLimitSwitch bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyClosed);
-  private final SparkMaxLimitSwitch topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyClosed);
+  private final SparkMaxLimitSwitch bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyOpen);
+  private final SparkMaxLimitSwitch topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyOpen);
 
   private CarriagePosition currentSetPosition = CarriagePosition.RETRACTED;
 
@@ -35,7 +35,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     carriageMotor.setClosedLoopRampRate(0.5);
     carriageEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
   }
-
+  //Positive = up
   @Override
   public void set(CarriagePosition pos) {
     carriageMotor.set(pos == CarriagePosition.EXTENDED ? 0.5 : -0.5);
