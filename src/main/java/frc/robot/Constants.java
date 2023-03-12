@@ -13,7 +13,6 @@ public final class Constants {
     public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
     public static final double MODULE_ANGLE_KP = 0.3;
     public static final double FOOT_PER_METER = 3.28084;
-    public static final double DRIFT_PER_DEGREE = 0.01805556;
 
     // Controlers
     public static final int DRIVE_CONTROL_PORT = 0;
@@ -33,25 +32,6 @@ public final class Constants {
     // Claw
     public static final int WRIST_MOTOR = 24;
     public static final int GRIPPER_INTAKE_MOTOR = 25;
-
-    // Limit Switches
-
-    // Slider
-    public static final int SLIDER_REAR_LIMIT_SWITCH = 1;
-    public static final int SLIDER_FRONT_LIMIT_SWITCH = 2;
-
-    // Carriage
-    public static final int CARRIAGE_BACK_LIMIT_SWITCH = 3;
-    public static final int CARRIAGE_FRONT_LIMIT_SWITCH = 4;
-
-    // Shoulder
-    public static final int SHOULDER_FRONT_LIMIT_SWITCH = 5;
-    public static final int SHOULDER_REAR_LIMIT_SWITCH = 6;
-
-    // Wrist
-    public static final int WRIST_LIMIT_SWITCH = 7;
-
-    // Solenoids
 
     // Gripper
     public static final int GRIPPER_SOLENOID_CHANNEL = 0;
