@@ -153,33 +153,15 @@ public class VectorR implements Cloneable {
         boolean magCheck = false;
         boolean angleCheck = false;
 
-        //0.25 speed auto
-        //if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 1){
-        //    magCheck = true;
-        //}
-        //0.5 speed auto
-        //if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 2){
-        //    magCheck = true;
-        //}
-        //0.75 speed auto
         if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 0.2){
             magCheck = true;
         }
-
-        /*if (Math.abs(MathR.halfOptimize(vector1.getAngle(), vector2.getAngle(), Math.toRadians(360))-vector2.getAngle()) <= Math.toRadians(10)){
-            angleCheck = true;
-        }*/
 
         if (Math.abs(vector1.getAngle() - vector2.getAngle()) <= 5){
             angleCheck = true;
         }
         
-        if (magCheck && angleCheck){
-            return true;
-        }
-        else{
-            return false;
-        }
+        return magCheck && angleCheck;
     }
 
     @Override

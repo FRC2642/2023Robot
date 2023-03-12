@@ -19,7 +19,7 @@ public class FollowVectorCommand extends CommandBase {
   public boolean set_period = false;
   private VectorR periodVector = new VectorR();
   private VectorR initVector = new VectorR();
-  private PIDController autoPid = new PIDController(0.02, 0, 0);
+  private PIDController pid = new PIDController(0.02, 0, 0);
 
   public FollowVectorCommand(DriveSubsystem drive, VectorR distance, VectorR velocity, double faceDegree) {
     //THIS COMMAND TAKES IN A VECTOR WITH AN ANGLE IN RADIANS AND AN ORIENTATION IN DEGREES
@@ -59,12 +59,7 @@ public class FollowVectorCommand extends CommandBase {
       
     reference = MathR.halfOptimize(DriveSubsystem.getYawDegrees(), faceDegree, 360);
     
-    //0.25 speed auto
-    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 400;
-    //0.5 speed auto
-    //turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1) * 100;
-    //0.75 speed auto
-    turnWheelSpeed = MathR.limit(autoPid.calculate(reference, faceDegree), -1, 1);
+    turnWheelSpeed = MathR.limit(pid.calculate(reference, faceDegree), -1, 1);
     drive.move(velocity, turnWheelSpeed);
 
     

@@ -27,7 +27,6 @@ public class GoToTiltCommand extends CommandBase {
     this.angle = angle;
     this.greaterThan = greaterThan;
     addRequirements(drive);
-    // Use addRequirements() here to declare subsystem dependencies.
   }
 
   // Called when the command is initially scheduled.
