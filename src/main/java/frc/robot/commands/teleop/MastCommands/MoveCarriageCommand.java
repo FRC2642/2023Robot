@@ -20,7 +20,6 @@ public class MoveCarriageCommand extends CommandBase {
   private CarriageSubsystem carriage;
   public PIDController carriagePID = new PIDController(.01, 0, 0);
   private boolean extended = false;
-  private double dampen;
 
   /** Creates a new CarriageMoveCommand. */
   public MoveCarriageCommand(CarriageSubsystem carriage, XboxController auxControl) {

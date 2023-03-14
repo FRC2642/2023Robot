@@ -37,14 +37,14 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public enum ShoulderPosition {
     MANUAL(-1),
-    STARTING_CONFIG(160),
+    STARTING_CONFIG(70),
     PICKUP_GROUND(MAX_DEGREES),
     PICKUP_HUMANPLAYER(MIN_DEGREES),
-    PLACE_SHELF1(180),
-    PLACE_SHELF2(150),
-    PLACE_CONE1(180),
+    PLACE_CUBE1(180),
+    PLACE_CUBE2(150),
+    PLACE_CONE1(170),
     PLACE_CONE1_OFFSIDE(MIN_DEGREES),
-    PLACE_CONE2(MIN_DEGREES);
+    PLACE_CONE2_OFFSIDE(MIN_DEGREES);
 
     public double angle;
 

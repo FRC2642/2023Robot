@@ -28,8 +28,8 @@ public class MoveShoulder extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    double speed = control.getLeftY();
-    shoulder.set(-speed, false);
+    double speed = -control.getLeftY();
+    shoulder.set(speed, false);
        
   }
 

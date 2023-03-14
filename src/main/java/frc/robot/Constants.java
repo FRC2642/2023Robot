@@ -7,7 +7,12 @@ package frc.robot;
 import frc.robot.subsystems.swerve.SwerveModuleInfo;
 import static frc.robot.subsystems.swerve.SwerveModules.ModuleLocation;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+
 public final class Constants {
+
+    public static final Alliance ALLIANCE = DriverStation.getAlliance();
 
     // Ratios
     public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;

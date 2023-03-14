@@ -14,7 +14,6 @@ public class MoveSliderCommand extends CommandBase {
   
   SliderSubsystem slider;
   XboxController control;
-  PIDController pid = new PIDController(0.2, 0, 0);
   boolean extended = false;
 
   public MoveSliderCommand(SliderSubsystem slider, XboxController auxControl) {

@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 
-public class ClawPneumaticCommand extends CommandBase {
+public class ClawGripperCommand extends CommandBase {
   
   private final ClawGripperSubsystem pneumatics;
   private final XboxController auxControl;
 
-  public ClawPneumaticCommand(ClawGripperSubsystem pneumatics, XboxController mainControl, XboxController auxControl) { 
+  public ClawGripperCommand(ClawGripperSubsystem pneumatics, XboxController auxControl) { 
     this.pneumatics = pneumatics;
     this.auxControl = auxControl;
     addRequirements(pneumatics);
