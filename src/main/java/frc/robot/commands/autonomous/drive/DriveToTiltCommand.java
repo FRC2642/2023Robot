@@ -12,13 +12,13 @@ public class DriveToTiltCommand extends DriveDirectionCommand {
 
   private final double tilt;
   private final boolean greaterThan;
-  /** Creates a new DriveToTiltCommand. */
-  public DriveToTiltCommand(DriveSubsystem drive, VectorR velocity, double faceDegree, double tilt, boolean greaterThan) {
-    super(drive, velocity, faceDegree);
+  
+  public DriveToTiltCommand(DriveSubsystem drive, VectorR velocity, double tilt, boolean greaterThan) {
+    super(drive, velocity);
     this.tilt = tilt;
     this.greaterThan = greaterThan;
   }
-  // Returns true when the command should end.
+  
   @Override
   public boolean isFinished() {
     return greaterThan ? DriveSubsystem.getRollDegrees() >= tilt : DriveSubsystem.getRollDegrees() <= tilt;

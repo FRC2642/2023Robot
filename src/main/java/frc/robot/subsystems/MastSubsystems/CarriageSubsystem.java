@@ -8,6 +8,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.subsystems.interfaces.IPositionable;
+import frc.robot.utils.MathR;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
@@ -25,54 +26,38 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   private static SparkMaxLimitSwitch topLimitSwitch;
 
   private CarriagePosition currentSetPosition = CarriagePosition.RETRACTED;
+  private double speedLimit = 1.0;
 
-  public enum CarriagePosition {
-    EXTENDED,
-    RETRACTED
-  }
 
   public CarriageSubsystem() {
-    carriageMotor.setClosedLoopRampRate(0.5);
+    carriageMotor.setClosedLoopRampRate(0.0);
+    carriageMotor.setOpenLoopRampRate(0.0);
+    carriageMotor.setInverted(false);
     carriageEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
     bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyOpen);
     topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyOpen);
-  
   }
-  //Positive = up
+
   @Override
   public void set(CarriagePosition pos) {
-    carriageMotor.set(pos == CarriagePosition.EXTENDED ? 0.5 : -0.5);
+    set(pos == CarriagePosition.EXTENDED ? 0.5 : -0.5);
+    currentSetPosition = pos;
   }
 
-  public void set(double speed){
-    carriageMotor.set(speed);
+  //Positive = up
+  public void set(double speed) {
+    currentSetPosition = CarriagePosition.MANUAL;
+    carriageMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }
-
- /*  public static boolean getCarriageExtension() {
-    //return carriageEncoder.getPosition();
-    return topLimitSwitch.isPressed();
-  } */
+  
   public static boolean isCarriageUp() {
     return topLimitSwitch.isPressed();
   }
+
   public static boolean isCarriageDown() {
     return bottomLimitSwitch.isPressed();
   }
 
-  
-
-  //reset the carriage position
- /*  public void resetCarriageEncoder() {
-    currentSetPosition = CarriagePosition.RETRACTED;
-    carriageEncoder.setPosition(0);
-  }*/
-
-  @Override
-  public void periodic() {
-    //SmartDashboard.putNumber("Carriage Extension",carriageEncoder.getPosition());
-    SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
-    SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
-  }
 
   @Override
   public boolean atSetPosition() {
@@ -82,6 +67,38 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   @Override
   public CarriagePosition getSetPosition() {
     return currentSetPosition;
+  }
+
+  @Override
+  public void setSpeedLimit(double max) {
+    speedLimit = max;
+  }
+
+  @Override
+  public double getSpeedLimit() {
+    return speedLimit;
+  }
+
+  @Override
+  public void setRampRate(double rampRate) {
+    carriageMotor.setOpenLoopRampRate(rampRate);
+  }
+
+  @Override
+  public double getRampRate() {
+    return carriageMotor.getOpenLoopRampRate();
+  }
+  
+  @Override
+  public void periodic() {
+    SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
+    SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
+  }
+  
+  public enum CarriagePosition {
+    EXTENDED,
+    RETRACTED,
+    MANUAL
   }
 
 }

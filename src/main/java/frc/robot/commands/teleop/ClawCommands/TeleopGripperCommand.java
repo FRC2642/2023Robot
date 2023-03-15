@@ -8,12 +8,12 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 
-public class ClawPneumaticCommand extends CommandBase {
+public class TeleopGripperCommand extends CommandBase {
   
   private final ClawGripperSubsystem pneumatics;
   private final XboxController auxControl;
 
-  public ClawPneumaticCommand(ClawGripperSubsystem pneumatics, XboxController mainControl, XboxController auxControl) { 
+  public TeleopGripperCommand(ClawGripperSubsystem pneumatics, XboxController auxControl) { 
     this.pneumatics = pneumatics;
     this.auxControl = auxControl;
     addRequirements(pneumatics);
@@ -21,13 +21,8 @@ public class ClawPneumaticCommand extends CommandBase {
 
   @Override
   public void execute() {
-      if (auxControl.getLeftBumper()) {
-        pneumatics.set(true);
-      }
-  
-      else if (auxControl.getRightBumper()) {
-        pneumatics.set(false);
-      }
+      if (auxControl.getLeftBumper()) pneumatics.set(true);
+      else if (auxControl.getRightBumper()) pneumatics.set(false);
   }
   
   @Override

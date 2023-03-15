@@ -8,10 +8,10 @@ import frc.robot.utils.VectorR;
 
 /** Add your docs here. */
 public class PiratePoint implements Comparable<PiratePoint> {
+    
     public final VectorR position;
     public final double heading;
     public final double time;
-
     public final boolean stopPoint;
 
     public PiratePoint(double x, double y, double heading, double time, Boolean stopPoint) {

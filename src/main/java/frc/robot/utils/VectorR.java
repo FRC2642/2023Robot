@@ -20,7 +20,7 @@ public class VectorR implements Cloneable {
     }
 
     public double getAngle() {
-        return Math.atan2(y, x);
+        return Math.toDegrees(Math.atan2(y, x));
     }
 
     public double getMagnitude() {
@@ -81,9 +81,9 @@ public class VectorR implements Cloneable {
         return v3;
     }
 
-    public void setFromPolar(double distance, double angle) {
-        x = distance * Math.cos(angle);
-        y = distance * Math.sin(angle);
+    public void setFromPolar(double magnitude, double angleDegrees) {
+        x = magnitude * Math.cos(Math.toRadians(angleDegrees));
+        y = magnitude * Math.sin(Math.toRadians(angleDegrees));
     }
 
     public void setFromCartesian(double x, double y) {
@@ -95,8 +95,8 @@ public class VectorR implements Cloneable {
         setFromPolar(mag, getAngle());
     }
 
-    public void setAngle(double rad) {
-        setFromPolar(getMagnitude(), rad);
+    public void setAngle(double degrees) {
+        setFromPolar(getMagnitude(), degrees);
     }
 
     public void setX(double val) {
@@ -117,13 +117,13 @@ public class VectorR implements Cloneable {
     }
 
     public double getTerminalAngle() {
-        return getAngle() + Math.PI;
+        return getAngle() + 180;
     }
 
 
-    public static VectorR fromPolar(double distance, double radians) {
+    public static VectorR fromPolar(double magnitude, double angleDegrees) {
         VectorR v = new VectorR();
-        v.setFromPolar(distance, radians);
+        v.setFromPolar(magnitude, angleDegrees);
         return v;
     }
 
@@ -147,9 +147,9 @@ public class VectorR implements Cloneable {
         return "<" + x + "," + y + ">";
     }
 
-    public boolean compare(VectorR v, double distanceThreshold, double angleRadThreshold) {
+    public boolean compare(VectorR v, double distanceThreshold, double angleDegThreshold) {
         boolean magnitude = Math.abs(getMagnitude() - v.getMagnitude()) < distanceThreshold;
-        boolean angle = Math.abs(MathR.getDistanceToAngleRadians(getAngle(), v.getAngle())) < angleRadThreshold;
+        boolean angle = Math.abs(MathR.getDistanceToAngle(getAngle(), v.getAngle())) < angleDegThreshold;
         return magnitude && angle;
     }
 }

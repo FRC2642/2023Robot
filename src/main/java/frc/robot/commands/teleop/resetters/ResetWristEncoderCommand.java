@@ -5,36 +5,25 @@
 package frc.robot.commands.teleop.resetters;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
-import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
-import frc.robot.subsystems.swerve.SwerveModules;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 
 public class ResetWristEncoderCommand extends CommandBase {
-  ClawWristSubsystem wrist;
-  public ResetWristEncoderCommand(ClawWristSubsystem wrist) {
+
+  private final ClawWristSubsystem wrist;
+  private final ClawWristSubsystem.WristPosition position;
+
+  public ResetWristEncoderCommand(ClawWristSubsystem wrist, WristPosition position) {
       this.wrist = wrist;
+      this.position = position;
     addRequirements(wrist);
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    wrist.resetWristEncoder();
+    wrist.resetWristEncoder(position);
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return true;

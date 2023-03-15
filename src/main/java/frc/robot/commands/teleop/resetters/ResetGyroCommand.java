@@ -7,23 +7,17 @@ package frc.robot.commands.teleop.resetters;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 
-public class ResetGyro extends CommandBase {
+public class ResetGyroCommand extends CommandBase {
 
-  final DriveSubsystem drive;
+  private final double heading;
 
-  public ResetGyro(DriveSubsystem drive) {
-    this.drive = drive;
-    addRequirements(drive);
+  public ResetGyroCommand(double heading) {
+    this.heading = heading;
   }
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    DriveSubsystem.resetGyro(0.0);
+    DriveSubsystem.resetGyro(heading);
   }
 
   @Override

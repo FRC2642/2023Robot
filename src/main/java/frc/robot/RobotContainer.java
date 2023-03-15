@@ -7,15 +7,17 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.teleop.ClawCommands.ClawWristCommand;
+import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
 import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
-import frc.robot.commands.teleop.resetters.ResetGyro;
+import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.utils.VectorR;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
@@ -50,9 +52,9 @@ public class RobotContainer {
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
    // SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
-    SmartDashboard.putData(new ResetWristEncoderCommand(wrist));
-    SmartDashboard.putData(new ResetGyro(drive));
-    SmartDashboard.putData(new ResetDisplacementCommand(drive));
+    SmartDashboard.putData(new ResetWristEncoderCommand(wrist, WristPosition.HORIZONTAL1));
+    SmartDashboard.putData(new ResetGyroCommand(0.0));
+    SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
 
     // Button bindings
     configureButtonBindings();
@@ -96,14 +98,14 @@ public class RobotContainer {
      // wrist.set(mainControl.getLeftX());
 
    // }, wrist));
-   wrist.setDefaultCommand(new ClawWristCommand(wrist, mainControl));
+   //wrist.setDefaultCommand(new TeleopWristCommand(wrist, mainControl));
 
     /*
     limelight.setDefaultCommand(new RunCommand(() -> {
 
     }, limelight));*/
 
-    new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
+    new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0.0));
 
   }
 

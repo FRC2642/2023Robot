@@ -27,10 +27,10 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    DriveSubsystem.resetGyro(0.0);
+
   }
 
-  final double TURN_KP = 1.0;
+  final double TURN_KP = 0.017;
   private boolean isLocked = false;
   private double lockedHeading = 0;
 
@@ -42,11 +42,11 @@ public class JoystickOrientedDriveCommand extends CommandBase {
       
 
       leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
-      leftJoystick.rotate(Math.toRadians(90));
+      leftJoystick.rotate(90);
       rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
-      rightJoystick.rotate(Math.toRadians(-90));
+      rightJoystick.rotate(-90);
 
-      double yaw = Math.toRadians(DriveSubsystem.getYawDegrees());
+      double yaw = DriveSubsystem.getYawDegrees();
 
       if (leftJoystick.getMagnitude() < 0.1 && rightJoystick.getMagnitude() < 0.2) {
         drive.stop();
@@ -68,11 +68,10 @@ public class JoystickOrientedDriveCommand extends CommandBase {
       double angleToFace = isLocked ? lockedHeading : rightJoystick.getAngle();
 
       double turnPower = MathR.lerp(0.35, 1, 0.2, 1.0, rightJoystick.getMagnitude())  * MathR
-          .limit(TURN_KP * MathR.getDistanceToAngleRadians(yaw, angleToFace), -1, 1);
+          .limit(TURN_KP * MathR.getDistanceToAngle(yaw, angleToFace), -1, 1);
 
       leftJoystick.mult(maxSpeed);
       drive.move(leftJoystick, turnPower * maxSpeed);
-    
   }
 
   @Override

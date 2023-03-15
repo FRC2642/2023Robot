@@ -28,7 +28,7 @@ public class ClawIntakeSubsystem extends SubsystemBase {
     intake.set(speed);
   }
 
-  public static boolean objectInClaw(){
+  public static boolean isObjectInClaw(){
     return intakeLimitSwitch.isPressed();
   }
 

@@ -12,7 +12,7 @@ public class SwerveModuleInfo {
     public final double X;
     public final double Y;
     public final SwerveModules.ModuleLocation LOCATION;
-    public final double MODULE_TANGENT_RAD;
+    public final double MODULE_TANGENT_DEG;
 
     public SwerveModuleInfo(int drive_motor_CAN_ID, int angle_motor_CAN_ID, int encoder_CAN_ID, double abs_encoder_max_value,
             double abs_encoder_value_when_wheel_straight, double x, double y, ModuleLocation location) {
@@ -24,6 +24,6 @@ public class SwerveModuleInfo {
         X = x;
         Y = y;
         LOCATION = location;
-        MODULE_TANGENT_RAD = VectorR.fromCartesian(x, y).getAngle() + Math.toRadians(90);
+        MODULE_TANGENT_DEG = VectorR.fromCartesian(x, y).getAngle() + 90;
     }
 }
