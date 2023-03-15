@@ -11,6 +11,8 @@ public class RunIntakeCommand extends CommandBase {
 
   private final ClawIntakeSubsystem intake;
   private final double speed;
+  private boolean intaken;
+  
   
   public RunIntakeCommand(ClawIntakeSubsystem intake, double speed) {
     this.intake = intake;
@@ -21,6 +23,7 @@ public class RunIntakeCommand extends CommandBase {
   @Override
   public void execute() {
     intake.set(speed);
+
   }
 
   @Override

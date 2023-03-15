@@ -10,22 +10,22 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 
 public class SetCarriageCommand extends CommandBase {
 
-  private final CarriageSubsystem shoulder;
+  private final CarriageSubsystem carriage;
   private final CarriageSubsystem.CarriagePosition position;
 
-  public SetCarriageCommand(CarriageSubsystem shoulder, CarriageSubsystem.CarriagePosition position) {
-    this.shoulder = shoulder;
+  public SetCarriageCommand(CarriageSubsystem carriage, CarriageSubsystem.CarriagePosition position) {
+    this.carriage = carriage;
     this.position = position;
-    addRequirements(shoulder);
+    addRequirements(carriage);
   }
 
   @Override
   public void execute() {
-    shoulder.set(position);
+    carriage.set(position);
   }
 
   @Override
   public boolean isFinished() {
-    return shoulder.atSetPosition();
+    return carriage.atSetPosition();
   }
 }
