@@ -23,73 +23,93 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public static final double DEGREES_PER_TICK = 360d / 3.3d;
   public static final double INCLINE_DEGREES = 27d;
-  public static final double MAX_DEGREES = 90 + INCLINE_DEGREES;
-  public static final double MIN_DEGREES = -INCLINE_DEGREES;
-  public static final double OFFSET_DEGREES = 0;
+  public static final double MAX_DEGREES = 180 + INCLINE_DEGREES;
+  public static final double MIN_DEGREES = INCLINE_DEGREES;
+  public static final double AT_SETPOINT_THRESHOLD = 10d;
 
-  private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
-  private final PIDController shoulderPIDController = new PIDController(0.2, 0.0, 0.0);
-  private final SparkMaxAnalogSensor absEncoder;
+  private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR_1, MotorType.kBrushed);
+ // private final CANSparkMax shoulderMotorFollower = new CANSparkMax(Constants.SHOULDER_MOTOR_2, MotorType.kBrushed);
+  private final SparkMaxAnalogSensor absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
 
-  ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
-  // private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
-  // private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
-
-  public enum ShoulderPosition {
-    MANUAL(-1),
-    STARTING_CONFIG(70),
-    PICKUP_GROUND(MAX_DEGREES),
-    PICKUP_HUMANPLAYER(MIN_DEGREES),
-    PLACE_CUBE1(180),
-    PLACE_CUBE2(150),
-    PLACE_CONE1(170),
-    PLACE_CONE1_OFFSIDE(MIN_DEGREES),
-    PLACE_CONE2_OFFSIDE(MIN_DEGREES);
-
-    public double angle;
-
-    private ShoulderPosition(double angle) {
-      this.angle = angle;
-    }
-  }
+  private final PIDController shoulderPIDController = new PIDController(0.05, 0.0, 0.0);
+  private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
+  private double speedLimit = 1.0;
 
 
   public ShoulderSubsystem() {
-    absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
     absEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
+    shoulderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
+    shoulderMotor.setInverted(false);
+    //shoulderMotorFollower.setInverted(false);
+    //shoulderMotorFollower.follow(shoulderMotor);
   }
 
-  //Negative = down, Positive = up
-  public void set(double speed, boolean softLimit) {
+  //Negative = up, Positive = down
+  public void set(double speed) {
     currentSetPosition = ShoulderPosition.MANUAL;
-    if (softLimit)
-      shoulderMotor.set(
-          MathR.limitWhenReached(speed, -1, 1, getShoulderAngle() <= MIN_DEGREES, getShoulderAngle() >= MAX_DEGREES));
-    else
-      shoulderMotor.set(speed);
+     // shoulderMotor.set(
+     //     MathR.limitWhenReached(speed, -1, 1, getShoulderAngle() <= MIN_DEGREES, getShoulderAngle() >= MAX_DEGREES));
+     shoulderMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }
 
   public void set(ShoulderPosition pos) {
+    set(shoulderPIDController.calculate(getShoulderAngle(), pos.angle));
     currentSetPosition = pos;
-    double speed = MathR.limit(MathR.getDistanceToAngleRadians(getShoulderAngle(), pos.angle), -1, 1);
-    
-    shoulderMotor.set(MathR.limitWhenReached(speed, -1, 1, getShoulderAngle() <= MIN_DEGREES, getShoulderAngle() >= MAX_DEGREES));
   }
 
   public boolean atSetPosition() {
     return shoulderPIDController.atSetpoint();
   }
+
   public ShoulderPosition getSetPosition() {
     return currentSetPosition;
   }
 
   public double getShoulderAngle() {
-    return absEncoder.getPosition() + OFFSET_DEGREES;
+    return MathR.getDistanceToAngle(0, (absEncoder.getPosition() - 32/*<- CHANGE NUMBER*/), 300);
+  }
+
+  @Override
+  public void setSpeedLimit(double max) {
+    speedLimit = max;
+  }
+
+  @Override
+  public double getSpeedLimit() {
+    return speedLimit;
+  }
+
+  @Override
+  public void setRampRate(double rampRate) {
+    shoulderMotor.setOpenLoopRampRate(rampRate);
+  }
+
+  @Override
+  public double getRampRate() {
+    return shoulderMotor.getOpenLoopRampRate();
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shoulder Angle", getShoulderAngle());
 
+  }
+
+  
+  public enum ShoulderPosition {
+    MANUAL(-1),
+    STARTING_CONFIG(130),
+    PICKUP_GROUND(MAX_DEGREES),
+    PICKUP_HUMANPLAYER(MIN_DEGREES),
+    PLACE_CUBE1(180),
+    PLACE_CUBE2(150),
+    PLACE_CONE1(170),
+    PLACE_CONE_OFFSIDE(MIN_DEGREES);
+
+    public double angle;
+
+    private ShoulderPosition(double angle) {
+      this.angle = angle;
+    }
   }
 }

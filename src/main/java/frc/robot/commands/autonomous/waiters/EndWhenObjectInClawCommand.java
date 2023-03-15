@@ -16,6 +16,6 @@ public class EndWhenObjectInClawCommand extends CommandBase {
   
   @Override
   public boolean isFinished() {
-    return endInClaw && ClawIntakeSubsystem.objectInClaw();
+    return endInClaw && ClawIntakeSubsystem.isObjectInClaw();
   }
 }

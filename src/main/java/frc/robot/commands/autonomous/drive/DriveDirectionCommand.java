@@ -11,31 +11,48 @@ import frc.robot.utils.VectorR;
 
 public class DriveDirectionCommand extends CommandBase { 
   
-  public static final double TURN_KP = 1.0;
+  public static final double TURN_KP = 0.017453;
   
-  private final DriveSubsystem drive;
-  private final VectorR velocity;
-  private final double faceDegree;
+  protected final DriveSubsystem drive;
+  protected final VectorR velocity;
+  protected Double faceDegree;
+
+  protected final VectorR localDisplacement = new VectorR();
 
   public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity, double faceDegree) {
-    //THIS COMMAND TAKES IN A VECTOR WITH AN ANGLE IN RADIANS AND AN ORIENTATION IN DEGREES
     this.drive = drive;
     this.velocity = velocity;
     this.faceDegree = faceDegree;
     addRequirements(drive);
   }
+  public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity) {
+    this.drive = drive;
+    this.velocity = velocity;
+    faceDegree = null;
+    addRequirements(drive);
+  }
+
+  @Override
+  public void initialize() {
+    localDisplacement.setFromCartesian(0, 0);
+    if (faceDegree == null) faceDegree = DriveSubsystem.getYawDegrees();
+  }
 
   @Override
   public void execute() {
+    localDisplacement.add(DriveSubsystem.getRelativeIncrement());
 
-    double reference = Math.toDegrees(MathR.getDistanceToAngleRadians(Math.toRadians(DriveSubsystem.getYawDegrees()), Math.toRadians(faceDegree)));
-    double turnSpeed = MathR.limit(reference, -1, 1);
+    double turnSpeed = TURN_KP * MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), faceDegree);
+  
+    VectorR rotatedDisplacement = localDisplacement.clone();
+    rotatedDisplacement.rotate(-velocity.getAngle());
+    VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() + 90);
     
-    drive.move(velocity, turnSpeed);
-    
+    VectorR driveSpeed = VectorR.addVectors(velocity, antiStrafe);
+
+    drive.move(driveSpeed,  MathR.limit(turnSpeed, -1, 1));
   }
 
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

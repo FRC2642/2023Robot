@@ -68,13 +68,13 @@ public class PiratePath extends TreeSet<PiratePoint> {
 
                 JsonNode translation = pose.get("translation");
 
-                    x = 54 + 1/12 - translation.get("x").asDouble() * Constants.FOOT_PER_METER;
-                    y = 22 + 7/12 - translation.get("y").asDouble() * Constants.FOOT_PER_METER;
-                    h = Math.toRadians(point.get("holonomicRotation").asDouble()) - Math.PI;
+                x = 54 + 1 / 12 - translation.get("x").asDouble() * Constants.FOOT_PER_METER;
+                y = 22 + 7 / 12 - translation.get("y").asDouble() * Constants.FOOT_PER_METER;
+                h = point.get("holonomicRotation").asDouble() - 180;
 
-                    if (blueAlliance && !(first == null)) {
-                        y = first.position.getY();
-                    }
+                if (blueAlliance && first != null) {
+                    y = -y + 2.0 * first.position.getY(); //Mirror about the first point's y-axis
+                }
                 boolean stop = point.get("velocity").asDouble() == 0.0 && !(first == null);
 
                 // CONVERT TO FEET

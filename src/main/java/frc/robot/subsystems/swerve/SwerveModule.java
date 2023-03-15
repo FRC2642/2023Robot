@@ -27,24 +27,18 @@ public class SwerveModule {
 
   // INFORMATION
   public final SwerveModuleInfo info;
-  private final double defensiveAngleRad;
+  private final double defensiveAngleDeg;
 
   public SwerveModule(SwerveModuleInfo info) {
     this.info = info;
     this.angleMotor = new WPI_TalonFX(info.TURN_ID);
     this.driveMotor = new WPI_TalonFX(info.DRIVE_ID);
     this.orientationEncoder = new CANCoder(info.ENCODER_ID);
-    this.defensiveAngleRad = VectorR.fromCartesian(info.X, info.Y).getAngle();
+    this.defensiveAngleDeg = VectorR.fromCartesian(info.X, info.Y).getAngle();
     angleMotor.setNeutralMode(NeutralMode.Brake);
     driveMotor.setNeutralMode(NeutralMode.Brake);
     orientationEncoder.setPosition(0);
     driveMotor.setSelectedSensorPosition(0);
-  }
-
-  //ENCODER METHODS
-
-  public double getTurnEncoderValue(){
-    return orientationEncoder.getAbsolutePosition();
   }
 
   //RESET METHODS
@@ -65,19 +59,19 @@ public class SwerveModule {
    * positive (+) = left turn CCW
    * negative (-) = right turn CW
    */
-  public double getWheelOrientationRadians() {
-    return (((getTurnEncoderValue() - info.ABS_ENCODER_VALUE_WHEN_STRAIGHT) / info.ABS_ENCODER_MAX_VALUE) * Math.PI * 2.0);
+  public double getWheelOrientationDegrees() {
+    return orientationEncoder.getAbsolutePosition() - info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
   }
 
   public VectorR getVelocity() {
-    return VectorR.fromPolar(getWheelSpeed(), getWheelOrientationRadians());
+    return VectorR.fromPolar(getWheelSpeed(), getWheelOrientationDegrees());
   }
 
   private double lastWheelPosition = 0;
   private double increment = 0;
 
   public VectorR getPositionIncrement() {
-    return VectorR.fromPolar(increment, getWheelOrientationRadians());
+    return VectorR.fromPolar(increment, getWheelOrientationDegrees());
   }
   
   private void updateIncrementMeasurement() {
@@ -113,16 +107,16 @@ public class SwerveModule {
    * speed 0 min - 1 max, turns module drive wheel
    * angle radians follows coordinate plane standards, sets module wheel to angle
    */
-  public void update(double speed, double anglerad) {
+  public void update(double speed, double angleDegrees) {
 
-    desired.setFromPolar(speed, anglerad);
+    desired.setFromPolar(speed, angleDegrees);
 
-    if (Math.abs(MathR.getDistanceToAngleRadians(getWheelOrientationRadians(), desiredAngle())) > Math.toRadians(90))
+    if (Math.abs(MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle())) > 90d)
       reverse();
 
     double speed_power = MathR.limit(desiredSpeed(), -1, 1);
     double angle_power = 1 * MathR
-        .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngleRadians(getWheelOrientationRadians(), desiredAngle()), -1, 1);
+        .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle()), -1, 1);
 
     driveMotor.set(speed_power); 
     angleMotor.set(angle_power);
@@ -138,6 +132,6 @@ public class SwerveModule {
   }
 
   public void stopDefensively() {
-    update(0.0000001,  defensiveAngleRad);
+    update(0.0000001,  defensiveAngleDeg);
   }
 }

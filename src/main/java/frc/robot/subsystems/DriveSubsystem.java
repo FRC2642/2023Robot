@@ -20,6 +20,7 @@ public class DriveSubsystem extends SubsystemBase {
   private static AHRS gyro;
 
   // POSITION TRACKING
+  private static VectorR increment;
   private static VectorR displacement;
   private static VectorR velocity;
   private static TimedVectorDerivative acceleration;
@@ -38,6 +39,7 @@ public class DriveSubsystem extends SubsystemBase {
     gyro.reset();
     gyro.calibrate();
 
+    increment = new VectorR();
     displacement = new VectorR();
     velocity = new VectorR();
     acceleration = new TimedVectorDerivative(velocity);
@@ -55,26 +57,28 @@ public class DriveSubsystem extends SubsystemBase {
   public void move(VectorR directionalSpeed, double turnSpeed) {
 
     velocity.setFromCartesian(0, 0);
+    increment.setFromCartesian(0, 0);
     
     VectorR directionalPull = directionalSpeed.clone();
-    directionalPull.rotate(Math.toRadians(-getYawDegrees()));
+    directionalPull.rotate(-getYawDegrees());
 
     for (SwerveModule module : modules) {
 
-      VectorR rotationalPull = VectorR.fromPolar(turnSpeed, module.info.MODULE_TANGENT_RAD);
+      VectorR rotationalPull = VectorR.fromPolar(turnSpeed, module.info.MODULE_TANGENT_DEG);
       VectorR wheelPull = VectorR.addVectors(directionalPull, rotationalPull);
 
       module.update(wheelPull.getMagnitude(), wheelPull.getAngle());
 
       // position tracking
-      var increment = module.getPositionIncrement();
-      increment.mult(1d / 4d);
-      increment.rotate(Math.toRadians(getYawDegrees()));
-      displacement.add(increment);
+      var inc = module.getPositionIncrement();
+      inc.mult(1d / 4d);
+      inc.rotate(getYawDegrees());
+      displacement.add(inc);
+      increment.add(inc);
 
       var velocityMeasured = module.getVelocity();
       velocityMeasured.mult(1d / 4d);
-      velocityMeasured.rotate(Math.toRadians(getYawDegrees()));
+      velocityMeasured.rotate(getYawDegrees());
       velocity.add(velocityMeasured);
     }
     acceleration.update();
@@ -117,6 +121,10 @@ public class DriveSubsystem extends SubsystemBase {
 
 
   // POSITION DATA
+  public static VectorR getRelativeIncrement() {
+    return displacement.clone();
+  }
+  
   public static VectorR getRelativeFieldPosition() {
     return displacement.clone();
   }

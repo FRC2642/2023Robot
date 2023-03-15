@@ -16,7 +16,7 @@ public final class Constants {
 
     // Ratios
     public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
-    public static final double MODULE_ANGLE_KP = 0.3;
+    public static final double MODULE_ANGLE_KP = 0.00524;
     public static final double FOOT_PER_METER = 3.28084;
 
     // Controlers
@@ -32,7 +32,8 @@ public final class Constants {
     // Mast
     public static final int MAIN_SLIDER_MOTOR = 21;
     public static final int CARRIAGE_MOTOR = 22;
-    public static final int SHOULDER_MOTOR = 23;
+    public static final int SHOULDER_MOTOR_1 = 23;
+    public static final int SHOULDER_MOTOR_2 = 23;
 
     // Claw
     public static final int WRIST_MOTOR = 24;

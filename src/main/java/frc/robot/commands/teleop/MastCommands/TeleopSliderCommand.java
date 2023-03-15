@@ -4,33 +4,34 @@
 
 package frc.robot.commands.teleop.MastCommands;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
-public class MoveSliderCommand extends CommandBase {
+public class TeleopSliderCommand extends CommandBase {
   
-  SliderSubsystem slider;
-  XboxController control;
-  boolean extended = false;
+  private final SliderSubsystem slider;
+  private final XboxController auxControl;
 
-  public MoveSliderCommand(SliderSubsystem slider, XboxController auxControl) {
+  private boolean extended = false;
+
+  public TeleopSliderCommand(SliderSubsystem slider, XboxController auxControl) {
     this.slider = slider;
-    this.control = auxControl;
-    
+    this.auxControl = auxControl;
     addRequirements(slider);
   }
 
   @Override
-  public void execute() {
-    
-    if (control.getAButtonPressed()){
-        extended = !extended;
+  public void initialize() {
+    slider.setRampRate(0.2);
+    slider.setSpeedLimit(1);
+  }
 
-     slider.set(extended ? SliderSubsystem.SliderPosition.EXTENDED : SliderSubsystem.SliderPosition.RETRACTED);
-    }
+  @Override
+  public void execute() {
+    if (auxControl.getAButtonPressed()) extended = !extended;
+    
+    slider.set(extended ? SliderSubsystem.SliderPosition.EXTENDED : SliderSubsystem.SliderPosition.RETRACTED);
   }
   
   @Override

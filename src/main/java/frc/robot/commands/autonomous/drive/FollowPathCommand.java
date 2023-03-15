@@ -15,7 +15,7 @@ import frc.robot.path.*;
 
 public class FollowPathCommand extends CommandBase {
 
-  public static final double HEADING_KP = .016;
+  public static final double HEADING_KP = 0.00027925;
   public static final double MOVEMENT_KP = .016;
   public static final double PRECISION = 0.05;
 
@@ -23,10 +23,7 @@ public class FollowPathCommand extends CommandBase {
   private final PiratePath path;
   private final Timer timer;
   private final Iterator<PiratePoint> iterator;
-
-  private double startTime = 0.0;
   
-
   public FollowPathCommand(DriveSubsystem drive, PiratePath path) {
     this.path = path;
     this.drive = drive;
@@ -39,7 +36,6 @@ public class FollowPathCommand extends CommandBase {
   public void initialize() {
     timer.reset();
     timer.start();
-    startTime = path.getFirst().time;
     DriveSubsystem.resetDisplacement(path.getFirst().position);
     DriveSubsystem.resetGyro(Math.toDegrees(path.getFirst().heading));
   }
@@ -58,7 +54,7 @@ public class FollowPathCommand extends CommandBase {
     velocity.sub(DriveSubsystem.getRelativeFieldPosition());
     velocity.mult(MOVEMENT_KP/delta_t);
 
-    double turn = MathR.getDistanceToAngleRadians(Math.toRadians(DriveSubsystem.getYawDegrees()), nextPoint.heading)/ delta_t;
+    double turn = MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), nextPoint.heading)/ delta_t;
 
     drive.move(velocity, turn * HEADING_KP);
   }

@@ -41,7 +41,7 @@ public class ScoreMidAndTaxi extends SequentialCommandGroup {
     }
 
     addCommands(
-      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE1_OFFSIDE)
+      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_OFFSIDE)
       .alongWith(new SetCarriageCommand(carriage, CarriagePosition.EXTENDED)),
       new OpenCloseClawCommand(claw, true),
       new RunIntakeCommand(intake, -0.5).raceWith(new WaitCommand(0.5)),

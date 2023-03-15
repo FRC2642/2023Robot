@@ -9,4 +9,9 @@ public interface IPositionable<Position> {
     public boolean atSetPosition();
     public Position getSetPosition();
     public void set(Position pos);
+    public void setSpeedLimit(double max);
+    public double getSpeedLimit();
+    public void setRampRate(double rampRate);
+    public double getRampRate();
+    
 }
