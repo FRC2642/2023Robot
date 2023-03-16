@@ -6,12 +6,13 @@ package frc.robot.commands.autonomous.drive;
 
 import java.util.Iterator;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.MathR;
 import frc.robot.path.*;
-
 
 public class FollowPathCommand extends CommandBase {
 
@@ -20,41 +21,70 @@ public class FollowPathCommand extends CommandBase {
   public static final double PRECISION = 0.05;
 
   private final DriveSubsystem drive;
-  private final PiratePath path;
-  private final Timer timer;
-  private final Iterator<PiratePoint> iterator;
-  
+  private final Timer timer = new Timer();
+  private final PiratePath notAdjustedPath;
+
+  private Iterator<PiratePoint> iterator = null;
+  private PiratePath path;
+  private double currentTime;
+
   public FollowPathCommand(DriveSubsystem drive, PiratePath path) {
-    this.path = path;
     this.drive = drive;
-    this.timer = new Timer();
-    this.iterator = path.iterator();
+    notAdjustedPath = path;
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
+    
+    if (DriverStation.getAlliance() == Alliance.Blue && path.allianceDependent)
+      setPath(notAdjustedPath.getBlueAlliance());
+    else
+      setPath(notAdjustedPath);
+
+    startPath();
+  }
+
+  protected void setPath(PiratePath path) {
+    this.path = path;
+  }
+
+  protected boolean startPath() {
+    if (path == null)
+      return false;
+    this.iterator = path.iterator();
     timer.reset();
     timer.start();
+    currentTime = timer.get() + path.getFirst().time;
     DriveSubsystem.resetDisplacement(path.getFirst().position);
     DriveSubsystem.resetGyro(Math.toDegrees(path.getFirst().heading));
+    return true;
   }
-  
+
+  protected void stopAndResetPath() {
+    iterator = null;
+  }
+
+  protected boolean isStarted() {
+    return iterator != null;
+  }
+
   PiratePoint nextPoint = null;
 
   @Override
   public void execute() {
-    double currentTime = timer.get() + path.getFirst().time;
+    currentTime = timer.get() + path.getFirst().time;
 
-    while ((nextPoint == null || nextPoint.time - currentTime < PRECISION) && iterator.hasNext()) nextPoint = iterator.next();
-    
+    while ((nextPoint == null || nextPoint.time - currentTime < PRECISION) && iterator.hasNext())
+      nextPoint = iterator.next();
+
     var delta_t = nextPoint.time - currentTime;
-    
+
     var velocity = nextPoint.position.clone();
     velocity.sub(DriveSubsystem.getRelativeFieldPosition());
-    velocity.mult(MOVEMENT_KP/delta_t);
+    velocity.mult(MOVEMENT_KP / delta_t);
 
-    double turn = MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), nextPoint.heading)/ delta_t;
+    double turn = MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), nextPoint.heading) / delta_t;
 
     drive.move(velocity, turn * HEADING_KP);
   }

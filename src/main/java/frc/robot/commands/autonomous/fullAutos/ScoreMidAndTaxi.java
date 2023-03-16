@@ -35,7 +35,7 @@ public class ScoreMidAndTaxi extends SequentialCommandGroup {
    
     PiratePath path = null;
     try {
-      path = new PiratePath("",Constants.ALLIANCE == Alliance.Red);
+      path = new PiratePath("");
     } catch (IOException e) {
       e.printStackTrace();
     }

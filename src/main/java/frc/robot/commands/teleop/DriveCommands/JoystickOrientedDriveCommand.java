@@ -12,7 +12,7 @@ import frc.robot.utils.VectorR;
 
 public class JoystickOrientedDriveCommand extends CommandBase {
 
-  double maxSpeed = 0.25;
+  private double maxSpeed = 0.25;
 
   private final DriveSubsystem drive;
   private final XboxController control;

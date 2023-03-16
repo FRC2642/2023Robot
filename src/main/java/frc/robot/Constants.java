@@ -12,8 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
 
-    public static final Alliance ALLIANCE = DriverStation.getAlliance();
-
     // Ratios
     public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
     public static final double MODULE_ANGLE_KP = 0.00524;
@@ -44,5 +42,8 @@ public final class Constants {
 
     // Other
     public static final String TEST_PATH = "New New New Path.wpilib.json";
+
+    public static final double FIELD_X = 54d + 1d/12d;
+    public static final double FIELD_Y = 26d + 7d/12d;
 
 }

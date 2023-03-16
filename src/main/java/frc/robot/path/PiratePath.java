@@ -34,30 +34,33 @@ public class PiratePath extends TreeSet<PiratePoint> {
     public static final String PARENT_DIRECTORY = Filesystem.getDeployDirectory().getAbsolutePath()
             + "/pathplanner/generatedJSON/";
 
+    public final boolean allianceDependent;
+
     /*
      * Creates an empty path
      */
     public PiratePath() {
-
+        allianceDependent = false;
     }
 
     /*
      * Creates a path from a JSON file from FRC PathPlanner 2023
      */
-    public PiratePath(String fileName, boolean blueAlliance) throws JsonProcessingException, IOException {
-        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, fileName), blueAlliance);
+    public PiratePath(String fileName) throws JsonProcessingException, IOException {
+        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, fileName));
         if (e != null) {
             e.printStackTrace();
             add(DEFAULT_VALUE);
         }
+        allianceDependent = true;
     }
 
-    public Exception trySetFromPathPlannerJSON(File jsonFile, boolean blueAlliance) {
+    public Exception trySetFromPathPlannerJSON(File jsonFile) {
         try {
             JsonNode root = JSON_MAPPER.readTree(jsonFile);
             var pointIterator = root.elements();
 
-            PiratePoint first = null;
+            boolean first = true;
             while (pointIterator.hasNext()) {
                 var point = pointIterator.next();
                 double t = point.get("time").asDouble();
@@ -72,10 +75,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
                 y = 22 + 7 / 12 - translation.get("y").asDouble() * Constants.FOOT_PER_METER;
                 h = point.get("holonomicRotation").asDouble() - 180;
 
-                if (blueAlliance && first != null) {
-                    y = -y + 2.0 * first.position.getY(); //Mirror about the first point's y-axis
-                }
-                boolean stop = point.get("velocity").asDouble() == 0.0 && !(first == null);
+                boolean stop = point.get("velocity").asDouble() == 0.0 && !first;
 
                 // CONVERT TO FEET
                 x *= Constants.FOOT_PER_METER;
@@ -83,12 +83,26 @@ public class PiratePath extends TreeSet<PiratePoint> {
 
                 PiratePoint pt = new PiratePoint(x, y, h, t, stop);
                 add(pt);
-                first = pt;
+                first = false;
             }
         } catch (Exception e) {
             return e;
         }
         return null;
+    }
+
+    public PiratePath getBlueAlliance() {
+
+        PiratePath bluePath = new PiratePath();
+
+        for (var pt : this) {
+            double Y = pt.position.getY();
+            var newPt = pt.clone();
+            newPt.position.setY(Constants.FIELD_Y - Y);
+            bluePath.add(newPt);
+        }
+
+        return bluePath;
     }
 
     public ArrayList<PiratePath> getSubPaths() {

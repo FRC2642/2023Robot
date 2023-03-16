@@ -12,6 +12,7 @@ import frc.robot.utils.VectorR;
 public class DriveDirectionCommand extends CommandBase { 
   
   public static final double TURN_KP = 0.017453;
+  public static final double STRAFE_KP = 0.1;
   
   protected final DriveSubsystem drive;
   protected final VectorR velocity;
@@ -28,14 +29,14 @@ public class DriveDirectionCommand extends CommandBase {
   public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity) {
     this.drive = drive;
     this.velocity = velocity;
-    faceDegree = null;
+    faceDegree = Double.NaN;
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
     localDisplacement.setFromCartesian(0, 0);
-    if (faceDegree == null) faceDegree = DriveSubsystem.getYawDegrees();
+    if (faceDegree == Double.NaN) faceDegree = DriveSubsystem.getYawDegrees();
   }
 
   @Override
@@ -47,10 +48,13 @@ public class DriveDirectionCommand extends CommandBase {
     VectorR rotatedDisplacement = localDisplacement.clone();
     rotatedDisplacement.rotate(-velocity.getAngle());
     VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() + 90);
+    antiStrafe.mult(STRAFE_KP);
     
     VectorR driveSpeed = VectorR.addVectors(velocity, antiStrafe);
 
     drive.move(driveSpeed,  MathR.limit(turnSpeed, -1, 1));
+
+    System.out.println("strafe corection: " + antiStrafe.getMagnitude());
   }
 
   @Override
