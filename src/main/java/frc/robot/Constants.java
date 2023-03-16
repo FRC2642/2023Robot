@@ -15,7 +15,7 @@ public final class Constants {
     public static final Alliance ALLIANCE = DriverStation.getAlliance();
 
     // Ratios
-    public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
+    public static final double FEET_PER_DISPLACEMENT = 6.1078e-5;//6.52131382735e-5;
     public static final double MODULE_ANGLE_KP = 0.00524;
     public static final double FOOT_PER_METER = 3.28084;
 
