@@ -4,6 +4,7 @@
 
 package frc.robot.utils;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 /** Wrapper class for vectors */
 public class VectorR implements Cloneable {
@@ -144,12 +145,20 @@ public class VectorR implements Cloneable {
 
     @Override
     public String toString() {
-        return "<" + x + "," + y + ">";
+        return "<" + truncate(x,2) + "," + truncate(y,2) + ">";
     }
 
     public boolean compare(VectorR v, double distanceThreshold, double angleDegThreshold) {
         boolean magnitude = Math.abs(getMagnitude() - v.getMagnitude()) < distanceThreshold;
         boolean angle = Math.abs(MathR.getDistanceToAngle(getAngle(), v.getAngle())) < angleDegThreshold;
         return magnitude && angle;
+    }
+
+    public static String truncate(double value, int decimals) {
+        if (value % 1 == 0) return Double.toString(value);
+        String val = Double.toString(value);
+        String[] split = val.split("\\.");
+        if (decimals == 0) return split[0];
+        return split[0] + "." + split[1].substring(0, decimals);
     }
 }

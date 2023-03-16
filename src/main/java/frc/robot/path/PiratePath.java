@@ -35,19 +35,22 @@ public class PiratePath extends TreeSet<PiratePoint> {
             + "/pathplanner/generatedJSON/";
 
     public final boolean allianceDependent;
+    public String name;
 
     /*
      * Creates an empty path
      */
     public PiratePath() {
         allianceDependent = false;
+        name = "unnamed";
     }
 
     /*
      * Creates a path from a JSON file from FRC PathPlanner 2023
      */
-    public PiratePath(String fileName) throws JsonProcessingException, IOException {
-        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, fileName));
+    public PiratePath(String name) {
+        this.name = name;
+        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, name + ".wpilib.json"));
         if (e != null) {
             e.printStackTrace();
             add(DEFAULT_VALUE);
@@ -56,30 +59,21 @@ public class PiratePath extends TreeSet<PiratePoint> {
     }
 
     public Exception trySetFromPathPlannerJSON(File jsonFile) {
+        System.out.println("started");
         try {
             JsonNode root = JSON_MAPPER.readTree(jsonFile);
             var pointIterator = root.elements();
-
             boolean first = true;
             while (pointIterator.hasNext()) {
                 var point = pointIterator.next();
-                double t = point.get("time").asDouble();
                 JsonNode pose = point.get("pose");
-                double x = 0;
-                double y = 0;
-                double h = 0;
-
                 JsonNode translation = pose.get("translation");
 
-                x = 54 + 1 / 12 - translation.get("x").asDouble() * Constants.FOOT_PER_METER;
-                y = 22 + 7 / 12 - translation.get("y").asDouble() * Constants.FOOT_PER_METER;
-                h = point.get("holonomicRotation").asDouble() - 180;
-
+                double t = point.get("time").asDouble();
+                double x = (Constants.FIELD_X) - (translation.get("x").asDouble() * Constants.FOOT_PER_METER);
+                double y = (Constants.FIELD_Y) - (translation.get("y").asDouble() * Constants.FOOT_PER_METER);
+                double h = point.get("holonomicRotation").asDouble() + 180;
                 boolean stop = point.get("velocity").asDouble() == 0.0 && !first;
-
-                // CONVERT TO FEET
-                x *= Constants.FOOT_PER_METER;
-                y *= Constants.FOOT_PER_METER;
 
                 PiratePoint pt = new PiratePoint(x, y, h, t, stop);
                 add(pt);
@@ -94,6 +88,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
     public PiratePath getBlueAlliance() {
 
         PiratePath bluePath = new PiratePath();
+        bluePath.name = "BLUE " + this.name;
 
         for (var pt : this) {
             double Y = pt.position.getY();
@@ -107,15 +102,16 @@ public class PiratePath extends TreeSet<PiratePoint> {
 
     public ArrayList<PiratePath> getSubPaths() {
         ArrayList<PiratePath> paths = new ArrayList<>();
-        ArrayList<PiratePath> usablePaths = new ArrayList<>();
 
         PiratePath current = new PiratePath();
+        int index = 0;
         for (var pt : this) {
             current.add(pt);
             if (pt.stopPoint && pt.time != 0.0) {
+                current.name = this.name + "[" + index + "]";
                 paths.add(current);
                 current = new PiratePath();
-
+                index++;
             }
         }
 
@@ -128,7 +124,23 @@ public class PiratePath extends TreeSet<PiratePoint> {
         for (var pt : this) {
             s.add(pt.toString());
         }
-        return String.join(",", s);
+        return name + "\n" + String.join("\n", s);
+    }
+
+    public void print() {
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+        System.out.println(toString());
+        System.out.println("--------------------------------------------------------------------------------------------------------------");
+    }
+    
+    public static void print(ArrayList<PiratePath> paths) {
+        for (var p : paths) {
+            p.print();
+        } 
+    }
+    
+    public static void print(ArrayList<PiratePath> paths, int index) {
+        paths.get(index).print();
     }
 
     public void fillWithSubPointsEasing(double timeBetweenPts, Easings.Functions interpolationEasing) {

@@ -27,17 +27,19 @@ public class FollowPathCommand extends CommandBase {
   private Iterator<PiratePoint> iterator = null;
   private PiratePath path;
   private double currentTime;
+  private final boolean recenterDisplacementToFirstPoint;
 
-  public FollowPathCommand(DriveSubsystem drive, PiratePath path) {
+  public FollowPathCommand(DriveSubsystem drive, PiratePath path, boolean recenterDisplacementToFirstPoint) {
     this.drive = drive;
     notAdjustedPath = path;
+    this.recenterDisplacementToFirstPoint = recenterDisplacementToFirstPoint;
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
-    
-    if (DriverStation.getAlliance() == Alliance.Blue && path.allianceDependent)
+
+    if (notAdjustedPath != null && DriverStation.getAlliance() == Alliance.Blue && notAdjustedPath.allianceDependent)
       setPath(notAdjustedPath.getBlueAlliance());
     else
       setPath(notAdjustedPath);
@@ -50,14 +52,17 @@ public class FollowPathCommand extends CommandBase {
   }
 
   protected boolean startPath() {
-    if (path == null)
+    if (path == null) {
       return false;
+    }
     this.iterator = path.iterator();
     timer.reset();
     timer.start();
     currentTime = timer.get() + path.getFirst().time;
-    DriveSubsystem.resetDisplacement(path.getFirst().position);
-    DriveSubsystem.resetGyro(Math.toDegrees(path.getFirst().heading));
+    if (recenterDisplacementToFirstPoint) {
+      DriveSubsystem.resetDisplacement(path.getFirst().position);
+      DriveSubsystem.resetGyro(path.getFirst().heading);
+    }
     return true;
   }
 

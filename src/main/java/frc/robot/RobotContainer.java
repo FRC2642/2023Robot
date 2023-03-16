@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.fullAutos.ASCUBEAutoCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
@@ -42,9 +43,12 @@ public class RobotContainer {
  // private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
  // private final ClawWristSubsystem wrist = new ClawWristSubsystem();
 
-  public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+
+  private final ASCUBEAutoCommand auto_1_ASCUBE;
 
   public RobotContainer() {
+    auto_1_ASCUBE = new ASCUBEAutoCommand(drive);
     // Default commands
   //  clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
   //  carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
@@ -143,12 +147,6 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    PiratePath teslaPath = null;
-    try {
-      teslaPath = new PiratePath("TeslaPath.wpilib.json");
-    } catch (IOException e) {
-      e.printStackTrace();
-    }
-    return new FollowPathCommand(drive, teslaPath);
+    return autoChooser.getSelected();
   }
 }

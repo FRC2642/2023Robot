@@ -32,6 +32,8 @@ public class PiratePoint implements Comparable<PiratePoint> {
 
     @Override
     public String toString() {
-        return "{[pos: " + position.toString() + "ft] [t: " + time + "s] [head: " + heading + "deg]}";
+        return "{[pos: " + position.toString() + "ft] [t: " + VectorR.truncate(time, 2) + "s] [head: " + VectorR.truncate(heading, 0) + "deg]}";
     }
+
+    
 }

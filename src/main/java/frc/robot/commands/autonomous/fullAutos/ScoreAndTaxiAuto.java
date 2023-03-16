@@ -6,9 +6,9 @@ package frc.robot.commands.autonomous.fullAutos;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.autonomous.SetShoulderCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
-import frc.robot.commands.autonomous.mast.SetShoulderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
@@ -26,7 +26,7 @@ public class ScoreAndTaxiAuto extends SequentialCommandGroup {
     addCommands(
       new OpenCloseClawCommand(pneumatics, true),
       new WaitCommand(2),
-      new FollowPathCommand(drive, path).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND))
+      new FollowPathCommand(drive, path, true).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND))
       //new CarriageAutoCommand(carriage, encoderTick).alongWith(new SetSliderCommand(sliders, true)),
       //new ShoulderAutoCommand(shoulder, encoderTick),
       //new ManageClawPneumaticCommand(pneumatics, true),
