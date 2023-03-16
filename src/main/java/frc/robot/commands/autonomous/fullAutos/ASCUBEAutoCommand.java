@@ -43,13 +43,13 @@ public class ASCUBEAutoCommand extends SequentialCommandGroup {
     PiratePath driveToSecondObjectPath = subs.get(2);
 
     addCommands(
-      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_OFFSIDE),
       new SetCarriageCommand(carriage, CarriagePosition.EXTENDED),
+      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_OFFSIDE),
       new SetSliderCommand(sliders, SliderPosition.EXTENDED),
       new OpenCloseClawCommand(gripper, true),
       new WaitCommand(1),
-      new SetWristCommand(wrist, WristPosition.VERTICAL1),
       new SetSliderCommand(sliders, SliderPosition.RETRACTED),
+      new SetWristCommand(wrist, WristPosition.VERTICAL1),
       new SetCarriageCommand(carriage, CarriagePosition.RETRACTED),
       new WaitCommand(1),
       new FollowPathCommand(drive, driveToCubePath, true).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND)),

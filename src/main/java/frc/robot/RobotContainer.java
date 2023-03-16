@@ -45,10 +45,10 @@ public class RobotContainer {
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
-  private final ASCUBEAutoCommand auto_1_ASCUBE;
+  //private final ASCUBEAutoCommand auto_1_ASCUBE;
 
   public RobotContainer() {
-    auto_1_ASCUBE = new ASCUBEAutoCommand(drive);
+    //auto_1_ASCUBE = new ASCUBEAutoCommand(drive);
     // Default commands
   //  clawPneumatics.setDefaultCommand(new ClawPneumaticCommand(clawPneumatics, mainControl, auxControl));
   //  carriage.setDefaultCommand(new MoveCarriageCommand(carriage, auxControl));
