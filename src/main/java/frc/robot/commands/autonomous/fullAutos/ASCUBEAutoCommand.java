@@ -54,7 +54,7 @@ public class ASCUBEAutoCommand extends SequentialCommandGroup {
       new WaitCommand(1),
       new FollowPathCommand(drive, driveToCubePath, true).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND)),
       new SetWristCommand(wrist, WristPosition.HORIZONTAL1),
-      new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(-0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
+      new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CUBE2).raceWith(new RunIntakeCommand(intake, 0.1)),
       new FollowPathCommand(drive, driveToBackToShelfPath, false).raceWith(new RunIntakeCommand(intake, 0.1)),
       new RunIntakeCommand(intake, -0.2).withTimeout(1),
