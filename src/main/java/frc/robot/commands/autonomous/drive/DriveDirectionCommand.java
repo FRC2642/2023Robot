@@ -11,8 +11,8 @@ import frc.robot.utils.VectorR;
 
 public class DriveDirectionCommand extends CommandBase { 
   
-  public static final double TURN_KP = 0.017453;
-  public static final double STRAFE_KP = 0.1;
+  public static final double TURN_KP = 0.01;
+  public static final double DRIVE_KP = 0.3;
   
   protected final DriveSubsystem drive;
   protected final VectorR velocity;
@@ -47,9 +47,8 @@ public class DriveDirectionCommand extends CommandBase {
   
     VectorR rotatedDisplacement = localDisplacement.clone();
     rotatedDisplacement.rotate(-velocity.getAngle());
-    VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() + 90);
-    antiStrafe.mult(STRAFE_KP);
-    
+    VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() - 90);
+    antiStrafe.mult(DRIVE_KP);
     VectorR driveSpeed = VectorR.addVectors(velocity, antiStrafe);
 
     drive.move(driveSpeed,  MathR.limit(turnSpeed, -1, 1));

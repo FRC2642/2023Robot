@@ -8,7 +8,7 @@ package frc.robot.utils;
 public class MathR {
 
     public static double getDistanceToAngle(double currentDegrees, double desiredDegrees) {
-        return modulo(((currentDegrees) - (desiredDegrees)) + 180, 360) - 180;
+        return modulo(((desiredDegrees) - (currentDegrees)) + 180, 360) - 180;
     }
     
     public static double getDistanceToAngle(double current, double desired, double avoid) {

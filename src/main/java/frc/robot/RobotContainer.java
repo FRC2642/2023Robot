@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.io.IOException;
+
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -7,8 +9,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
+import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
+import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
+import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
+import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
@@ -29,13 +34,13 @@ public class RobotContainer {
  // private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
 
   private final DriveSubsystem drive = new DriveSubsystem();
-  private final LimelightSubsystem limelight = new LimelightSubsystem();
-  private final ClawGripperSubsystem clawPneumatics = new ClawGripperSubsystem();
-  private final CarriageSubsystem carriage = new CarriageSubsystem();
-  private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
-  private final SliderSubsystem slider = new SliderSubsystem();
-  private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
-  private final ClawWristSubsystem wrist = new ClawWristSubsystem();
+ // private final LimelightSubsystem limelight = new LimelightSubsystem();
+ // private final ClawGripperSubsystem clawPneumatics = new ClawGripperSubsystem();
+ // private final CarriageSubsystem carriage = new CarriageSubsystem();
+ // private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
+ // private final SliderSubsystem slider = new SliderSubsystem();
+ // private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
+ // private final ClawWristSubsystem wrist = new ClawWristSubsystem();
 
   public SendableChooser<Command> autoChooser = new SendableChooser<Command>();
 
@@ -50,11 +55,12 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED", new WaitCommand(5));
+    //autoChooser.setDefaultOption(new , getAutonomousCommand());
 
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
    // SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
-    SmartDashboard.putData(new ResetWristEncoderCommand(wrist, WristPosition.HORIZONTAL1));
+    //SmartDashboard.putData(new ResetWristEncoderCommand(wrist, WristPosition.HORIZONTAL1));
     SmartDashboard.putData(new ResetGyroCommand(0.0));
     SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
 
@@ -68,8 +74,8 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    //drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
-    
+    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+   
     
    /*  clawPneumatics.setDefaultCommand(new RunCommand(() -> {
       if (mainControl.getLeftX() > 0.5) clawPneumatics.set(true);
@@ -108,6 +114,7 @@ public class RobotContainer {
     }, limelight));*/
 
     new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0.0));
+    new POVButton(mainControl, 0).whileTrue(new ResetDisplacementCommand(VectorR.fromCartesian(0, 0)));
 
   }
 
@@ -136,6 +143,12 @@ public class RobotContainer {
   }
 
   public Command getAutonomousCommand() {
-    return autoChooser.getSelected();
+    PiratePath teslaPath = null;
+    try {
+      teslaPath = new PiratePath("TeslaPath.wpilib.json");
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    return new FollowPathCommand(drive, teslaPath);
   }
 }
