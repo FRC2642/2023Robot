@@ -51,6 +51,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utils.MathR;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -78,6 +79,8 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
   }
+  
+  double angle = 0.1256346784324;
 
   /**
    * This function is called every robot packet, no matter the mode. Use this for
@@ -92,6 +95,10 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    if (angle < 400) {
+      System.out.println("Current Angle: " + 0 + " Desired Angle: " + angle + " Distance: " + MathR.getDistanceToAngle(0, angle, 300));
+      angle += 5.2347523465;
+    }
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
