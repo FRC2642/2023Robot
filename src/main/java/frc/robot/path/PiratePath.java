@@ -59,7 +59,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
     }
 
     public Exception trySetFromPathPlannerJSON(File jsonFile) {
-        System.out.println("started");
+       
         try {
             JsonNode root = JSON_MAPPER.readTree(jsonFile);
             var pointIterator = root.elements();

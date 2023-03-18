@@ -69,9 +69,6 @@ public class JoystickOrientedDriveCommand extends CommandBase {
           .limit(TURN_KP * MathR.getDistanceToAngle(yaw, angleToFace), -1, 1);
 
       leftJoystick.mult(maxSpeed);
-
-      System.out.println("turn power: " + turnPower * maxSpeed);
-      
       drive.move(leftJoystick, turnPower * maxSpeed);
   }
 

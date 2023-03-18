@@ -20,6 +20,7 @@ import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
 import frc.robot.commands.teleop.ClawCommands.TeleopGripperCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopIntakeCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
@@ -30,8 +31,10 @@ import frc.robot.commands.teleop.MastCommands.TeleopShoulderCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopSliderCommand;
 import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
+import frc.robot.path.PiratePoint;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
+import frc.robot.commands.teleop.resetters.ResetSliderCommand;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
@@ -43,6 +46,7 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
+import frc.robot.utils.Easings.Functions;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
@@ -63,10 +67,16 @@ public class RobotContainer {
 
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  private final PiratePath taxiPath = new PiratePath();
+  
 
   //private final ASCUBEAutoCommand auto_1_ASCUBE;
 
   public RobotContainer() {
+    taxiPath.add(new PiratePoint(0, 0, 180, 0, false));
+    taxiPath.add(new PiratePoint(10, 0, 180, 8, false));
+    taxiPath.fillWithSubPointsEasing(0.01, Functions.easeInOutCubic);
+
     //auto_1_ASCUBE = new ASCUBEAutoCommand(drive);
     // Default commands
     clawPneumatics.setDefaultCommand(new TeleopGripperCommand(clawPneumatics, auxControl));
@@ -78,14 +88,15 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED", new WaitCommand(5));
-    //autoChooser.setDefaultOption(new , getAutonomousCommand());
+    autoChooser.setDefaultOption("Drop and move" , new ScoreAndTaxiAuto(slider, clawPneumatics, drive, carriage, shoulder, taxiPath));
 
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
    // SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
-    //SmartDashboard.putData(new ResetWristEncoderCommand(wrist, WristPosition.HORIZONTAL1));
+    SmartDashboard.putData(new ResetWristEncoderCommand(wrist, WristPosition.HORIZONTAL1));
     SmartDashboard.putData(new ResetGyroCommand(0.0));
     SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
+    SmartDashboard.putData(new ResetSliderCommand());
 
     // Button bindings
     configureButtonBindings();
@@ -93,15 +104,22 @@ public class RobotContainer {
 
   public void autonomousInit() {
     drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
-
   }
 
 
   public void teleopInit() {
-    //drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
     SmartDashboard.putData(new SetShoulderCommand(shoulder, ShoulderPosition.STARTING_CONFIG));
-    SmartDashboard.putData(new SetCarriageCommand(carriage, CarriagePosition.EXTENDED));
-    SmartDashboard.putData(new SetWristCommand(wrist, WristPosition.HORIZONTAL1));
+   // SmartDashboard.putData(new SetCarriageCommand(carriage, CarriagePosition.EXTENDED));
+    SmartDashboard.putData(new SetSliderCommand(slider, SliderPosition.EXTENDED));
+   // SmartDashboard.putData(new SetWristCommand(wrist, WristPosition.HORIZONTAL1));
+
+   new JoystickButton(auxControl, 1).onTrue(
+    new SetCarriageCommand(carriage, CarriagePosition.EXTENDED).alongWith(new SetSliderCommand(slider, SliderPosition.EXTENDED)).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_HIGH))
+   );
+   new JoystickButton(auxControl, 2).onTrue(
+    new SetCarriageCommand(carriage, CarriagePosition.RETRACTED).alongWith(new SetSliderCommand(slider, SliderPosition.RETRACTED)).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND))
+   );
     
 
    

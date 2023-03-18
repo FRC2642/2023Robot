@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClawWristSubsystem extends SubsystemBase implements IPositionable<ClawWristSubsystem.WristPosition> {
   
-  public static final double DEGREES_PER_TICK = 180d/22d;
+  public static final double DEGREES_PER_TICK = -180d/22d;
   public static final double MAX_DEGREES = 280d;
   public static final double MIN_DEGREES = 27d;
   public static final double AT_SETPOINT_THRESHOLD = 10d;
@@ -30,7 +30,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
   private final RelativeEncoder wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
   
-  private final PIDController wristPIDController = new PIDController(0.05, 0.0, 0.0);
+  private final PIDController wristPIDController = new PIDController(0.005, 0.0, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
@@ -58,6 +58,10 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(WristPosition pos) {
     set(wristPIDController.calculate(getWristAngle(), pos.angle));
     currentSetPosition = pos;
+  }
+  
+  public void set() {
+    set(wristPIDController.calculate(getWristAngle(), currentSetPosition.angle));
   }
 
   public boolean atSetPosition() {
@@ -92,12 +96,13 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void periodic() {
     SmartDashboard.putNumber("Wrist Angle", getWristAngle());
     SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
+    SmartDashboard.putString("Wrist", currentSetPosition.toString());
   }
   
   public enum WristPosition {
     MANUAL(-1),
-    HORIZONTAL2(180),
-    HORIZONTAL1(360),
+    HORIZONTAL2(360),
+    HORIZONTAL1(180),
     VERTICAL1(270);
 
     public double angle;
