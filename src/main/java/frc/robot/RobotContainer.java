@@ -2,19 +2,25 @@ package frc.robot;
 
 import java.io.IOException;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.autonomous.SetCarriageCommand;
+import frc.robot.commands.autonomous.SetShoulderCommand;
+import frc.robot.commands.autonomous.SetSliderCommand;
 import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.fullAutos.ASCUBEAutoCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
+import frc.robot.commands.teleop.MastCommands.TeleopCarriageCommand;
 import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
@@ -25,6 +31,9 @@ import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 import frc.robot.utils.VectorR;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
@@ -33,6 +42,7 @@ import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 public class RobotContainer {
   private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
  // private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
+ public final Joystick auxButtonBoard = new Joystick(Constants.AUX_BUTTON_BOARD_PORT);
 
   private final DriveSubsystem drive = new DriveSubsystem();
  // private final LimelightSubsystem limelight = new LimelightSubsystem();
@@ -79,6 +89,7 @@ public class RobotContainer {
 
   public void teleopInit() {
     drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+    auxButtonBoard.getRawButton(0);
    
     
    /*  clawPneumatics.setDefaultCommand(new RunCommand(() -> {
@@ -144,6 +155,19 @@ public class RobotContainer {
  //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
  //   new JoystickButton(mainControl, Button.kY.value).whileTrue(
  //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
+
+ //mast down
+ //new JoystickButton(auxButtonBoard, 1).onTrue(new SetCarriageCommand(carriage, CarriagePosition.RETRACTED).alongWith(new SetSliderCommand(slider, SliderPosition.RETRACTED)));
+ //mast up
+ //new JoystickButton(auxButtonBoard, 2).onTrue(new SetCarriageCommand(carriage, CarriagePosition.EXTENDED).alongWith(new SetSliderCommand(slider, SliderPosition.EXTENDED)));
+ //shluder down
+ //new JoystickButton(auxButtonBoard, 3).onTrue(SetShoulderCommand(shoudler, ShoulderPosition.DOWN));
+ //shoulder up
+ //new JoystickButton(auxButtonBoard, 4).onTrue(SetShoulderCommand(shoudler, ShoulderPosition.UP));
+ //shoulder min
+ //new JoystickButton(auxButtonBoard, 5).onTrue(SetShoulderCommand(shoudler, ShoulderPosition.MID));
+ //travel position
+ //new JoystickButton(auxButtonBoard, 6).onTrue(new SetCarriageCommand(carriage, CarriagePosition.RETRACTED).alongWith(new SetSliderCommand(slider, SliderPosition.RETRACTED)).alongWith(SetShoulderCommand(shoudler, ShoulderPosition.UP)))
   }
 
   public Command getAutonomousCommand() {

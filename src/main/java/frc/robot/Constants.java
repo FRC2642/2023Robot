@@ -20,6 +20,7 @@ public final class Constants {
     // Controlers
     public static final int DRIVE_CONTROL_PORT = 0;
     public static final int AUX_CONTROL_PORT = 1;
+    public static final int AUX_BUTTON_BOARD_PORT = 2;
 
     // Swerve
     public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1, ModuleLocation.FRONT_RIGHT);

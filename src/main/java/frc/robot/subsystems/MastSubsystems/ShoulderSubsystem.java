@@ -22,7 +22,7 @@ import frc.robot.utils.MathR;
 public class ShoulderSubsystem extends SubsystemBase implements IPositionable<ShoulderSubsystem.ShoulderPosition> {
 
   public static final double DEGREES_PER_TICK = 360d / 3.3d;
-  public static final double INCLINE_DEGREES = 27d;
+  public static final double INCLINE_DEGREES = 23.8d;
   public static final double MAX_DEGREES = 180 + INCLINE_DEGREES;
   public static final double MIN_DEGREES = INCLINE_DEGREES;
   public static final double AT_SETPOINT_THRESHOLD = 10d;
@@ -95,7 +95,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   }
 
-  
+  //slider incline 23.8 degrees
   public enum ShoulderPosition {
     MANUAL(-1),
     STARTING_CONFIG(130),
@@ -104,7 +104,10 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     PLACE_CUBE1(180),
     PLACE_CUBE2(150),
     PLACE_CONE1(170),
-    PLACE_CONE_OFFSIDE(MIN_DEGREES);
+    PLACE_CONE_OFFSIDE(MIN_DEGREES),
+    DOWN(MIN_DEGREES),
+    UP(MAX_DEGREES),
+    MID(150);
 
     public double angle;
 
