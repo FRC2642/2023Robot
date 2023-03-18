@@ -34,22 +34,11 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
-  public enum WristPosition {
-    MANUAL(-1),
-    HORIZONTAL2(180),
-    HORIZONTAL1(360),
-    VERTICAL1(270);
-
-    public double angle;
-
-    private WristPosition(double angle) {
-      this.angle = angle;
-    }
-  }
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
     wristEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
     wristMotor.setInverted(true);
+    wristPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
   public double getWristAngle() {
@@ -64,13 +53,10 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
     wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
-    
   }
 
   public void set(WristPosition pos) {
-    double speed = wristPIDController.calculate(getWristAngle(), pos.angle);
-    if (!atSetPosition()) set(speed);
-    else set(0.0);
+    set(wristPIDController.calculate(getWristAngle(), pos.angle));
     currentSetPosition = pos;
   }
 
@@ -81,14 +67,6 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public WristPosition getSetPosition() {
     return currentSetPosition;
   }
-      
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Wrist Angle", getWristAngle());
-    SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
-  }
-
-
 
   @Override
   public void setSpeedLimit(double max) {
@@ -108,5 +86,24 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   @Override
   public double getRampRate() {
     return wristMotor.getOpenLoopRampRate();
+  }
+  
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Wrist Angle", getWristAngle());
+    SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
+  }
+  
+  public enum WristPosition {
+    MANUAL(-1),
+    HORIZONTAL2(180),
+    HORIZONTAL1(360),
+    VERTICAL1(270);
+
+    public double angle;
+
+    private WristPosition(double angle) {
+      this.angle = angle;
+    }
   }
 }

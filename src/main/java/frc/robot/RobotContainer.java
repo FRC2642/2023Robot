@@ -98,7 +98,7 @@ public class RobotContainer {
 
 
   public void teleopInit() {
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+    //drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
     SmartDashboard.putData(new SetShoulderCommand(shoulder, ShoulderPosition.STARTING_CONFIG));
     SmartDashboard.putData(new SetCarriageCommand(carriage, CarriagePosition.EXTENDED));
     SmartDashboard.putData(new SetWristCommand(wrist, WristPosition.HORIZONTAL1));

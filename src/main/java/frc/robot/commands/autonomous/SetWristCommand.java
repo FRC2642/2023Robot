@@ -17,6 +17,11 @@ public class SetWristCommand extends CommandBase {
     this.position = position;
     addRequirements(wrist);
   }
+  @Override
+  public void initialize() {
+    wrist.setSpeedLimit(0.5);
+    wrist.setRampRate(0.0);
+  }
 
   @Override
   public void execute() {

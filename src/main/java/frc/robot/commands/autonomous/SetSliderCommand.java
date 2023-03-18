@@ -17,6 +17,11 @@ public class SetSliderCommand extends CommandBase {
     this.position = position;
     addRequirements(sliders);
   }
+  @Override
+  public void initialize() {
+    sliders.setSpeedLimit(1.0);
+    sliders.setRampRate(0.0);
+  }
 
   @Override
   public void execute() {
