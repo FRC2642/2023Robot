@@ -19,9 +19,10 @@ import frc.robot.utils.MathR;
 public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
 
   public static final double FULL_EXTENSION_PER_TICK = 1d / 240d;
+  public static final double AT_SETPOINT_THRESHOLD = 0.1;
 
   private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
-  private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(1);
+  private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(2);
   private final RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
 
   private final PIDController sliderPIDController = new PIDController(0.5, 0, 0);
@@ -33,6 +34,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     sliderMotor.setOpenLoopRampRate(0.0);
     sliderMotor.setClosedLoopRampRate(0.0);
     sliderMotor.setInverted(false);
+    sliderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
   public void set(SliderPosition pos) {
@@ -47,8 +49,8 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   public void set(double speed) {
     currentSetPosition = SliderPosition.MANUAL;
     
-    if (speed == 0.0) brake.set(true);
-    else brake.set(false);
+   // if (speed == 0.0) brake.set(true);
+   // else brake.set(false);
 
     sliderMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }

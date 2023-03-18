@@ -18,9 +18,9 @@ import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class ScoreAndBalanceAuto extends SequentialCommandGroup {
+public class ScoreGroundAndBalanceAuto extends SequentialCommandGroup {
   /** Creates a new ScoreBalance. */
-  public ScoreAndBalanceAuto(SliderSubsystem sliders, ClawGripperSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ShoulderSubsystem shoulder, PiratePath path) {
+  public ScoreGroundAndBalanceAuto(SliderSubsystem sliders, ClawGripperSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ShoulderSubsystem shoulder, PiratePath path) {
     addCommands(
       new OpenCloseClawCommand(pneumatics, true),
       new WaitCommand(2),

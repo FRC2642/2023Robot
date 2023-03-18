@@ -17,9 +17,10 @@ public final class Constants {
     public static final double MODULE_ANGLE_KP = 0.00524;
     public static final double FOOT_PER_METER = 3.28084;
 
-    // Controlers
+    // Controllers
     public static final int DRIVE_CONTROL_PORT = 0;
     public static final int AUX_CONTROL_PORT = 1;
+    public static final int AUX_BUTTON_BOARD_PORT = 2;
 
     // Swerve
     public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1, ModuleLocation.FRONT_RIGHT);

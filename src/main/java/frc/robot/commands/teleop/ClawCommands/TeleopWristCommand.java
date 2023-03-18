@@ -40,7 +40,7 @@ public class TeleopWristCommand extends CommandBase {
       }
     }
 
-    if (wrist.atSetPosition()) wrist.set(0);
+    if (true || wrist.atSetPosition()) wrist.set(0);
   }
 
   @Override

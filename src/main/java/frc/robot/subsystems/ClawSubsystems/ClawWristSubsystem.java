@@ -64,10 +64,13 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
     wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
+    
   }
 
   public void set(WristPosition pos) {
-    set(wristPIDController.calculate(getWristAngle(), pos.angle));
+    double speed = wristPIDController.calculate(getWristAngle(), pos.angle);
+    if (!atSetPosition()) set(speed);
+    else set(0.0);
     currentSetPosition = pos;
   }
 

@@ -31,10 +31,14 @@ public class TeleopCarriageCommand extends CommandBase {
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if (auxControl.getXButtonPressed()) {
+  /*   if (auxControl.getXButtonPressed()) {
       extended = !extended;
     }
-    carriage.set(extended ? CarriagePosition.EXTENDED : CarriagePosition.MANUAL);
+    carriage.set(extended ? CarriagePosition.EXTENDED : CarriagePosition.MANUAL); */
+    if (Math.abs(auxControl.getRightY()) > 0.1) {
+      carriage.set(-1 * auxControl.getRightY());
+    }
+    else carriage.set(0.0);
   }
 
   @Override

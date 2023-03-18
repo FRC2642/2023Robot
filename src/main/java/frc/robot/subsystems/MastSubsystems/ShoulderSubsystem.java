@@ -21,7 +21,7 @@ import frc.robot.utils.MathR;
 
 public class ShoulderSubsystem extends SubsystemBase implements IPositionable<ShoulderSubsystem.ShoulderPosition> {
 
-  public static final double DEGREES_PER_TICK = 360d / 3.3d;
+  public static final double DEGREES_PER_TICK = -360d / 3.3d;
   public static final double INCLINE_DEGREES = 27d;
   public static final double MAX_DEGREES = 180 + INCLINE_DEGREES;
   public static final double MIN_DEGREES = INCLINE_DEGREES;
@@ -53,7 +53,11 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public void set(ShoulderPosition pos) {
-    set(shoulderPIDController.calculate(getShoulderAngle(), pos.angle));
+    double speed = shoulderPIDController.calculate(getShoulderAngle(), pos.angle);
+
+    if (!atSetPosition()) set(speed);
+    else set(0.0);
+    
     currentSetPosition = pos;
   }
 
@@ -66,7 +70,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public double getShoulderAngle() {
-    return MathR.getDistanceToAngle(0, (absEncoder.getPosition() - 32/*<- CHANGE NUMBER*/), 300);
+    return MathR.getDistanceToAngle(0, (absEncoder.getPosition() - 32-96/*<- CHANGE NUMBER*/), 300);
   }
 
   @Override
@@ -101,10 +105,10 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     STARTING_CONFIG(130),
     PICKUP_GROUND(MAX_DEGREES),
     PICKUP_HUMANPLAYER(MIN_DEGREES),
-    PLACE_CUBE1(180),
-    PLACE_CUBE2(150),
-    PLACE_CONE1(170),
-    PLACE_CONE_OFFSIDE(MIN_DEGREES);
+    PLACE_CUBE_MID(180),
+    PLACE_CUBE_HIGH(150),
+    PLACE_CONE_MID(170),
+    PLACE_CONE_HIGH(MIN_DEGREES);
 
     public double angle;
 

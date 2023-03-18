@@ -22,12 +22,12 @@ public class TeleopShoulderCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    shoulder.setSpeedLimit(0.35);
-    shoulder.setRampRate(0.2);
+    shoulder.setSpeedLimit(0.5);
+    shoulder.setRampRate(1);
   }
   @Override
   public void execute() {
-    double speed = -auxControl.getLeftY();
+    double speed = auxControl.getLeftY();
     shoulder.set(speed);
   }
 

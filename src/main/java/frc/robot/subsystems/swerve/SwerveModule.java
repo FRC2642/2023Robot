@@ -114,7 +114,7 @@ public class SwerveModule {
     if (Math.abs(MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle())) > 90d)
       reverse();
 
-    double speed_power = MathR.limit(desiredSpeed(), -1, 1);
+    double speed_power = MathR.limit(desiredSpeed(), -1.2, 1.2);
     double angle_power = MathR
         .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle()), -1, 1);
    

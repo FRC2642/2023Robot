@@ -33,9 +33,9 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 import frc.robot.utils.VectorR;
 
-public class ASCUBEAutoCommand extends SequentialCommandGroup {
+public class BSCUBEAutoCommand extends SequentialCommandGroup {
   
-  public ASCUBEAutoCommand(DriveSubsystem drive, LimelightSubsystem camera, CarriageSubsystem carriage, SliderSubsystem sliders, ShoulderSubsystem shoulder, ClawWristSubsystem wrist, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper) {
+  public BSCUBEAutoCommand(DriveSubsystem drive, LimelightSubsystem camera, CarriageSubsystem carriage, SliderSubsystem sliders, ShoulderSubsystem shoulder, ClawWristSubsystem wrist, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper) {
     PiratePath path = new PiratePath("ASCUBE");
     var subs = path.getSubPaths();
     PiratePath driveToCubePath = subs.get(0);
@@ -44,7 +44,7 @@ public class ASCUBEAutoCommand extends SequentialCommandGroup {
 
     addCommands(
       new SetCarriageCommand(carriage, CarriagePosition.EXTENDED),
-      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_OFFSIDE),
+      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_HIGH),
       new SetSliderCommand(sliders, SliderPosition.EXTENDED),
       new OpenCloseClawCommand(gripper, true),
       new WaitCommand(1),
@@ -55,9 +55,11 @@ public class ASCUBEAutoCommand extends SequentialCommandGroup {
       new FollowPathCommand(drive, driveToCubePath, true).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND)),
       new SetWristCommand(wrist, WristPosition.HORIZONTAL1),
       new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
-      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CUBE2).raceWith(new RunIntakeCommand(intake, 0.1)),
+      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CUBE_HIGH).raceWith(new RunIntakeCommand(intake, 0.1)),
       new FollowPathCommand(drive, driveToBackToShelfPath, false).raceWith(new RunIntakeCommand(intake, 0.1)),
       new RunIntakeCommand(intake, -0.2).withTimeout(1),
-      new FollowPathCommand(drive, driveToSecondObjectPath, false));
+      new FollowPathCommand(drive, driveToSecondObjectPath, false).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND))
+      );
+      //TESTABLE
   }
 }

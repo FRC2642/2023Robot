@@ -33,10 +33,10 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 import frc.robot.utils.VectorR;
 
-public class HSCUBEAutoCommand extends SequentialCommandGroup {
+public class RSCUBEAutoCommand extends SequentialCommandGroup {
   
-  public HSCUBEAutoCommand(DriveSubsystem drive, LimelightSubsystem camera, CarriageSubsystem carriage, SliderSubsystem sliders, ShoulderSubsystem shoulder, ClawWristSubsystem wrist, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper) {
-    PiratePath path = new PiratePath("HSCUBE");
+  public RSCUBEAutoCommand(DriveSubsystem drive, LimelightSubsystem camera, CarriageSubsystem carriage, SliderSubsystem sliders, ShoulderSubsystem shoulder, ClawWristSubsystem wrist, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper) {
+    PiratePath path = new PiratePath("RSCUBE");
     var subs = path.getSubPaths();
     PiratePath driveToBumpPath = subs.get(0);
     PiratePath driveToCubePath = subs.get(1);
@@ -47,18 +47,28 @@ public class HSCUBEAutoCommand extends SequentialCommandGroup {
 
 
     addCommands(
-      new SetCarriageCommand(carriage, CarriagePosition.EXTENDED),
-      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_OFFSIDE),
-      new SetSliderCommand(sliders, SliderPosition.EXTENDED),
+      new SetCarriageCommand(carriage, CarriagePosition.EXTENDED).alongWith(
+      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_HIGH)).alongWith(
+      new SetSliderCommand(sliders, SliderPosition.EXTENDED)),
       new OpenCloseClawCommand(gripper, true),
       new WaitCommand(1),
-      new SetSliderCommand(sliders, SliderPosition.RETRACTED),
-      new SetWristCommand(wrist, WristPosition.VERTICAL1),
+      new SetSliderCommand(sliders, SliderPosition.RETRACTED).alongWith(
+      new SetWristCommand(wrist, WristPosition.VERTICAL1)),
       new SetCarriageCommand(carriage, CarriagePosition.RETRACTED),
       new WaitCommand(1),
       new FollowPathCommand(drive, driveToBumpPath, true).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND)),
-      new FollowPathCommand(drive, driveToCubePath, false),
-//NOT FINISHED
+      new FollowPathCommand(drive, driveToCubePath, false).alongWith(
+      new SetWristCommand(wrist, WristPosition.HORIZONTAL1)),
+      new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
+      new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CUBE_HIGH).raceWith(new RunIntakeCommand(intake, 0.1)),
+      new FollowPathCommand(drive, driveBackToBumpPath, false).raceWith(new RunIntakeCommand(intake, 0.1)),
+      new FollowPathCommand(drive, driveBackOverBumpPath, false).raceWith(new RunIntakeCommand(intake, 0.1)),
+      new FollowPathCommand(drive, driveBackToShelfPath, false).raceWith(new RunIntakeCommand(intake, 0.1)),
+      new RunIntakeCommand(intake, -0.2).withTimeout(1),
+      new FollowPathCommand(drive, turnAroundPath, false).alongWith(
+      new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND))
+
+//TESTABLE
 
     );
      
