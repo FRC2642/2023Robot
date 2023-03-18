@@ -21,8 +21,8 @@ import frc.robot.utils.MathR;
 
 public class ShoulderSubsystem extends SubsystemBase implements IPositionable<ShoulderSubsystem.ShoulderPosition> {
 
-  public static final double DEGREES_PER_TICK = -360d / 3.3d;
-  public static final double INCLINE_DEGREES = 27d;
+  public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
+  public static final double INCLINE_DEGREES = 23d;
   public static final double MAX_DEGREES = 180 + INCLINE_DEGREES;
   public static final double MIN_DEGREES = INCLINE_DEGREES;
   public static final double AT_SETPOINT_THRESHOLD = 10d;
@@ -70,7 +70,8 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public double getShoulderAngle() {
-    return MathR.getDistanceToAngle(0, (absEncoder.getPosition() - 32-96/*<- CHANGE NUMBER*/), 300);
+    return absEncoder.getPosition();
+   // return MathR.getDistanceToAngle(0, (absEncoder.getPosition()/*<- CHANGE NUMBER*/), 300);
   }
 
   @Override
@@ -96,7 +97,6 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shoulder Angle", getShoulderAngle());
-
   }
 
   

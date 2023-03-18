@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,6 +23,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private final RelativeEncoder carriageEncoder = carriageMotor.getEncoder();
+  private final PIDController carriagePIDController = new PIDController(1.0, 0, 0);
   private static SparkMaxLimitSwitch bottomLimitSwitch;
   private static SparkMaxLimitSwitch topLimitSwitch;
 
@@ -40,7 +42,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   @Override
   public void set(CarriagePosition pos) {
-    set(pos == CarriagePosition.EXTENDED ? 0.5 : -0.5);
+    set(carriagePIDController.calculate(getCarriageExtension(), pos.extension));
     currentSetPosition = pos;
   }
 
@@ -56,6 +58,10 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   public static boolean isCarriageDown() {
     return bottomLimitSwitch.isPressed();
+  }
+
+  public double getCarriageExtension() {
+    return carriageEncoder.getPosition();
   }
 
 
@@ -96,9 +102,14 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   }
   
   public enum CarriagePosition {
-    EXTENDED,
-    RETRACTED,
-    MANUAL
+    EXTENDED(1),
+    RETRACTED(0),
+    MANUAL(-1);
+
+    public final double extension;
+    private CarriagePosition(double extension) {
+      this.extension = extension;
+    }
   }
 
 }
