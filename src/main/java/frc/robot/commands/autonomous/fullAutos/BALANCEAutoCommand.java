@@ -42,13 +42,13 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
       new ResetGyroCommand(180),
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
-      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
-      new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND).withTimeout(0.2),
-      new SetRobotConfigurationCommand(() -> RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
-      new OpenCloseClawCommand(pneumatics, true),
-      new SetRobotConfigurationCommand(() -> RobotConfiguration.STARTING_CONFIG, shoulder, sliders, carriage),
+   //   new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
+    //  new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND).withTimeout(0.2),
+ //     new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
+   //   new OpenCloseClawCommand(pneumatics, true),
+   //   new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, sliders, carriage),
       new DriveDistanceCommand(drive, VectorR.fromPolar(0.4, 0), 15),
-      new DriveUpAndBalanceBackwardsCommand(drive)
+      new DriveUpAndBalanceBackwardsCommand(drive) 
     ); 
   }
 }

@@ -35,20 +35,28 @@ public class TeleopWristCommand extends CommandBase {
     else if (auxControl.getPOV() != -1) manualControl = false;
 
     if (manualControl) {
+      
+    wrist.setSpeedLimit(0.3);
       if (auxControl.getXButton()){
-        wrist.set(-0.7);
+        wrist.set(-1.0);
       }
       else if (auxControl.getYButton()){
-        wrist.set(0.7);
+        wrist.set(1.0);
       }
       else{
         wrist.set(0.0);
       }
     }
     else {
+      
+    wrist.setSpeedLimit(0.5);
+    
+    if (auxControl.getRawButtonPressed(8)) wrist.set(WristPosition.DIAGONAL1);
+    else if (auxControl.getRawButtonPressed(7)) wrist.set(WristPosition.DIAGONAL2);
+    
       switch (auxControl.getPOV()) {
         case 0: {
-          wrist.set(WristPosition.HORIZONTAL1);
+          wrist.set(WristPosition.HORIZONTAL2);
           break;
         }
         case 90: {
@@ -60,13 +68,14 @@ public class TeleopWristCommand extends CommandBase {
           break;
         }
         case 180: {
-          wrist.set(WristPosition.HORIZONTAL2);
+          wrist.set(WristPosition.HORIZONTAL1);
           break;
         }
         default: {
           wrist.set();
         }
       }
+
     }
 
 

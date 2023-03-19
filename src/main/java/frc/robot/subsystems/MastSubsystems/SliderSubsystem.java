@@ -43,7 +43,6 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
 
   public void set(SliderPosition pos) {
     double speed = sliderPIDController.calculate(getSliderExtension(), pos.extension);
-    
     if (currentSetPosition != pos) hardSetPosition = false;
 
     if (atSetPosition()) {
@@ -53,17 +52,26 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     else{
       set(speed);
     } 
-
+ 
     currentSetPosition = pos;
   }
 
   public void set(double speed) {
     currentSetPosition = SliderPosition.MANUAL;
-    speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.0, getSliderExtension() >= 0.95);
-    
+    speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1, getSliderExtension() >= 0.9);
+    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || (speed < 0 && ShoulderSubsystem.getShoulderAngle() < 45)) {
+      speed = 0.0;
+    }
+
+
     if (speed == 0.0) brake.set(true);
     else brake.set(false);
 
+    /*if (ShoulderSubsystem.getShoulderAngle() <= 180) 
+      sliderMotor.set(speed);
+    else{
+      sliderMotor.set(0.0);
+    }*/
     sliderMotor.set(speed);
   }
   

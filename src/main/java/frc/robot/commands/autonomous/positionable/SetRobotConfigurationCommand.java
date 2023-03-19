@@ -15,12 +15,15 @@ import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 
 public class SetRobotConfigurationCommand extends ParallelCommandGroup {
+  private final RobotConfiguration configuration;
 
-  public SetRobotConfigurationCommand(Supplier<RobotConfiguration> config, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage) {
+  public SetRobotConfigurationCommand(RobotConfiguration config, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage) {
+    configuration = config;
+   
     addCommands(
-      new SetShoulderCommand(shoulder, () -> config.get().shoulderPos),
-      new SetCarriageCommand(carriage, () -> config.get().carriagePos),
-      new SetSliderCommand(slider, () -> config.get().sliderPos)
+      new SetShoulderCommand(shoulder, () -> configuration.shoulderPos),
+      new SetCarriageCommand(carriage, () -> configuration.carriagePos),
+      new SetSliderCommand(slider, () -> configuration.sliderPos)
     );
   }
 

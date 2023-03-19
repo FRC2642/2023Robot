@@ -33,7 +33,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   private final PIDController shoulderPIDController = new PIDController(0.01, 0.0, 0.0);
   private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
-  private double speedLimit = 0.3;
+  private double speedLimit = 0.2;
 
   public ShoulderSubsystem() {
     absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
@@ -51,11 +51,11 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   public void set(double speed) {
     currentSetPosition = ShoulderPosition.MANUAL;
 
-    /*if ((speed > 0 && getShoulderAngle() > 90) || (speed < 0 && getShoulderAngle() < 90)) {
+    if ((speed > 0 && getShoulderAngle() > 113) || (speed < 0 && getShoulderAngle() < 113)) {
       speed *= (Math.abs(Math.sin(Math.toRadians(getShoulderAngle() - INCLINE_DEGREES)))+0.1);
-    } HIGHLY EXPIERMENTNTIAL !!! :) */
+    }
 
-    speed *= (Math.abs(Math.cos(Math.toRadians(getShoulderAngle()))) + 0.1);
+    speed *= (Math.abs(Math.cos(Math.toRadians(getShoulderAngle()))) + 0.05);
 
     shoulderMotor.set(
         MathR.limitWhenReached(speed, -speedLimit, speedLimit, getShoulderAngle() <= MIN_DEGREES,

@@ -52,6 +52,10 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   //Positive = up
   public void set(double speed) {
     currentSetPosition = CarriagePosition.MANUAL;
+    
+    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || (speed < 0 && ShoulderSubsystem.getShoulderAngle() < 45)) {
+       speed = 0.0;
+    }
     carriageMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }
   
@@ -73,7 +77,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   @Override
   public boolean atSetPosition() {
-    return true;
+    return carriagePIDController.atSetpoint();
   }
 
   @Override

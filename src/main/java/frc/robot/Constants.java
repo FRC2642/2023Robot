@@ -41,6 +41,10 @@ public final class Constants {
     // Gripper
     public static final int GRIPPER_SOLENOID_CHANNEL = 0;
 
+    //LEDS
+    public static final int LED_PORT = 1;
+    public static final int LED_LENGTH = 60;
+
     // Other
     public static final String TEST_PATH = "New New New Path.wpilib.json";
 

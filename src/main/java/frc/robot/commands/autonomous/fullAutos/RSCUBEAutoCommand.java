@@ -56,9 +56,9 @@ public class RSCUBEAutoCommand extends SequentialCommandGroup {
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
       new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND).withTimeout(0.2),
-      new SetRobotConfigurationCommand(() -> RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
       new OpenCloseClawCommand(gripper, true),
-      new SetRobotConfigurationCommand(() -> RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
         new WaitCommand(1).andThen(
           new FollowPathCommand(drive, driveToBumpPath, true), 
           new FollowPathCommand(drive, driveToCubePath, false))

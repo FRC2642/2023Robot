@@ -21,8 +21,8 @@ public class SetShoulderCommand extends CommandBase {
   }
   @Override
   public void initialize() {
-    shoulder.setSpeedLimit(0.35);
-    shoulder.setRampRate(2);
+    shoulder.setSpeedLimit(0.2);
+    shoulder.setRampRate(3);
   }
   
   @Override

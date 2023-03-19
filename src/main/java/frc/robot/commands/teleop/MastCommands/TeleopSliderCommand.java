@@ -35,7 +35,7 @@ public class TeleopSliderCommand extends CommandBase {
     /*if (Math.abs(auxControl.getRightY()) > 0.1) {
       slider.set(-1 * auxControl.getRightY());
     }
-    else slider.set(0.0);*/
+    else*/ slider.set(0.0);
     
     
   }

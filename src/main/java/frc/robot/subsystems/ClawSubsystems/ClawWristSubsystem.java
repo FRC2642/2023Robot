@@ -25,12 +25,12 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public static final double DEGREES_PER_TICK = 180d/22d;
   public static final double MAX_DEGREES = 280d;
   public static final double MIN_DEGREES = 27d;
-  public static final double AT_SETPOINT_THRESHOLD = 10d;
+  public static final double AT_SETPOINT_THRESHOLD = 2d;
 
   private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
   private static RelativeEncoder wristEncoder;
   
-  private final PIDController wristPIDController = new PIDController(0.005, 0.0, 0.0);
+  private final PIDController wristPIDController = new PIDController(0.02, 0.006, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
@@ -61,14 +61,15 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   }
 
   public void set(WristPosition pos) {
-
-    set(wristPIDController.calculate(getWristAngle(), pos.angle));
-    System.out.println("cur: " + getWristAngle() + " des: " + pos.angle + " pow: " + wristMotor.get());
+    currentSetPosition = pos;
+    if (!atSetPosition()) set(wristPIDController.calculate(getWristAngle(), pos.angle));
+    else set(0.0);
+  //  System.out.println("cur: " + getWristAngle() + " des: " + pos.angle + " pow: " + wristMotor.get());
     currentSetPosition = pos;
   }
   
   public void set() {
-    set(currentSetPosition.angle);
+    set(currentSetPosition);
   }
 
   public boolean atSetPosition() {
@@ -110,6 +111,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
     MANUAL(-1),
     HORIZONTAL2(360),
     HORIZONTAL1(180),
+    DIAGONAL1(225),
+    DIAGONAL2(315),
     VERTICAL1(270);
 
     public double angle;

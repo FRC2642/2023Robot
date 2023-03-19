@@ -1,11 +1,15 @@
 package frc.robot;
 
+import edu.wpi.first.wpilibj.AddressableLED;
+import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -14,6 +18,7 @@ import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
+import frc.robot.commands.autonomous.positionable.SetWristCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.autonomous.fullAutos.BALANCEAutoCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopGripperCommand;
@@ -32,6 +37,7 @@ import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
@@ -45,6 +51,7 @@ import frc.robot.utils.Easings.Functions;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import com.mindsensors.*;
 
 public class RobotContainer {
   private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
@@ -59,16 +66,28 @@ public class RobotContainer {
   private final SliderSubsystem slider = new SliderSubsystem();
   private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
   private final ClawWristSubsystem wrist = new ClawWristSubsystem();
+  //private final LEDSubsystem leds;
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final PiratePath taxiPath = new PiratePath();
 
+  public static boolean DEBUG = false;
+
+  //public static final AddressableLED leds = new AddressableLED(Constants.LED_PORT);
+  //private final AddressableLEDBuffer buffer = new AddressableLEDBuffer(Constants.LED_LENGTH);
+
   // private final ASCUBEAutoCommand auto_1_ASCUBE;
 
   public RobotContainer() {
+
+    /*leds.setLength(buffer.getLength());
+    leds.setData(buffer);
+    leds.start();*/
     taxiPath.add(new PiratePoint(0, 0, 180, 0, false));
     taxiPath.add(new PiratePoint(10, 0, 180, 8, false));
     taxiPath.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
+
+    SmartDashboard.putNumber("DEBUG MODE", 0);
 
     // auto_1_ASCUBE = new ASCUBEAutoCommand(drive);
     // Default commands
@@ -91,12 +110,16 @@ public class RobotContainer {
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 
+    // mindsensors led class
+    //CANLight lights = new CANLight(Constants.LED_PORT);
+    //leds = new LEDSubsystem(lights);
+    //leds.blink(1);
     // Button bindings
     configureButtonBindings();
   }
 
   public void autonomousInit() {
-    drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
+    //drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
     carriage.setDefaultCommand(new RunCommand(() -> carriage.set(0.0), carriage));
     slider.setDefaultCommand(new RunCommand(() -> slider.set(0.0), slider));
     wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
@@ -105,24 +128,54 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
+    /*for (int i = 0; i < buffer.getLength(); i++){
+      buffer.setRGB(i, 120, 190, 33);
+    }
+    leds.setData(buffer);*/
+    CommandScheduler.getInstance().cancelAll();
     SmartDashboard.putData("Starting Config", new SetShoulderCommand(shoulder, () -> ShoulderPosition.STARTING_CONFIG));
     // SmartDashboard.putData(new SetCarriageCommand(carriage,
     // CarriagePosition.EXTENDED));
     // SmartDashboard.putData(new SetWristCommand(wrist,
     // WristPosition.HORIZONTAL1));
 
-    new JoystickButton(auxControl, 1).onTrue(
-        new SetRobotConfigurationCommand(() -> RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage));
-    new JoystickButton(auxControl, 2).onTrue(
-        new SetRobotConfigurationCommand(() -> RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage));
+    if (!DEBUG) {  
+      new JoystickButton(auxControl, 1).onTrue(
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).withTimeout(5));
+     // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)));
 
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
-    gripper.setDefaultCommand(new TeleopGripperCommand(gripper, auxControl));
-    carriage.setDefaultCommand(new TeleopCarriageCommand(carriage, auxControl));
-    intake.setDefaultCommand(new TeleopIntakeCommand(intake, auxControl));
-    slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));
-    shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
-    wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
+      new JoystickButton(auxControl, 2).onTrue(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).withTimeout(5));
+    //  .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)));
+
+      drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+      gripper.setDefaultCommand(new TeleopGripperCommand(gripper, auxControl));
+      carriage.setDefaultCommand(new TeleopCarriageCommand(carriage, auxControl));
+      intake.setDefaultCommand(new TeleopIntakeCommand(intake, auxControl));
+      slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));   
+      shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
+      wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
+    }
+    else {
+      
+      SmartDashboard.putData("Slider UP", new InstantCommand(() -> slider.set(0.4),slider));
+      SmartDashboard.putData("Slider DOWN", new InstantCommand(() -> slider.set(-0.4),slider));
+      SmartDashboard.putData("Slider STOP", new RunCommand(() -> slider.set(0.0),slider));
+      drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
+      carriage.setDefaultCommand(new RunCommand(() -> carriage.set(-1 * mainControl.getRightY()), carriage));
+      slider.setDefaultCommand(new RunCommand(() -> slider.set(-1 * mainControl.getLeftY()), slider));
+      wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
+      shoulder.setDefaultCommand(new RunCommand(() -> shoulder.set(-1 * auxControl.getLeftY()), shoulder));
+      
+      intake.setDefaultCommand(new RunCommand(() -> intake.set(0.0), intake));
+    }
+  
+   
+ 
+/*  slider.setDefaultCommand(new RunCommand(() -> {
+   slider.set(mainControl.getLeftX());
+   }, slider));*/
+ 
 
     /*
      * clawPneumatics.setDefaultCommand(new RunCommand(() -> {
