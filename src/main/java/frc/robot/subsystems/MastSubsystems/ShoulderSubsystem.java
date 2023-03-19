@@ -29,13 +29,14 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR_1, MotorType.kBrushed);
   private final CANSparkMax shoulderMotorFollower = new CANSparkMax(Constants.SHOULDER_MOTOR_2, MotorType.kBrushed);
-  private final SparkMaxAnalogSensor absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
+  private static SparkMaxAnalogSensor absEncoder;
 
   private final PIDController shoulderPIDController = new PIDController(0.01, 0.0, 0.0);
   private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
   private double speedLimit = 0.3;
 
   public ShoulderSubsystem() {
+    absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
     absEncoder.setPositionConversionFactor(1.0);
     shoulderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
     shoulderMotor.setInverted(false);
@@ -49,7 +50,13 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   // Negative = up, Positive = down
   public void set(double speed) {
     currentSetPosition = ShoulderPosition.MANUAL;
+
+    /*if ((speed > 0 && getShoulderAngle() > 90) || (speed < 0 && getShoulderAngle() < 90)) {
+      speed *= (Math.abs(Math.sin(Math.toRadians(getShoulderAngle() - INCLINE_DEGREES)))+0.1);
+    } HIGHLY EXPIERMENTNTIAL !!! :) */
+
     speed *= (Math.abs(Math.cos(Math.toRadians(getShoulderAngle()))) + 0.1);
+
     shoulderMotor.set(
         MathR.limitWhenReached(speed, -speedLimit, speedLimit, getShoulderAngle() <= MIN_DEGREES,
             getShoulderAngle() >= MAX_DEGREES));
@@ -74,7 +81,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     return currentSetPosition;
   }
 
-  public double getShoulderAngle() {
+  public static double getShoulderAngle() {
     return absEncoder.getPosition() * DEGREES_PER_TICK + 270;
   }
 

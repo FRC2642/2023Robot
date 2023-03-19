@@ -39,7 +39,7 @@ public class FollowPathCommand extends CommandBase {
   @Override
   public void initialize() {
 
-    if (notAdjustedPath != null && DriverStation.getAlliance() == Alliance.Blue && notAdjustedPath.allianceDependent)
+    if (notAdjustedPath != null && notAdjustedPath.allianceDependent && DriverStation.getAlliance() == Alliance.Blue)
       setPath(notAdjustedPath.getBlueAlliance());
     else
       setPath(notAdjustedPath);
