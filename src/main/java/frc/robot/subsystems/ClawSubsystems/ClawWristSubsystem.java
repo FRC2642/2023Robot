@@ -28,7 +28,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public static final double AT_SETPOINT_THRESHOLD = 10d;
 
   private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
-  private final RelativeEncoder wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
+  private static RelativeEncoder wristEncoder;
   
   private final PIDController wristPIDController = new PIDController(0.005, 0.0, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
@@ -36,17 +36,18 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
+    wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
     wristEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
     wristEncoder.setInverted(true);
     wristMotor.setInverted(false);
     wristPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
-  public double getWristAngle() {
+  public static double getWristAngle() {
     return wristEncoder.getPosition();
   }
 
-  public void resetWristEncoder(WristPosition pos) {
+  public static void resetWristEncoder(WristPosition pos) {
     wristEncoder.setPosition(pos.angle);
   }
 

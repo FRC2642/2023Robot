@@ -22,9 +22,9 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   public static final double FULL_EXTENSION_PER_TICK = 1d/250d;
   public static final double AT_SETPOINT_THRESHOLD = 0.05;
 
-  private static final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
+  private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
   private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(2);
-  private static final RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
+  private static RelativeEncoder sliderEncoder;
 
   private final PIDController sliderPIDController = new PIDController(3, 0, 0);
   private SliderPosition currentSetPosition = SliderPosition.RETRACTED;
@@ -33,6 +33,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   private boolean hardSetPosition = false;
 
   public SliderSubsystem() {
+    sliderEncoder = sliderMotor.getEncoder();
     sliderEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
     sliderMotor.setOpenLoopRampRate(0.0);
     sliderMotor.setClosedLoopRampRate(0.0);
@@ -70,7 +71,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     sliderEncoder.setPosition(pos.extension);
   }
 
-  public double getSliderExtension(){
+  public static double getSliderExtension(){
     return sliderEncoder.getPosition();
   }
 

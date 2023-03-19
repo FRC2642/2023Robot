@@ -8,25 +8,17 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 
-public class ResetSliderCommand extends CommandBase {
-  /** Creates a new ResetSliderCommand. */
-  public ResetSliderCommand() {}
+public class ResetSliderEncoderCommand extends CommandBase {
 
-  // Called when the command is initially scheduled.
-  @Override
-  public void initialize() {}
-
-  // Called every time the scheduler runs while the command is scheduled.
+  private final SliderPosition pos;
+  public ResetSliderEncoderCommand(SliderPosition position) {
+    this.pos = position;
+  }
   @Override
   public void execute() {
-    SliderSubsystem.resetSliderEncoder(SliderPosition.RETRACTED);
+    SliderSubsystem.resetSliderEncoder(pos);
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return true;
