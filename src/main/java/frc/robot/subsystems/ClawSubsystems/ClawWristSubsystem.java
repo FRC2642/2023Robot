@@ -22,7 +22,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClawWristSubsystem extends SubsystemBase implements IPositionable<ClawWristSubsystem.WristPosition> {
   
-  public static final double DEGREES_PER_TICK = -180d/22d;
+  public static final double DEGREES_PER_TICK = 180d/22d;
   public static final double MAX_DEGREES = 280d;
   public static final double MIN_DEGREES = 27d;
   public static final double AT_SETPOINT_THRESHOLD = 10d;
@@ -37,7 +37,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
     wristEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
-    wristMotor.setInverted(true);
+    wristEncoder.setInverted(true);
+    wristMotor.setInverted(false);
     wristPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
@@ -53,15 +54,20 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
     wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
+    SmartDashboard.putNumber("wrist speed", wristMotor.get());
+    SmartDashboard.putNumber("wrist convo", wristEncoder.getPositionConversionFactor());
+    
   }
 
   public void set(WristPosition pos) {
+
     set(wristPIDController.calculate(getWristAngle(), pos.angle));
+    System.out.println("cur: " + getWristAngle() + " des: " + pos.angle + " pow: " + wristMotor.get());
     currentSetPosition = pos;
   }
   
   public void set() {
-    set(wristPIDController.calculate(getWristAngle(), currentSetPosition.angle));
+    set(currentSetPosition.angle);
   }
 
   public boolean atSetPosition() {

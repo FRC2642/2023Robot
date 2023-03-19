@@ -108,18 +108,18 @@ public class RobotContainer {
 
 
   public void teleopInit() {
-    drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
+   // drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
     SmartDashboard.putData(new SetShoulderCommand(shoulder, ShoulderPosition.STARTING_CONFIG));
    // SmartDashboard.putData(new SetCarriageCommand(carriage, CarriagePosition.EXTENDED));
     SmartDashboard.putData(new SetSliderCommand(slider, SliderPosition.EXTENDED));
    // SmartDashboard.putData(new SetWristCommand(wrist, WristPosition.HORIZONTAL1));
 
-   new JoystickButton(auxControl, 1).onTrue(
+ /*   new JoystickButton(auxControl, 1).onTrue(
     new SetCarriageCommand(carriage, CarriagePosition.EXTENDED).alongWith(new SetSliderCommand(slider, SliderPosition.EXTENDED)).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PLACE_CONE_HIGH))
    );
    new JoystickButton(auxControl, 2).onTrue(
     new SetCarriageCommand(carriage, CarriagePosition.RETRACTED).alongWith(new SetSliderCommand(slider, SliderPosition.RETRACTED)).alongWith(new SetShoulderCommand(shoulder, ShoulderPosition.PICKUP_GROUND))
-   );
+   ); */
     
 
    
@@ -142,7 +142,7 @@ public class RobotContainer {
 
     slider.setDefaultCommand(new RunCommand(() -> {
       slider.set(mainControl.getLeftX());
-    }, slider));
+    }, slider)); 
 
  
     shoulder.setDefaultCommand(new RunCommand(() -> {

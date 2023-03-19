@@ -36,10 +36,10 @@ public class TeleopWristCommand extends CommandBase {
 
     if (manualControl) {
       if (auxControl.getXButton()){
-        wrist.set(0.7);
+        wrist.set(-0.7);
       }
       else if (auxControl.getYButton()){
-        wrist.set(-0.7);
+        wrist.set(0.7);
       }
       else{
         wrist.set(0.0);
