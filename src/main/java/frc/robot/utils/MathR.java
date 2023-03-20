@@ -8,12 +8,15 @@ package frc.robot.utils;
 public class MathR {
 
     public static double getDistanceToAngle(double currentDegrees, double desiredDegrees) {
-        return modulo(((currentDegrees) - (desiredDegrees)) + 180, 360) - 180;
+        return modulo(((desiredDegrees) - (currentDegrees)) + 180, 360) - 180;
     }
     
     public static double getDistanceToAngle(double current, double desired, double avoid) {
-        if (Math.abs(getDistanceToAngle(current, avoid)) + Math.abs(getDistanceToAngle(desired, avoid)) > 180) return getDistanceToAngle(current, desired);
-        else return modulo(getDistanceToAngle(current, desired) - 360, 360);
+        double distance = getDistanceToAngle(current, desired);
+        if (Math.abs(getDistanceToAngle(desired, avoid)) + Math.abs(getDistanceToAngle(current, avoid)) == Math.abs(distance)) {
+            return modulo(distance - 360, 360);
+        }
+        return distance;
     }
 
     public static double modulo(double x, double y) {

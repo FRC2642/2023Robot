@@ -21,39 +21,55 @@ import frc.robot.utils.MathR;
 
 public class ShoulderSubsystem extends SubsystemBase implements IPositionable<ShoulderSubsystem.ShoulderPosition> {
 
-  public static final double DEGREES_PER_TICK = 360d / 3.3d;
-  public static final double INCLINE_DEGREES = 27d;
-  public static final double MAX_DEGREES = 180 + INCLINE_DEGREES;
-  public static final double MIN_DEGREES = INCLINE_DEGREES;
-  public static final double AT_SETPOINT_THRESHOLD = 10d;
+  public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
+  public static final double INCLINE_DEGREES = 23d;
+  public static final double MAX_DEGREES = 180;//213;
+  public static final double MIN_DEGREES = 30;//20;
+  public static final double AT_SETPOINT_THRESHOLD = 3d;
 
   private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR_1, MotorType.kBrushed);
- // private final CANSparkMax shoulderMotorFollower = new CANSparkMax(Constants.SHOULDER_MOTOR_2, MotorType.kBrushed);
-  private final SparkMaxAnalogSensor absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
+  private final CANSparkMax shoulderMotorFollower = new CANSparkMax(Constants.SHOULDER_MOTOR_2, MotorType.kBrushed);
+  private static SparkMaxAnalogSensor absEncoder;
 
-  private final PIDController shoulderPIDController = new PIDController(0.05, 0.0, 0.0);
+  private final PIDController shoulderPIDController = new PIDController(0.01, 0.0, 0.0);
   private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
-  private double speedLimit = 1.0;
-
+  private double speedLimit = 0.2;
 
   public ShoulderSubsystem() {
-    absEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
+    absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
+    absEncoder.setPositionConversionFactor(1.0);
     shoulderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
     shoulderMotor.setInverted(false);
-    //shoulderMotorFollower.setInverted(false);
-    //shoulderMotorFollower.follow(shoulderMotor);
+    // shoulderMotorFollower.setInverted(false);
+    shoulderMotorFollower.follow(shoulderMotor);
   }
 
-  //Negative = up, Positive = down
+ // public static double SLOW_DOWN_MAX_ANGLE = 180;
+ // public static double SLOW_DOWN_MIN_ANGLE = 50;
+
+  // Negative = up, Positive = down
   public void set(double speed) {
     currentSetPosition = ShoulderPosition.MANUAL;
-     // shoulderMotor.set(
-     //     MathR.limitWhenReached(speed, -1, 1, getShoulderAngle() <= MIN_DEGREES, getShoulderAngle() >= MAX_DEGREES));
-     shoulderMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
+
+    if ((speed > 0 && getShoulderAngle() > 113) || (speed < 0 && getShoulderAngle() < 113)) {
+      speed *= (Math.abs(Math.sin(Math.toRadians(getShoulderAngle() - INCLINE_DEGREES)))+0.1);
+    }
+
+    speed *= (Math.abs(Math.cos(Math.toRadians(getShoulderAngle()))) + 0.05);
+
+    shoulderMotor.set(
+        MathR.limitWhenReached(speed, -speedLimit, speedLimit, getShoulderAngle() <= MIN_DEGREES,
+            getShoulderAngle() >= MAX_DEGREES));
   }
 
   public void set(ShoulderPosition pos) {
-    set(shoulderPIDController.calculate(getShoulderAngle(), pos.angle));
+    double speed = shoulderPIDController.calculate(getShoulderAngle(), pos.angle);
+
+    if (!atSetPosition())
+      set(speed);
+    else
+      set(0.0);
+
     currentSetPosition = pos;
   }
 
@@ -65,8 +81,8 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     return currentSetPosition;
   }
 
-  public double getShoulderAngle() {
-    return MathR.getDistanceToAngle(0, (absEncoder.getPosition() - 32/*<- CHANGE NUMBER*/), 300);
+  public static double getShoulderAngle() {
+    return absEncoder.getPosition() * DEGREES_PER_TICK + 270;
   }
 
   @Override
@@ -92,19 +108,18 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shoulder Angle", getShoulderAngle());
-
+    SmartDashboard.putString("Shoulder", currentSetPosition.toString());
   }
 
-  
   public enum ShoulderPosition {
     MANUAL(-1),
-    STARTING_CONFIG(130),
+    STARTING_CONFIG(56),
     PICKUP_GROUND(MAX_DEGREES),
     PICKUP_HUMANPLAYER(MIN_DEGREES),
-    PLACE_CUBE1(180),
-    PLACE_CUBE2(150),
-    PLACE_CONE1(170),
-    PLACE_CONE_OFFSIDE(MIN_DEGREES);
+    PLACE_CUBE_MID(180),
+    PLACE_CUBE_HIGH(150),
+    PLACE_CONE_MID(170),
+    PLACE_CONE_HIGH(MIN_DEGREES);
 
     public double angle;
 

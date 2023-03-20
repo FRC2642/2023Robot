@@ -25,38 +25,29 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public static final double DEGREES_PER_TICK = 180d/22d;
   public static final double MAX_DEGREES = 280d;
   public static final double MIN_DEGREES = 27d;
-  public static final double AT_SETPOINT_THRESHOLD = 10d;
+  public static final double AT_SETPOINT_THRESHOLD = 2d;
 
   private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
-  private final RelativeEncoder wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
+  private static RelativeEncoder wristEncoder;
   
-  private final PIDController wristPIDController = new PIDController(0.05, 0.0, 0.0);
+  private final PIDController wristPIDController = new PIDController(0.02, 0.006, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
-  public enum WristPosition {
-    MANUAL(-1),
-    HORIZONTAL2(180),
-    HORIZONTAL1(360),
-    VERTICAL1(270);
-
-    public double angle;
-
-    private WristPosition(double angle) {
-      this.angle = angle;
-    }
-  }
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
+    wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
     wristEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
-    wristMotor.setInverted(true);
+    wristEncoder.setInverted(true);
+    wristMotor.setInverted(false);
+    wristPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
-  public double getWristAngle() {
+  public static double getWristAngle() {
     return wristEncoder.getPosition();
   }
 
-  public void resetWristEncoder(WristPosition pos) {
+  public static void resetWristEncoder(WristPosition pos) {
     wristEncoder.setPosition(pos.angle);
   }
 
@@ -64,11 +55,21 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
     wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
+    SmartDashboard.putNumber("wrist speed", wristMotor.get());
+    SmartDashboard.putNumber("wrist convo", wristEncoder.getPositionConversionFactor());
+    
   }
 
   public void set(WristPosition pos) {
-    set(wristPIDController.calculate(getWristAngle(), pos.angle));
     currentSetPosition = pos;
+    if (!atSetPosition()) set(wristPIDController.calculate(getWristAngle(), pos.angle));
+    else set(0.0);
+  //  System.out.println("cur: " + getWristAngle() + " des: " + pos.angle + " pow: " + wristMotor.get());
+    currentSetPosition = pos;
+  }
+  
+  public void set() {
+    set(currentSetPosition);
   }
 
   public boolean atSetPosition() {
@@ -78,14 +79,6 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public WristPosition getSetPosition() {
     return currentSetPosition;
   }
-      
-  @Override
-  public void periodic() {
-    SmartDashboard.putNumber("Wrist Angle", getWristAngle());
-    SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
-  }
-
-
 
   @Override
   public void setSpeedLimit(double max) {
@@ -105,5 +98,27 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   @Override
   public double getRampRate() {
     return wristMotor.getOpenLoopRampRate();
+  }
+  
+  @Override
+  public void periodic() {
+    SmartDashboard.putNumber("Wrist Angle", getWristAngle());
+    SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
+    SmartDashboard.putString("Wrist", currentSetPosition.toString());
+  }
+  
+  public enum WristPosition {
+    MANUAL(-1),
+    HORIZONTAL2(360),
+    HORIZONTAL1(180),
+    DIAGONAL1(225),
+    DIAGONAL2(315),
+    VERTICAL1(270);
+
+    public double angle;
+
+    private WristPosition(double angle) {
+      this.angle = angle;
+    }
   }
 }

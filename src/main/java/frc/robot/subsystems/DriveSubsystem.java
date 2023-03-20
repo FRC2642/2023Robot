@@ -122,7 +122,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   // POSITION DATA
   public static VectorR getRelativeIncrement() {
-    return displacement.clone();
+    return increment.clone();
   }
   
   public static VectorR getRelativeFieldPosition() {
@@ -176,10 +176,11 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("pitch:", getPitchDegrees());
     SmartDashboard.putNumber("roll:", getRollDegrees());
     SmartDashboard.putNumber("gyro", getYawDegrees());
+    modules.debugSmartDashboard();
 
 
-    // SmartDashboard.putNumber("x field", displacement.getX());
-    // SmartDashboard.putNumber("y field", displacement.getY());
+     SmartDashboard.putNumber("x field", displacement.getX());
+     SmartDashboard.putNumber("y field", displacement.getY());
 
     // SmartDashboard.putNumber("distance [ft]",
     // getRelativeFieldPosition().getMagnitude());

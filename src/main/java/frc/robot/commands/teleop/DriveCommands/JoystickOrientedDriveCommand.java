@@ -12,7 +12,7 @@ import frc.robot.utils.VectorR;
 
 public class JoystickOrientedDriveCommand extends CommandBase {
 
-  double maxSpeed = 0.25;
+  private double maxSpeed = 0.25;
 
   private final DriveSubsystem drive;
   private final XboxController control;
@@ -26,9 +26,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
   }
 
   @Override
-  public void initialize() {
-
-  }
+  public void initialize() { }
 
   final double TURN_KP = 0.017;
   private boolean isLocked = false;
@@ -36,7 +34,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
 
   @Override
   public void execute() {
-      maxSpeed = MathR.lerp(0.25, 1.0, 0.0, 1.0, control.getLeftTriggerAxis());
+      maxSpeed = MathR.lerp(0.25, 1.2, 0.0, 1.0, control.getLeftTriggerAxis());
 
       //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
       

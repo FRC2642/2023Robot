@@ -6,7 +6,6 @@ package frc.robot.commands.autonomous.claw;
 
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.commands.autonomous.waiters.EndWhenObjectInClawCommand;
 import frc.robot.game.GamePieceType;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;

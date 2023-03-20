@@ -11,43 +11,44 @@ import frc.robot.utils.VectorR;
 
 public class DriveDirectionCommand extends CommandBase { 
   
-  public static final double TURN_KP = 0.017453;
+  public static final double TURN_KP = 0.01;
+  public static final double DRIVE_KP = 0.3;
   
   protected final DriveSubsystem drive;
-  protected final VectorR velocity;
-  protected Double faceDegree;
+  protected VectorR velocity;
+  protected Double heading;
 
   protected final VectorR localDisplacement = new VectorR();
 
-  public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity, double faceDegree) {
+  public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity, double heading) {
     this.drive = drive;
     this.velocity = velocity;
-    this.faceDegree = faceDegree;
+    this.heading = heading;
     addRequirements(drive);
   }
   public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity) {
     this.drive = drive;
     this.velocity = velocity;
-    faceDegree = null;
+    heading = null;
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
     localDisplacement.setFromCartesian(0, 0);
-    if (faceDegree == null) faceDegree = DriveSubsystem.getYawDegrees();
+    if (heading == null) heading = DriveSubsystem.getYawDegrees();
   }
 
   @Override
   public void execute() {
     localDisplacement.add(DriveSubsystem.getRelativeIncrement());
 
-    double turnSpeed = TURN_KP * MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), faceDegree);
+    double turnSpeed = TURN_KP * MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), heading);
   
     VectorR rotatedDisplacement = localDisplacement.clone();
     rotatedDisplacement.rotate(-velocity.getAngle());
-    VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() + 90);
-    
+    VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() - 90);
+    antiStrafe.mult(DRIVE_KP);
     VectorR driveSpeed = VectorR.addVectors(velocity, antiStrafe);
 
     drive.move(driveSpeed,  MathR.limit(turnSpeed, -1, 1));

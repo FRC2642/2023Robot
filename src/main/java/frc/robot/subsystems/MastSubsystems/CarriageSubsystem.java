@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,35 +19,43 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 public class CarriageSubsystem extends SubsystemBase implements IPositionable<CarriageSubsystem.CarriagePosition> {
 
-  public static final double FULL_EXTENSION_PER_TICK = 1d / 520d;
+  public static final double FULL_EXTENSION_PER_TICK = 1.0/100d;
+  public static final double AT_SETPOINT_THRESHOLD = 0.05;
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
-  private final RelativeEncoder carriageEncoder = carriageMotor.getEncoder();
+  private static RelativeEncoder carriageEncoder;
+  private final PIDController carriagePIDController = new PIDController(3.0, 0, 0);
   private static SparkMaxLimitSwitch bottomLimitSwitch;
   private static SparkMaxLimitSwitch topLimitSwitch;
 
   private CarriagePosition currentSetPosition = CarriagePosition.RETRACTED;
-  private double speedLimit = 1.0;
+  private double speedLimit = 1;
 
 
   public CarriageSubsystem() {
     carriageMotor.setClosedLoopRampRate(0.0);
     carriageMotor.setOpenLoopRampRate(0.0);
     carriageMotor.setInverted(false);
+    carriageEncoder = carriageMotor.getEncoder();
     carriageEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
+    carriagePIDController.setTolerance(AT_SETPOINT_THRESHOLD);
     bottomLimitSwitch = carriageMotor.getReverseLimitSwitch(Type.kNormallyOpen);
     topLimitSwitch = carriageMotor.getForwardLimitSwitch(Type.kNormallyOpen);
   }
 
   @Override
   public void set(CarriagePosition pos) {
-    set(pos == CarriagePosition.EXTENDED ? 0.5 : -0.5);
+    set(carriagePIDController.calculate(getCarriageExtension(), pos.extension));
     currentSetPosition = pos;
   }
 
   //Positive = up
   public void set(double speed) {
     currentSetPosition = CarriagePosition.MANUAL;
+    
+    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || (speed < 0 && ShoulderSubsystem.getShoulderAngle() < 45)) {
+       speed = 0.0;
+    }
     carriageMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }
   
@@ -58,10 +67,17 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     return bottomLimitSwitch.isPressed();
   }
 
+  public double getCarriageExtension() {
+    return carriageEncoder.getPosition();
+  }
+
+  public static void resetCarriageEncoder(CarriagePosition position) {
+    carriageEncoder.setPosition(position.extension);
+  }
 
   @Override
   public boolean atSetPosition() {
-    return true;
+    return carriagePIDController.atSetpoint();
   }
 
   @Override
@@ -93,12 +109,21 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   public void periodic() {
     SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
     SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
+    SmartDashboard.putNumber("Carriage Extension", getCarriageExtension());
+
+  //  if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);
+  //  else if (isCarriageDown()) resetCarriageEncoder(CarriagePosition.RETRACTED);
   }
   
   public enum CarriagePosition {
-    EXTENDED,
-    RETRACTED,
-    MANUAL
+    EXTENDED(1),
+    RETRACTED(0),
+    MANUAL(-1);
+
+    public final double extension;
+    private CarriagePosition(double extension) {
+      this.extension = extension;
+    }
   }
 
 }

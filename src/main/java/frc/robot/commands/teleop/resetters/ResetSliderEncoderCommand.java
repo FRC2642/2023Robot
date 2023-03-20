@@ -5,20 +5,18 @@
 package frc.robot.commands.teleop.resetters;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 
-public class ResetWristEncoderCommand extends CommandBase {
+public class ResetSliderEncoderCommand extends CommandBase {
 
-  private final ClawWristSubsystem.WristPosition position;
-
-  public ResetWristEncoderCommand(WristPosition position) {
-    this.position = position;
+  private final SliderPosition pos;
+  public ResetSliderEncoderCommand(SliderPosition position) {
+    this.pos = position;
   }
-
   @Override
   public void execute() {
-    ClawWristSubsystem.resetWristEncoder(position);
+    SliderSubsystem.resetSliderEncoder(pos);
   }
 
   @Override

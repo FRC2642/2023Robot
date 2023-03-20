@@ -12,16 +12,15 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
 
-    public static final Alliance ALLIANCE = DriverStation.getAlliance();
-
     // Ratios
-    public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
+    public static final double FEET_PER_DISPLACEMENT = 6.1078e-5;//6.52131382735e-5;
     public static final double MODULE_ANGLE_KP = 0.00524;
     public static final double FOOT_PER_METER = 3.28084;
 
-    // Controlers
+    // Controllers
     public static final int DRIVE_CONTROL_PORT = 0;
     public static final int AUX_CONTROL_PORT = 1;
+    public static final int AUX_BUTTON_BOARD_PORT = 2;
 
     // Swerve
     public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1, ModuleLocation.FRONT_RIGHT);
@@ -33,7 +32,7 @@ public final class Constants {
     public static final int MAIN_SLIDER_MOTOR = 21;
     public static final int CARRIAGE_MOTOR = 22;
     public static final int SHOULDER_MOTOR_1 = 23;
-    public static final int SHOULDER_MOTOR_2 = 23;
+    public static final int SHOULDER_MOTOR_2 = 26;
 
     // Claw
     public static final int WRIST_MOTOR = 24;
@@ -42,7 +41,14 @@ public final class Constants {
     // Gripper
     public static final int GRIPPER_SOLENOID_CHANNEL = 0;
 
+    //LEDS
+    public static final int LED_PORT = 1;
+    public static final int LED_LENGTH = 60;
+
     // Other
     public static final String TEST_PATH = "New New New Path.wpilib.json";
+
+    public static final double FIELD_X = 54d + 1d/12d;
+    public static final double FIELD_Y = 26d + 7d/12d;
 
 }

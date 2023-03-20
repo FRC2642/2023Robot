@@ -48,18 +48,18 @@ public class SwerveModules implements Iterable<SwerveModule> {
 
    
   public void debugSmartDashboard() {
-   /*  SmartDashboard.putNumber("FR", frontRight.driveMotor.getSelectedSensorPosition());
+    /*  SmartDashboard.putNumber("FR", frontRight.driveMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("FL", frontLeft.driveMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("BR", backRight.driveMotor.getSelectedSensorPosition());
     SmartDashboard.putNumber("BL", backLeft.driveMotor.getSelectedSensorPosition());
 
-    SmartDashboard.putNumber("FR heading", Math.toDegrees(frontRight.getWheelHeadingRadians()));
-    SmartDashboard.putNumber("FL heading", Math.toDegrees(frontLeft.getWheelHeadingRadians()));
-    SmartDashboard.putNumber("BR heading", Math.toDegrees(backRight.getWheelHeadingRadians()));
-    SmartDashboard.putNumber("BL heading", Math.toDegrees(backLeft.getWheelHeadingRadians()));
+    SmartDashboard.putNumber("FR heading", frontRight.getWheelOrientationDegrees());
+    SmartDashboard.putNumber("FL heading", frontLeft.getWheelOrientationDegrees());
+    SmartDashboard.putNumber("BR heading", backRight.getWheelOrientationDegrees());
+    SmartDashboard.putNumber("BL heading", backLeft.getWheelOrientationDegrees());
+*/
 
-
-    SmartDashboard.putNumber("FL Turn Encoder", frontLeft.getRelativeTurnEncoderValue());*/
+  //  SmartDashboard.putNumber("FL Turn Encoder", frontLeft.getRelativeTurnEncoderValue());*/
   } 
 
   // get a list of the modules for looping through (iterating)

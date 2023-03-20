@@ -23,7 +23,7 @@ public class TeleopSliderCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    slider.setRampRate(0.2);
+    slider.setRampRate(0.5);
     slider.setSpeedLimit(1);
   }
 
@@ -31,7 +31,13 @@ public class TeleopSliderCommand extends CommandBase {
   public void execute() {
     if (auxControl.getAButtonPressed()) extended = !extended;
     
-    slider.set(extended ? SliderSubsystem.SliderPosition.EXTENDED : SliderSubsystem.SliderPosition.RETRACTED);
+    //slider.set(extended ? SliderSubsystem.SliderPosition.EXTENDED : SliderSubsystem.SliderPosition.RETRACTED);
+    /*if (Math.abs(auxControl.getRightY()) > 0.1) {
+      slider.set(-1 * auxControl.getRightY());
+    }
+    else*/ slider.set(0.0);
+    
+    
   }
   
   @Override
