@@ -23,7 +23,7 @@ public class SetCarriageCommand extends CommandBase {
   @Override
   public void initialize() {
     carriage.setSpeedLimit(0.6);
-    carriage.setRampRate(1.5);
+    carriage.setRampRate(1.0);
   }
 
   @Override

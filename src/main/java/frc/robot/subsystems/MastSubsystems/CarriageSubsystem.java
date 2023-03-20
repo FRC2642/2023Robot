@@ -110,6 +110,9 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
     SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
     SmartDashboard.putNumber("Carriage Extension", getCarriageExtension());
+
+  //  if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);
+  //  else if (isCarriageDown()) resetCarriageEncoder(CarriagePosition.RETRACTED);
   }
   
   public enum CarriagePosition {

@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
+import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
 import frc.robot.commands.autonomous.positionable.SetWristCommand;
@@ -115,7 +116,6 @@ public class RobotContainer {
     //leds = new LEDSubsystem(lights);
     //leds.blink(1);
     // Button bindings
-    configureButtonBindings();
   }
 
   public void autonomousInit() {
@@ -146,6 +146,7 @@ public class RobotContainer {
 
       new JoystickButton(auxControl, 2).onTrue(
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).withTimeout(5));
+      
     //  .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)));
 
       drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
@@ -155,126 +156,37 @@ public class RobotContainer {
       slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));   
       shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
+      
+    new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0));
+    new JoystickButton(mainControl, Button.kA.value)
+    .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
+new JoystickButton(mainControl, Button.kB.value).whileTrue(
+    new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
+new JoystickButton(mainControl, Button.kX.value)
+    .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
+new JoystickButton(mainControl, Button.kY.value).whileTrue(
+    new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
     }
     else {
       
       SmartDashboard.putData("Slider UP", new InstantCommand(() -> slider.set(0.4),slider));
       SmartDashboard.putData("Slider DOWN", new InstantCommand(() -> slider.set(-0.4),slider));
       SmartDashboard.putData("Slider STOP", new RunCommand(() -> slider.set(0.0),slider));
+      SmartDashboard.putData("Carriage UP", new SetCarriageCommand(carriage, () -> CarriagePosition.EXTENDED));
+      SmartDashboard.putData("Carriage DOWN", new SetCarriageCommand(carriage, () -> CarriagePosition.RETRACTED));
+      SmartDashboard.putData("Shoulder UP", new SetShoulderCommand(shoulder, () -> ShoulderPosition.PLACE_CONE_HIGH));
+      SmartDashboard.putData("Shoulder DOWN", new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND));
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
       carriage.setDefaultCommand(new RunCommand(() -> carriage.set(-1 * mainControl.getRightY()), carriage));
       slider.setDefaultCommand(new RunCommand(() -> slider.set(-1 * mainControl.getLeftY()), slider));
       wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
       shoulder.setDefaultCommand(new RunCommand(() -> shoulder.set(-1 * auxControl.getLeftY()), shoulder));
-      
       intake.setDefaultCommand(new RunCommand(() -> intake.set(0.0), intake));
     }
-  
-   
- 
-/*  slider.setDefaultCommand(new RunCommand(() -> {
-   slider.set(mainControl.getLeftX());
-   }, slider));*/
- 
-
-    /*
-     * clawPneumatics.setDefaultCommand(new RunCommand(() -> {
-     * if (mainControl.getLeftX() > 0.5) clawPneumatics.set(true);
-     * else clawPneumatics.set(false);
-     * }, clawPneumatics));
-     * 
-     * 
-     * carriage.setDefaultCommand(new RunCommand(() -> {
-     * carriage.set(mainControl.getLeftX());
-     * }, carriage));
-     * 
-     * 
-     * intake.setDefaultCommand(new RunCommand(() -> {
-     * intake.set(mainControl.getLeftX());
-     * }, intake));
-     * 
-     * 
-     * slider.setDefaultCommand(new RunCommand(() -> {
-     * slider.set(mainControl.getLeftX());
-     * }, slider));
-     * 
-     * 
-     * shoulder.setDefaultCommand(new RunCommand(() -> {
-     * shoulder.set(mainControl.getLeftX(), false);
-     * }, shoulder));
-     */
-
-    // wrist.setDefaultCommand(new RunCommand(() -> {
-    // wrist.set(mainControl.getLeftX());
-
-    // }, wrist));
-    // wrist.setDefaultCommand(new TeleopWristCommand(wrist, mainControl));
-
-    /*
-     * limelight.setDefaultCommand(new RunCommand(() -> {
-     * 
-     * }, limelight));
-     */
-
-    // new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0.0));
-    // new POVButton(mainControl, 0).whileTrue(new
-    // ResetDisplacementCommand(VectorR.fromCartesian(0, 0)));
-
   }
 
-  // test mode doesnt work with controllers
   public void testInit() {
-    // System.out.println("TEST INIT");
-    // drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive,
-    // mainControl));
 
-  }
-
-  private void configureButtonBindings() {
-    new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0));
-    // new POVButton(mainControl, 180).whileTrue(new RampCommand(drive,
-    // VectorR.fromCartesian(0, 0), true));
-    // new POVButton(mainControl, 270).whileTrue(new
-    // ToggleStopDefensivelyCommand(drive));
-    new JoystickButton(mainControl, Button.kA.value)
-        .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
-    new JoystickButton(mainControl, Button.kB.value).whileTrue(
-        new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
-    new JoystickButton(mainControl, Button.kX.value)
-        .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
-    new JoystickButton(mainControl, Button.kY.value).whileTrue(
-        new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
-
-    /*
-     * //mast down
-     * new JoystickButton(auxButtonBoard, 1).onTrue(new SetCarriageCommand(carriage,
-     * CarriagePosition.RETRACTED).alongWith(new SetSliderCommand(slider,
-     * SliderPosition.RETRACTED)));
-     * //mast up
-     * new JoystickButton(auxButtonBoard, 2).onTrue(new SetCarriageCommand(carriage,
-     * CarriagePosition.EXTENDED).alongWith(new SetSliderCommand(slider,
-     * SliderPosition.EXTENDED)));
-     * //shoulder pickup
-     * new JoystickButton(auxButtonBoard, 3).onTrue(new SetShoulderCommand(shoulder,
-     * ShoulderPosition.PICKUP_GROUND));
-     * //shoulder place cube mid
-     * new JoystickButton(auxButtonBoard, 4).onTrue(new SetShoulderCommand(shoulder,
-     * ShoulderPosition.PLACE_CUBE_MID));
-     * //shoulder place cube high
-     * new JoystickButton(auxButtonBoard, 5).onTrue(new SetShoulderCommand(shoulder,
-     * ShoulderPosition.PLACE_CUBE_HIGH));
-     * //shoulder place cone mid
-     * new JoystickButton(auxButtonBoard, 6).onTrue(new SetShoulderCommand(shoulder,
-     * ShoulderPosition.PLACE_CONE_MID));
-     * //shoulder place cone high
-     * new JoystickButton(auxButtonBoard, 7).onTrue(new SetShoulderCommand(shoulder,
-     * ShoulderPosition.PLACE_CONE_HIGH));
-     * //travel position
-     * new JoystickButton(auxButtonBoard, 8).onTrue(new SetCarriageCommand(carriage,
-     * CarriagePosition.RETRACTED).alongWith(new SetSliderCommand(slider,
-     * SliderPosition.RETRACTED)).alongWith(new SetShoulderCommand(shoulder,
-     * ShoulderPosition.STARTING_CONFIG)));
-     */
   }
 
   public Command getAutonomousCommand() {
