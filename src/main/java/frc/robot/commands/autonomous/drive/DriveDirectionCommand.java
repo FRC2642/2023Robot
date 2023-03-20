@@ -29,14 +29,14 @@ public class DriveDirectionCommand extends CommandBase {
   public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity) {
     this.drive = drive;
     this.velocity = velocity;
-    heading = Double.NaN;
+    heading = null;
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
     localDisplacement.setFromCartesian(0, 0);
-    if (heading == Double.NaN) heading = DriveSubsystem.getYawDegrees();
+    if (heading == null) heading = DriveSubsystem.getYawDegrees();
   }
 
   @Override
