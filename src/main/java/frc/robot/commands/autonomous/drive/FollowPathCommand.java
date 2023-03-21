@@ -97,7 +97,6 @@ public class FollowPathCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    System.out.println("isFinished Path: " + (currentTime > path.getLastTime()) + " cur: " + currentTime + " path: " + path.getLastTime());
     return currentTime > path.getLastTime();
   }
 }
