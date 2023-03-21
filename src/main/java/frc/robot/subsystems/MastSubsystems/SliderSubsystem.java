@@ -75,6 +75,11 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     sliderMotor.set(speed);
   }
   
+  public void setManual(double speed) {
+    brake.set(false);
+    sliderMotor.set(speed);
+  }
+  
   public static void resetSliderEncoder(SliderPosition pos) {
     sliderEncoder.setPosition(pos.extension);
   }

@@ -15,6 +15,8 @@ import frc.robot.utils.DataStreamJitterDetector;
 
 public class LimelightSubsystem extends SubsystemBase {
 
+  private final String networkTableName;
+
   /*
    * Limelight Detection pipeline, NOTE: pipeline order must follow enum order
    * Pipeline 0: CONE
@@ -87,7 +89,7 @@ public class LimelightSubsystem extends SubsystemBase {
   private NetworkTable limelightTable;
 
   private void initialize() {
-    limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+    limelightTable = NetworkTableInstance.getDefault().getTable(networkTableName);
     jitterDetectorX.reset();
     jitterDetectorY.reset();
   }
@@ -184,8 +186,8 @@ public class LimelightSubsystem extends SubsystemBase {
     return DetectionError.SUCCESS;
   }
 
-  public LimelightSubsystem() {
-
+  public LimelightSubsystem(String networkTableName) {
+    this.networkTableName = networkTableName;
   }
 
   @Override

@@ -58,6 +58,10 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     }
     carriageMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }
+
+  public void setManual(double speed) {
+    carriageMotor.set(speed);
+  }
   
   public static boolean isCarriageUp() {
     return topLimitSwitch.isPressed();

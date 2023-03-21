@@ -72,6 +72,10 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
     currentSetPosition = pos;
   }
+  
+  public void setManual(double speed) {
+    shoulderMotor.set(speed);
+  }
 
   public boolean atSetPosition() {
     return shoulderPIDController.atSetpoint();
