@@ -39,9 +39,9 @@ public class FollowPathCommand extends CommandBase {
   @Override
   public void initialize() {
 
-    if (notAdjustedPath != null && notAdjustedPath.allianceDependent && DriverStation.getAlliance() == Alliance.Blue)
-      setPath(notAdjustedPath.getBlueAlliance());
-    else
+    // if (notAdjustedPath != null && notAdjustedPath.allianceDependent && DriverStation.getAlliance() == Alliance.Blue)
+    //   setPath(notAdjustedPath.getBlueAlliance());
+    // else
       setPath(notAdjustedPath);
 
     startPath();
@@ -84,6 +84,7 @@ public class FollowPathCommand extends CommandBase {
       nextPoint = iterator.next();
 
     var delta_t = nextPoint.time - currentTime;
+    
 
     var velocity = nextPoint.position.clone();
     velocity.sub(DriveSubsystem.getRelativeFieldPosition());
@@ -96,6 +97,7 @@ public class FollowPathCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return timer.get() + path.getFirst().time > path.getLastTime();
+    System.out.println("isFinished Path: " + (currentTime > path.getLastTime()) + " cur: " + currentTime + " path: " + path.getLastTime());
+    return currentTime > path.getLastTime();
   }
 }

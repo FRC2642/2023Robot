@@ -85,8 +85,8 @@ public class RobotContainer {
     leds.setData(buffer);
     leds.start();*/
     taxiPath.add(new PiratePoint(0, 0, 180, 0, false));
-    taxiPath.add(new PiratePoint(10, 0, 180, 8, false));
-    taxiPath.fillWithSubPointsEasing(0.2, Functions.easeInOutCubic);
+    taxiPath.add(new PiratePoint(14.5, 0, 180, 8, false));
+    taxiPath.fillWithSubPointsEasing(0.01, Functions.easeInOutCubic);
 
     SmartDashboard.putNumber("DEBUG MODE", 0);
 
@@ -95,7 +95,7 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
-    autoChooser.addOption("drop and move", new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, taxiPath));
+    autoChooser.addOption("drop and move", new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
     autoChooser.addOption("[BSCUBE] Barrier Side Cube",
         new BSCUBEAutoCommand(drive, limelight, carriage, slider, shoulder, wrist, intake, gripper));
     autoChooser.addOption("[RSCUBE] Rail Side Cube",
@@ -119,7 +119,7 @@ public class RobotContainer {
   }
 
   public void autonomousInit() {
-    //drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
+    drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
     carriage.setDefaultCommand(new RunCommand(() -> carriage.set(0.0), carriage));
     slider.setDefaultCommand(new RunCommand(() -> slider.set(0.0), slider));
     wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
