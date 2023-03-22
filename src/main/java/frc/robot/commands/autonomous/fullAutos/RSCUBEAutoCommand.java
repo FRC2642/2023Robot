@@ -59,19 +59,19 @@ public class RSCUBEAutoCommand extends SequentialCommandGroup {
       new RunIntakeCommand(intake, -.2).withTimeout(1),
       new RunIntakeCommand(intake, 0.0).withTimeout(0.1),
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
-      new FollowPathCommand(drive, driveToBumpPath, true)), 
-      new FollowPathCommand(drive, driveToCubePath, false),
+      new FollowPathCommand(drive, driveToBumpPath, true, 0.0)), 
+      new FollowPathCommand(drive, driveToCubePath, false, 0.0),
      // new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       new RunIntakeCommand(intake, 0.1).alongWith(
         new SetShoulderCommand(shoulder, () -> ShoulderPosition.STARTING_CONFIG).alongWith(
-          new FollowPathCommand(drive, driveBackToBumpPath, false),
-          new FollowPathCommand(drive, driveBackOverBumpPath, false),
-          new FollowPathCommand(drive, driveBackToShelfPath, false)
+          new FollowPathCommand(drive, driveBackToBumpPath, false, 0.0),
+          new FollowPathCommand(drive, driveBackOverBumpPath, false, 0.0),
+          new FollowPathCommand(drive, driveBackToShelfPath, false, 0.0)
     )),
       new RunIntakeCommand(intake, -0.2).withTimeout(1),
       new WaitCommand(1),
       new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND).alongWith(
-        new WaitCommand(1).andThen(new FollowPathCommand(drive, turnAroundPath, false))
+        new WaitCommand(1).andThen(new FollowPathCommand(drive, turnAroundPath, false, 0.0))
       ));
      
   }

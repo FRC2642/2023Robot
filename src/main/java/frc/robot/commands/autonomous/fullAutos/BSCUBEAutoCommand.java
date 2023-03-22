@@ -55,14 +55,14 @@ public class BSCUBEAutoCommand extends SequentialCommandGroup {
       new RunIntakeCommand(intake, -.2).withTimeout(1),
       new RunIntakeCommand(intake, 0.0).withTimeout(0.1),
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),
-      new FollowPathCommand(drive, driveToCubePath, true),
+      new FollowPathCommand(drive, driveToCubePath, true, 0.0),
       //new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       new SetShoulderCommand(shoulder, () -> ShoulderPosition.PLACE_CUBE_MID).alongWith(
-         new FollowPathCommand(drive, driveToBackToShelfPath, false).raceWith(new RunIntakeCommand(intake, 0.1))
+         new FollowPathCommand(drive, driveToBackToShelfPath, false, 1.0).raceWith(new RunIntakeCommand(intake, 0.1))
        ),
        new RunIntakeCommand(intake, -0.5).withTimeout(0.5),
        new WaitCommand(1),
-       new FollowPathCommand(drive, driveToSecondObjectPath, false).alongWith(
+       new FollowPathCommand(drive, driveToSecondObjectPath, false, 0.0).alongWith(
          new WaitCommand(1).andThen(new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND)))
        );
       //TESTABLE

@@ -42,7 +42,7 @@ public class ScoreAndTaxiAuto extends SequentialCommandGroup {
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),
       //new OpenCloseClawCommand(pneumatics, true),
       //new WaitCommand(2),
-      new FollowPathCommand(drive, new PiratePath("TaxiPath Copy"), true)/*.alongWith(
+      new FollowPathCommand(drive, new PiratePath("TaxiPath Copy"), true, 0.0)/*.alongWith(
         new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND)*/
        // new RunIntakeCommand(intake, 0.1))
       //new CarriageAutoCommand(carriage, encoderTick).alongWith(new SetSliderCommand(sliders, true)),

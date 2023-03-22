@@ -54,7 +54,7 @@ public class BSCONEAutoCommand extends SequentialCommandGroup {
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
       new RunIntakeCommand(intake, -.2).withTimeout(1),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
-        new WaitCommand(1.5).andThen(new FollowPathCommand(drive, driveToConePath, true))
+        new WaitCommand(1.5).andThen(new FollowPathCommand(drive, driveToConePath, true, 0.0))
       )
      // new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0))//.raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       // new SetShoulderCommand(shoulder, () -> ShoulderPosition.PLACE_CUBE_HIGH).alongWith(
