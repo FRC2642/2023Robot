@@ -185,7 +185,7 @@ public class RobotContainer {
 new JoystickButton(mainControl, Button.kB.value).whileTrue(
     new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
 new JoystickButton(mainControl, Button.kX.value)
-    .whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.CONE));
+    .whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.CONE, mainControl));
  //new JoystickButton(mainControl, Button.kY.value).whileTrue(
    // new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
 
