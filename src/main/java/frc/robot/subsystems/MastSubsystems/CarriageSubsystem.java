@@ -111,8 +111,8 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   
   @Override
   public void periodic() {
-    SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
-    SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
+  //  SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
+   // SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
     SmartDashboard.putNumber("Carriage Extension", getCarriageExtension());
 
   //  if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);

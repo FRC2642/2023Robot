@@ -65,7 +65,7 @@ public class RobotContainer {
 
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight");
-  //private final LimelightSubsystem poleLimelight = new LimelightSubsystem("polelimelight");
+  private final LimelightSubsystem poleLimelight = new LimelightSubsystem("polelimelight");
   
   private final ClawGripperSubsystem gripper = new ClawGripperSubsystem();
   private final CarriageSubsystem carriage = new CarriageSubsystem();

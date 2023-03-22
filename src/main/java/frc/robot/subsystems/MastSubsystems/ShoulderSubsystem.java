@@ -112,7 +112,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shoulder Angle", getShoulderAngle());
-    SmartDashboard.putString("Shoulder", currentSetPosition.toString());
+    //SmartDashboard.putString("Shoulder", currentSetPosition.toString());
   }
 
   public enum ShoulderPosition {

@@ -18,10 +18,10 @@ public class DriveUpAndBalanceBackwardsCommand extends SequentialCommandGroup {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
-      new DriveToTiltCommand(drive, VectorR.fromPolar(0.3, 0), 10, true),
-      new DriveToTiltCommand(drive, VectorR.fromPolar(0.15, 0), 7, false),
+      new DriveToTiltCommand(drive, VectorR.fromPolar(0.3, 180), 10, true),
+      new DriveToTiltCommand(drive, VectorR.fromPolar(0.15, 180), 7, false),
       new WaitCommand(2),
-      new DriveDistanceCommand(drive, VectorR.fromPolar(0.2, 180), 0.5)
+      new DriveDistanceCommand(drive, VectorR.fromPolar(0.2, 0), 0.5)
     );
   }
 }

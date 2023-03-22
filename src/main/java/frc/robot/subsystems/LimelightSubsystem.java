@@ -9,6 +9,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.DataStreamJitterDetector;
@@ -196,6 +197,7 @@ public class LimelightSubsystem extends SubsystemBase {
       detectionError = update();
     } else {
       initialize();
+      System.out.println("LIMELIGHT---------Initializing: [" + limelightTable + "] ----------- Error: " + detectionError.toString());
     }
   }
 }

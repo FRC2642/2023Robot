@@ -14,34 +14,33 @@ import frc.robot.utils.VectorR;
 public class TurnTowardsGamePieceCommand extends CommandBase {
 
   DriveSubsystem drive;
+  XboxController mainControl;
   LimelightSubsystem limelight;
   LimelightSubsystem.DetectionType type;
 
-  /** Creates a new TurnTowardsGamePieceCommand. */
-  public TurnTowardsGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType type) {
+  final VectorR leftJoystick = new VectorR();
+
+  public TurnTowardsGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType type, XboxController mainControl) {
     this.drive = drive;
     this.limelight = limelight;
     this.type = type;
+    this.mainControl = mainControl;
     addRequirements(drive, limelight);
   }
 
-  // Called when the command is initially scheduled.
   @Override
   public void initialize() {
     limelight.setDetectionType(type);
   }
 
-  // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    drive.move(new VectorR(), limelight.x * -1 * (1d/37d));
+    leftJoystick.setFromCartesian(mainControl.getLeftX(), -1 * mainControl.getLeftY());
+    
+    if (limelight.isDetection && limelight.confidence() > 1) drive.move(leftJoystick, limelight.x * -1 * (1d/37d));
+    else drive.move(leftJoystick, 0.0);
   }
 
-  // Called once the command ends or is interrupted.
-  @Override
-  public void end(boolean interrupted) {}
-
-  // Returns true when the command should end.
   @Override
   public boolean isFinished() {
     return false;

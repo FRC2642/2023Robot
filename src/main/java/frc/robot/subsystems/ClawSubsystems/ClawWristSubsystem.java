@@ -55,8 +55,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
     wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
-    SmartDashboard.putNumber("wrist speed", wristMotor.get());
-    SmartDashboard.putNumber("wrist convo", wristEncoder.getPositionConversionFactor());
+    //SmartDashboard.putNumber("wrist speed", wristMotor.get());
+    //SmartDashboard.putNumber("wrist convo", wristEncoder.getPositionConversionFactor());
     
   }
 
@@ -103,8 +103,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Wrist Angle", getWristAngle());
-    SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
-    SmartDashboard.putString("Wrist", currentSetPosition.toString());
+   // SmartDashboard.putBoolean("Wrist At Angle", atSetPosition());
+   // SmartDashboard.putString("Wrist", currentSetPosition.toString());
   }
   
   public enum WristPosition {

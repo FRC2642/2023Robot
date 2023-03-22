@@ -43,7 +43,7 @@ public class BSCONEAutoCommand extends SequentialCommandGroup {
   public BSCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem camera, CarriageSubsystem carriage, SliderSubsystem sliders, ShoulderSubsystem shoulder, ClawWristSubsystem wrist, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper) {
     PiratePath path = new PiratePath("BSCONE");
     var subs = path.getSubPaths();
-    PiratePath driveToCubePath = subs.get(0);
+    PiratePath driveToConePath = subs.get(0);
     PiratePath driveToBackToShelfPath = subs.get(1);
     PiratePath driveToSecondObjectPath = subs.get(2);
 
@@ -51,13 +51,12 @@ public class BSCONEAutoCommand extends SequentialCommandGroup {
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
-      new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND).withTimeout(0.2),
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
-      new OpenCloseClawCommand(gripper, true),
+      new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
+      new RunIntakeCommand(intake, -.2).withTimeout(1),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
-        new WaitCommand(1.5).andThen(new FollowPathCommand(drive, driveToCubePath, true))
-      ),
-      new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0))//.raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
+        new WaitCommand(1.5).andThen(new FollowPathCommand(drive, driveToConePath, true))
+      )
+     // new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0))//.raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       // new SetShoulderCommand(shoulder, () -> ShoulderPosition.PLACE_CUBE_HIGH).alongWith(
       //   new FollowPathCommand(drive, driveToBackToShelfPath, false).raceWith(new RunIntakeCommand(intake, 0.1))
       // ),

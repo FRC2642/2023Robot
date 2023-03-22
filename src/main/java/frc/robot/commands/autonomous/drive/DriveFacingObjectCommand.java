@@ -6,21 +6,27 @@ package frc.robot.commands.autonomous.drive;
 
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
 public class DriveFacingObjectCommand extends DriveDirectionCommand {
 
   private final LimelightSubsystem camera;
+  private final LimelightSubsystem.DetectionType objectType;
 
-  public DriveFacingObjectCommand(DriveSubsystem drive, LimelightSubsystem camera, VectorR velocity) {
+  public DriveFacingObjectCommand(DriveSubsystem drive, LimelightSubsystem camera, LimelightSubsystem.DetectionType objectType, VectorR velocity) {
     super(drive, velocity);
     this.camera = camera;
+    this.objectType = objectType;
   }
   
   @Override
   public void execute() {
+    camera.setDetectionType(objectType);
+
     if (camera.isDetection && camera.confidence() > 5)
-      heading = DriveSubsystem.getYawDegrees() + camera.x;
+      turnSpeed = MathR.limit(camera.x * (-1d/27d), -0.5, 0.5);
+    
     super.execute();
   }
 }

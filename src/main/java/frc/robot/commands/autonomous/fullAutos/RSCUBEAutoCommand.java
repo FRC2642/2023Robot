@@ -61,7 +61,7 @@ public class RSCUBEAutoCommand extends SequentialCommandGroup {
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
       new FollowPathCommand(drive, driveToBumpPath, true)), 
       new FollowPathCommand(drive, driveToCubePath, false),
-      new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
+     // new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       new RunIntakeCommand(intake, 0.1).alongWith(
         new SetShoulderCommand(shoulder, () -> ShoulderPosition.STARTING_CONFIG).alongWith(
           new FollowPathCommand(drive, driveBackToBumpPath, false),

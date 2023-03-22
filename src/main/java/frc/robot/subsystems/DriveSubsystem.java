@@ -176,11 +176,11 @@ public class DriveSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("pitch:", getPitchDegrees());
     SmartDashboard.putNumber("roll:", getRollDegrees());
     SmartDashboard.putNumber("gyro", getYawDegrees());
-    modules.debugSmartDashboard();
+   // modules.debugSmartDashboard();
 
 
-     SmartDashboard.putNumber("x field", displacement.getX());
-     SmartDashboard.putNumber("y field", displacement.getY());
+   //  SmartDashboard.putNumber("x field", displacement.getX());
+  //   SmartDashboard.putNumber("y field", displacement.getY());
 
     // SmartDashboard.putNumber("distance [ft]",
     // getRelativeFieldPosition().getMagnitude());

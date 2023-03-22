@@ -39,7 +39,6 @@ public class ScoreAndTaxiAuto extends SequentialCommandGroup {
       new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
       new RunIntakeCommand(intake, -.2).withTimeout(1),
-      new RunIntakeCommand(intake, 0.0).withTimeout(0.1),
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),
       //new OpenCloseClawCommand(pneumatics, true),
       //new WaitCommand(2),
