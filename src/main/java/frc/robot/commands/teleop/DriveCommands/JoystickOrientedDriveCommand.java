@@ -26,7 +26,7 @@ public class JoystickOrientedDriveCommand extends CommandBase {
   }
 
   @Override
-  public void initialize() { }
+  public void initialize() {}
 
   final double TURN_KP = 0.017;
   private boolean isLocked = false;

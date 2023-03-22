@@ -27,10 +27,11 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   private static RelativeEncoder sliderEncoder;
 
   private final PIDController sliderPIDController = new PIDController(3, 0, 0);
-  private SliderPosition currentSetPosition = SliderPosition.RETRACTED;
+  public static SliderPosition currentSetPosition = SliderPosition.RETRACTED;
   private double speedLimit = 1;
 
   private boolean hardSetPosition = false;
+  public static boolean protectionEnabled = true;
 
   public SliderSubsystem() {
     sliderEncoder = sliderMotor.getEncoder();
@@ -57,11 +58,16 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   }
 
   public void set(double speed) {
+    
     currentSetPosition = SliderPosition.MANUAL;
     speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1, getSliderExtension() >= 0.9);
-    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || (speed < 0 && ShoulderSubsystem.getShoulderAngle() < 45)) {
-      speed = 0.0;
+    if (protectionEnabled){
+      if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || (speed < 0 && ShoulderSubsystem.getShoulderAngle() < 45)) {
+        speed = 0.0;
+      }
     }
+
+    
 
 
     if (speed == 0.0) brake.set(true);
@@ -125,7 +131,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   }
   
   public enum SliderPosition {
-    MANUAL(-1),
+    MANUAL(0),
     RETRACTED(0),
     PARTIALLY(0.7),
     EXTENDED(1.0);

@@ -6,13 +6,15 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 import com.mindsensors.*;
 public class LEDSubsystem extends SubsystemBase {
+
+  private final CANLight lights;
   /** Creates a new LEDSubsystem. */
-  CANLight lights;
-  public LEDSubsystem(CANLight lights) {
-    this.lights = lights;
+  public LEDSubsystem() {
+    this.lights = new CANLight(Constants.LED_PORT);
   }
 
   public void fade(int start_rgb, int end_rgb) {

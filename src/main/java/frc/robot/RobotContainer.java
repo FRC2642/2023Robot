@@ -14,14 +14,16 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.BSCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
+import frc.robot.commands.autonomous.positionable.SetSliderCommand;
 import frc.robot.commands.autonomous.positionable.SetWristCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.autonomous.fullAutos.BALANCEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopGripperCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopIntakeCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
@@ -63,7 +65,7 @@ public class RobotContainer {
 
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight");
- // private final LimelightSubsystem poleLimelight = new LimelightSubsystem("limelight");
+  //private final LimelightSubsystem poleLimelight = new LimelightSubsystem("polelimelight");
   
   private final ClawGripperSubsystem gripper = new ClawGripperSubsystem();
   private final CarriageSubsystem carriage = new CarriageSubsystem();
@@ -71,7 +73,7 @@ public class RobotContainer {
   private final SliderSubsystem slider = new SliderSubsystem();
   private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
   private final ClawWristSubsystem wrist = new ClawWristSubsystem();
-  //private final LEDSubsystem leds;
+  //private final LEDSubsystem leds = new LEDSubsystem();
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final PiratePath taxiPath = new PiratePath();
@@ -101,14 +103,14 @@ public class RobotContainer {
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
     autoChooser.addOption("drop and move", new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
     autoChooser.addOption("[BSCUBE] Barrier Side Cube",
-        new BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
+        new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     autoChooser.addOption("[RSCUBE] Rail Side Cube",
-        new BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
+        new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     autoChooser.addOption("Balance", new BALANCEAutoCommand(slider, gripper, drive, carriage, shoulder));
-
+    autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
-    // SmartDashboard.putData(new ToggleProtectShoulder(shoulder));
+
     SmartDashboard.putData(new ResetWristEncoderCommand(WristPosition.HORIZONTAL1));
     SmartDashboard.putData(new ResetGyroCommand(0.0));
     SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
@@ -117,7 +119,7 @@ public class RobotContainer {
 
     // mindsensors led class
     //CANLight lights = new CANLight(Constants.LED_PORT);
-    //leds = new LEDSubsystem(lights);
+    
     //leds.blink(1);
     // Button bindings
   }
@@ -132,6 +134,8 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
+
+   // leds.blink(2);
     /*for (int i = 0; i < buffer.getLength(); i++){
       buffer.setRGB(i, 120, 190, 33);
     }
@@ -161,19 +165,33 @@ public class RobotContainer {
       shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
       
+      //BUTTONS
+      new JoystickButton(auxButtonBoard, 8).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
+      new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
+        SliderSubsystem.protectionEnabled = false;
+        return SliderPosition.EXTENDED;
+      }));
+      new JoystickButton(auxButtonBoard, 11).onTrue(new SetSliderCommand(slider, () -> {
+        SliderSubsystem.protectionEnabled = false;
+        return SliderPosition.RETRACTED;
+      }));
+      new JoystickButton(auxButtonBoard, 10).onTrue(new SetSliderCommand(slider, () -> {
+        SliderSubsystem.protectionEnabled = true;
+        return SliderSubsystem.currentSetPosition;
+      }));
     new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0));
     new JoystickButton(mainControl, Button.kA.value)
     .whileTrue(new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.CONE));
 new JoystickButton(mainControl, Button.kB.value).whileTrue(
     new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
 new JoystickButton(mainControl, Button.kX.value)
-    .whileTrue(new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
-//new JoystickButton(mainControl, Button.kY.value).whileTrue(
- //   new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
+    .whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.CONE));
+ //new JoystickButton(mainControl, Button.kY.value).whileTrue(
+   // new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
 
 
       //NEW LIMELIGHT CODE
-     // new JoystickButton(mainControl, Button.kY).whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE));
+      //new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE));
     }
     else {
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
