@@ -167,6 +167,7 @@ public class RobotContainer {
       
       //BUTTONS
       new JoystickButton(auxButtonBoard, 8).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
+      new JoystickButton(auxButtonBoard, 1).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, slider, carriage));
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.EXTENDED;
@@ -191,7 +192,7 @@ new JoystickButton(mainControl, Button.kX.value)
 
 
       //NEW LIMELIGHT CODE
-      //new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE));
+      new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));
     }
     else {
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));

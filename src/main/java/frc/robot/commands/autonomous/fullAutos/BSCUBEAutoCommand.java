@@ -30,6 +30,7 @@ import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
+import frc.robot.subsystems.LimelightSubsystem.DetectionType;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
@@ -55,8 +56,9 @@ public class BSCUBEAutoCommand extends SequentialCommandGroup {
       new RunIntakeCommand(intake, -.2).withTimeout(1),
       new RunIntakeCommand(intake, 0.0).withTimeout(0.1),
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),
-      new FollowPathCommand(drive, driveToCubePath, true, 0.0),
-      //new DriveFacingObjectCommand(drive, camera, VectorR.fromCartesian(0.3, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
+      new FollowPathCommand(drive, driveToCubePath, true, 0.0).alongWith(
+       new SetShoulderCommand(shoulder, ()->ShoulderPosition.PICKUP_GROUND)),
+      new DriveFacingObjectCommand(drive, camera, DetectionType.CUBE, VectorR.fromCartesian(0.1, 0.0)).raceWith(new IntakeObjectCommand(intake, gripper, GamePieceType.CUBE)),
       new SetShoulderCommand(shoulder, () -> ShoulderPosition.PLACE_CUBE_MID).alongWith(
          new FollowPathCommand(drive, driveToBackToShelfPath, false, 1.0).raceWith(new RunIntakeCommand(intake, 0.1))
        ),

@@ -35,8 +35,11 @@ public class TurnTowardsGamePieceCommand extends CommandBase {
 
   @Override
   public void execute() {
-    leftJoystick.setFromCartesian(mainControl.getLeftX(), -1 * mainControl.getLeftY());
+    leftJoystick.setFromCartesian(mainControl.getLeftX(), -mainControl.getLeftY());
+    leftJoystick.rotate(90);
     
+    limelight.setDetectionType(type);
+
     if (limelight.isDetection && limelight.confidence() > 1) drive.move(leftJoystick, limelight.x * -1 * (1d/37d));
     else drive.move(leftJoystick, 0.0);
   }

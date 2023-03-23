@@ -25,6 +25,8 @@ public class SetRobotConfigurationCommand extends ParallelCommandGroup {
       new SetCarriageCommand(carriage, () -> configuration.carriagePos),
       new SetSliderCommand(slider, () -> configuration.sliderPos)
     );
+
+    
   }
 
   public enum RobotConfiguration {

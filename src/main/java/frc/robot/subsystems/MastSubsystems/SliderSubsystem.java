@@ -62,7 +62,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     currentSetPosition = SliderPosition.MANUAL;
     speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1, getSliderExtension() >= 0.9);
     if (protectionEnabled){
-      if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || (speed < 0 && ShoulderSubsystem.getShoulderAngle() < 45)) {
+      if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
         speed = 0.0;
       }
     }

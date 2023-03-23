@@ -24,7 +24,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
   public static final double INCLINE_DEGREES = 23d;
   public static final double MAX_DEGREES = 190;//213;
-  public static final double MIN_DEGREES = 30;//20;
+  public static final double MIN_DEGREES = 25;//20;
   public static final double AT_SETPOINT_THRESHOLD = 3d;
 
   private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR_1, MotorType.kBrushed);
@@ -86,7 +86,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public static double getShoulderAngle() {
-    return absEncoder.getPosition() * DEGREES_PER_TICK + 270;
+    return absEncoder.getPosition() * DEGREES_PER_TICK + 277;
   }
 
   @Override
@@ -123,7 +123,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     PLACE_CUBE_MID(180),
     PLACE_CUBE_HIGH(150),
     PLACE_CONE_MID(170),
-    PLACE_CONE_HIGH(MIN_DEGREES);
+    PLACE_CONE_HIGH(MIN_DEGREES+20);
 
     public double angle;
 
