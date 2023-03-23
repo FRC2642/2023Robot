@@ -19,7 +19,7 @@ import frc.robot.utils.MathR;
 
 public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
 
-  public static final double FULL_EXTENSION_PER_TICK = 1d/250d;
+  public static final double FULL_EXTENSION_PER_TICK = 1d / 250d;
   public static final double AT_SETPOINT_THRESHOLD = 0.05;
 
   private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
@@ -44,53 +44,47 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
 
   public void set(SliderPosition pos) {
     double speed = sliderPIDController.calculate(getSliderExtension(), pos.extension);
-    if (currentSetPosition != pos) hardSetPosition = false;
+    if (currentSetPosition != pos)
+      hardSetPosition = false;
 
     if (atSetPosition()) {
-     set(0.0);
-     hardSetPosition = true;
-    }
-    else{
+      set(0.0);
+      hardSetPosition = true;
+    } else {
       set(speed);
-    } 
- 
+    }
+
     currentSetPosition = pos;
   }
 
   public void set(double speed) {
-    
     currentSetPosition = SliderPosition.MANUAL;
-    speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1, getSliderExtension() >= 0.9);
-    if (protectionEnabled){
-      if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
-        speed = 0.0;
-      }
+    
+    speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1,
+        getSliderExtension() >= 0.9);
+
+    if (!ShoulderSubsystem.shoulderBroken && speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) {
+      speed = 0.0;
     }
 
-    
+    if (speed == 0.0)
+      brake.set(true);
+    else
+      brake.set(false);
 
-
-    if (speed == 0.0) brake.set(true);
-    else brake.set(false);
-
-    /*if (ShoulderSubsystem.getShoulderAngle() <= 180) 
-      sliderMotor.set(speed);
-    else{
-      sliderMotor.set(0.0);
-    }*/
     sliderMotor.set(speed);
   }
-  
+
   public void setManual(double speed) {
     brake.set(false);
     sliderMotor.set(speed);
   }
-  
+
   public static void resetSliderEncoder(SliderPosition pos) {
     sliderEncoder.setPosition(pos.extension);
   }
 
-  public static double getSliderExtension(){
+  public static double getSliderExtension() {
     return sliderEncoder.getPosition();
   }
 
@@ -123,13 +117,13 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   public double getRampRate() {
     return sliderMotor.getOpenLoopRampRate();
   }
-  
+
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Slider Extension", getSliderExtension());
-   // SmartDashboard.putString("Slider", currentSetPosition.toString());
+    // SmartDashboard.putString("Slider", currentSetPosition.toString());
   }
-  
+
   public enum SliderPosition {
     MANUAL(0),
     RETRACTED(0),
@@ -137,6 +131,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     EXTENDED(1.0);
 
     public double extension;
+
     private SliderPosition(double extension) {
       this.extension = extension;
     }

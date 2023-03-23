@@ -6,6 +6,7 @@ package frc.robot.commands.teleop.MastCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 
 public class TeleopSliderCommand extends CommandBase {
@@ -29,15 +30,8 @@ public class TeleopSliderCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (auxControl.getAButtonPressed()) extended = !extended;
-    
-    //slider.set(extended ? SliderSubsystem.SliderPosition.EXTENDED : SliderSubsystem.SliderPosition.RETRACTED);
-    /*if (Math.abs(auxControl.getRightY()) > 0.1) {
-      slider.set(-1 * auxControl.getRightY());
-    }
-    else*/ slider.set(0.0);
-    
-    
+    if (!ShoulderSubsystem.shoulderBroken) slider.set(0.0);
+    else if (Math.abs(auxControl.getLeftY()) > 0.1) slider.setManual(auxControl.getLeftY() * -1);
   }
   
   @Override

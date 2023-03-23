@@ -35,25 +35,18 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
   private double speedLimit = 1.0;
 
+  public static boolean shoulderBroken = false;
+
   public ShoulderSubsystem() {
     absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
     absEncoder.setPositionConversionFactor(1.0);
     shoulderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
     shoulderMotor.setInverted(false);
-    // shoulderMotorFollower.setInverted(false);
     shoulderMotorFollower.follow(shoulderMotor);
   }
-
- // public static double SLOW_DOWN_MAX_ANGLE = 180;
- // public static double SLOW_DOWN_MIN_ANGLE = 50;
-
   // Negative = up, Positive = down
   public void set(double speed) {
     currentSetPosition = ShoulderPosition.MANUAL;
-
-    /*if ((speed > 0 && getShoulderAngle() > 113) || (speed < 0 && getShoulderAngle() < 113)) {
-      speed *= (Math.abs(Math.sin(Math.toRadians(getShoulderAngle() - INCLINE_DEGREES)))+0.2);
-    }*/
 
     speed *= (Math.abs(Math.cos(Math.toRadians(getShoulderAngle()))) + 0.1);
 
@@ -78,7 +71,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public boolean atSetPosition() {
-    return shoulderPIDController.atSetpoint();
+    return shoulderBroken ? true : shoulderPIDController.atSetpoint();
   }
 
   public ShoulderPosition getSetPosition() {
@@ -112,6 +105,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Shoulder Angle", getShoulderAngle());
+    SmartDashboard.putBoolean("SHOULDER WORKS", !shoulderBroken);
     //SmartDashboard.putString("Shoulder", currentSetPosition.toString());
   }
 

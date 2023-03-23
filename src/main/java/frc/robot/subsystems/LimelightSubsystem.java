@@ -197,7 +197,10 @@ public class LimelightSubsystem extends SubsystemBase {
       detectionError = update();
     } else {
       initialize();
-      System.out.println("LIMELIGHT---------Initializing: [" + limelightTable + "] ----------- Error: " + detectionError.toString());
+      System.out.println("LIMELIGHT---------Initializing: [" + limelightTable + "]");
     }
+    SmartDashboard.putString(networkTableName, detectionError.toString());
+    SmartDashboard.putNumber(networkTableName + "-X", x);
+    SmartDashboard.putBoolean(networkTableName + "-DET", isDetection);
   }
 }

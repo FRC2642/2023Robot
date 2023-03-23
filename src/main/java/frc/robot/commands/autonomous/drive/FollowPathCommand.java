@@ -92,7 +92,7 @@ public class FollowPathCommand extends CommandBase {
       return;
     }
 
-    if (startingLookAheadTime == null) lookAheadTime = BASE_PRECISION;
+    if (startingLookAheadTime == null || startingLookAheadTime == BASE_PRECISION) lookAheadTime = BASE_PRECISION;
     else {
       lookAheadTime = MathR.lerp(startingLookAheadTime, BASE_PRECISION, 0.0, TIME_TO_CORRECT_FROM_START, timer.get());
       lookAheadTime = MathR.limit(lookAheadTime, BASE_PRECISION, startingLookAheadTime);
