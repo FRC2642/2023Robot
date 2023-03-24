@@ -116,6 +116,6 @@ public class FollowPathCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return currentTime > path.getLastTime();
+    return currentTime > (path.getLastTime() - lookAheadTime);
   }
 }

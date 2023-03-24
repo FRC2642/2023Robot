@@ -9,10 +9,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
+import frc.robot.commands.autonomous.drive.BalanceByOscillatingCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.DriveToTiltCommand;
-import frc.robot.commands.autonomous.drive.DriveUpAndBalanceBackwardsCommand;
-import frc.robot.commands.autonomous.drive.DriveUpAndBalanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
@@ -72,6 +71,7 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.2, 180), 7, false ,4, 0.15),
         new RunCommand(() -> drive.stop(), drive).withTimeout(0.5),
         new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 0), 0.35))
+       // ,new BalanceByOscillatingCommand(drive, 0.25)
       ),
       new RunCommand(() -> {
         drive.setDefensiveMode(true);
