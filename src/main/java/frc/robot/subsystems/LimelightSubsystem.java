@@ -199,5 +199,7 @@ public class LimelightSubsystem extends SubsystemBase {
       initialize();
       System.out.println("LIMELIGHT---------Initializing: [" + limelightTable + "] ----------- Error: " + detectionError.toString());
     }
+
+    SmartDashboard.putNumber(networkTableName+ "X", x);
   }
 }

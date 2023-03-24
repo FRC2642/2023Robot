@@ -40,9 +40,9 @@ public class JoystickOrientedDriveCommand extends CommandBase {
       
 
       leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
-      leftJoystick.rotate(90);
+      leftJoystick.rotate(-90);
       rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
-      rightJoystick.rotate(-90);
+      rightJoystick.rotate(90);
 
       double yaw = DriveSubsystem.getYawDegrees();
 

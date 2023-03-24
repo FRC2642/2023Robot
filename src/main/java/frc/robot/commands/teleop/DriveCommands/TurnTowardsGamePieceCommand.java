@@ -5,6 +5,7 @@
 package frc.robot.commands.teleop.DriveCommands;
 
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -36,12 +37,14 @@ public class TurnTowardsGamePieceCommand extends CommandBase {
   @Override
   public void execute() {
     leftJoystick.setFromCartesian(mainControl.getLeftX(), -mainControl.getLeftY());
-    leftJoystick.rotate(90);
+    leftJoystick.rotate(-90);
     
     limelight.setDetectionType(type);
 
-    if (limelight.isDetection && limelight.confidence() > 1) drive.move(leftJoystick, limelight.x * -1 * (1d/37d));
-    else drive.move(leftJoystick, 0.0);
+    SmartDashboard.putNumber("centerX", limelight.x);
+
+    if (limelight.isDetection) drive.move(leftJoystick, limelight.x * -1 * (1d/37d));
+    else if (leftJoystick.getMagnitude() > 0.1) drive.move(leftJoystick, 0.0);
   }
 
   @Override

@@ -11,6 +11,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -27,6 +28,7 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   //Positive = intake, Negative = outake
   public void set(double speed) {
     intake.set(speed);
+ //   System.out.println("CLAW SPEED: " + speed);
   }
 
   public static boolean isObjectInClaw(){
@@ -36,6 +38,7 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Object In Claw", isObjectInClaw());
+   //if (getCurrentCommand() != null) SmartDashboard.putString("COMMAND", getCurrentCommand().getName() );
     // This method will be called once per scheduler run
   }
 }

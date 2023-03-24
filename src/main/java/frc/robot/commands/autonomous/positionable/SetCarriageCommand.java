@@ -30,6 +30,11 @@ public class SetCarriageCommand extends CommandBase {
   public void execute() {
     carriage.set(position.get());
   }
+  
+  @Override
+  public void end(boolean interrupted) {
+    carriage.set(0.0);
+  }
 
   @Override
   public boolean isFinished() {

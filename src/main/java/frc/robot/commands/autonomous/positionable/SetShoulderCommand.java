@@ -26,6 +26,11 @@ public class SetShoulderCommand extends CommandBase {
   }
   
   @Override
+  public void end(boolean interrupted) {
+    shoulder.set(0.0);
+  }
+  
+  @Override
   public void execute() {
     shoulder.set(position.get());
   }

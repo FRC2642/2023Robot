@@ -24,6 +24,11 @@ public class SetSliderCommand extends CommandBase {
     sliders.setSpeedLimit(1.0);
     sliders.setRampRate(1);
   }
+  
+  @Override
+  public void end(boolean interrupted) {
+    sliders.set(0.0);
+  }
 
   @Override
   public void execute() {

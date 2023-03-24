@@ -106,7 +106,7 @@ public class RobotContainer {
         new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     autoChooser.addOption("[RSCUBE] Rail Side Cube",
         new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
-    autoChooser.addOption("Balance", new BALANCEAutoCommand(slider, gripper, drive, carriage, shoulder));
+    autoChooser.addOption("Balance", new BALANCEAutoCommand(slider, gripper, drive, carriage, shoulder, intake));
     autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
@@ -180,7 +180,7 @@ public class RobotContainer {
         SliderSubsystem.protectionEnabled = true;
         return SliderSubsystem.currentSetPosition;
       }));
-    new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(0));
+    new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(180));
     new JoystickButton(mainControl, Button.kA.value)
     .whileTrue(new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.CONE));
 new JoystickButton(mainControl, Button.kB.value).whileTrue(
@@ -192,7 +192,7 @@ new JoystickButton(mainControl, Button.kX.value)
 
 
       //NEW LIMELIGHT CODE
-      new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));
+      new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.RETROREFLECTIVE, mainControl));
     }
     else {
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));

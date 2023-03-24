@@ -46,7 +46,7 @@ public class DriveDirectionCommand extends CommandBase {
     localDisplacement.add(DriveSubsystem.getRelativeIncrement());
 
     if (turnSpeed == null) turnSpeed = TURN_KP * MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), heading);
-  
+
     VectorR rotatedDisplacement = localDisplacement.clone();
     rotatedDisplacement.rotate(-velocity.getAngle());
     VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() - 90);

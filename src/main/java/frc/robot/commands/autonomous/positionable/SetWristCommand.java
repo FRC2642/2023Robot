@@ -29,6 +29,11 @@ public class SetWristCommand extends CommandBase {
   public void execute() {
     wrist.set(position.get());
   }
+  
+  @Override
+  public void end(boolean interrupted) {
+    wrist.set(0.0);
+  }
 
   @Override
   public boolean isFinished() {
