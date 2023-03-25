@@ -6,6 +6,7 @@ package frc.robot.commands.teleop.MastCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
 import edu.wpi.first.math.controller.PIDController;
@@ -46,6 +47,7 @@ public class TeleopCarriageCommand extends CommandBase {
     }
     else carriage.set(0.0);
 
+   // SmartDashboard.putData("front limitswitch", carriage.isCarriageUp());
     
 
   }

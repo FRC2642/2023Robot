@@ -73,8 +73,8 @@ public class RobotContainer {
   private final ClawWristSubsystem wrist = new ClawWristSubsystem();
   //private final LEDSubsystem leds = new LEDSubsystem();
 
-  AddressableLED led = new AddressableLED(3);
-  AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
+  //AddressableLED led = new AddressableLED(3);
+  //AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final PiratePath taxiPath = new PiratePath();
@@ -113,8 +113,8 @@ public class RobotContainer {
     SmartDashboard.putData(autoChooser);
 
     SmartDashboard.putData(new ResetWristEncoderCommand(WristPosition.HORIZONTAL1));
-    SmartDashboard.putData(new ResetGyroCommand(0.0));
-    SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
+    //SmartDashboard.putData(new ResetGyroCommand(0.0));
+   // SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 
@@ -137,11 +137,11 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-    led.setData(buffer);
-    led.start();
-    for (int i = 0; i < buffer.getLength(); i++) {
-      buffer.setRGB(i, 50, 205, 50);
-    }
+  //  led.setData(buffer);
+   // led.start();
+   // for (int i = 0; i < buffer.getLength(); i++) {
+   //   buffer.setRGB(i, 50, 205, 50);
+   // }
 
    // leds.blink(2);
     /*for (int i = 0; i < buffer.getLength(); i++){
