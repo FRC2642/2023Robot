@@ -41,7 +41,6 @@ import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LEDSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
@@ -56,7 +55,6 @@ import frc.robot.utils.Easings.Functions;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
-import com.mindsensors.*;
 
 public class RobotContainer {
   private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
@@ -74,6 +72,9 @@ public class RobotContainer {
   private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
   private final ClawWristSubsystem wrist = new ClawWristSubsystem();
   //private final LEDSubsystem leds = new LEDSubsystem();
+
+  AddressableLED led = new AddressableLED(3);
+  AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
 
   private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
   private final PiratePath taxiPath = new PiratePath();
@@ -101,12 +102,12 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
-    autoChooser.addOption("drop and move", new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
+    autoChooser.addOption("Mobility High Cube", new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
     /*autoChooser.addOption("[BSCUBE] Barrier Side Cube",
         new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     autoChooser.addOption("[RSCUBE] Rail Side Cube",
         new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));*/
-    autoChooser.addOption("Balance", new BALANCEAutoCommand(slider, gripper, drive, carriage, shoulder, intake));
+    autoChooser.addOption("Balance High Cube", new BALANCEAutoCommand(slider, gripper, drive, carriage, intake));//.alongWith(new RunCommand(() -> shoulder.set(ShoulderPosition.STARTING_CONFIG), shoulder)));
     //autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
@@ -122,6 +123,8 @@ public class RobotContainer {
     
     //leds.blink(1);
     // Button bindings
+    
+   
   }
 
   public void autonomousInit() {
@@ -134,6 +137,11 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
+    led.setData(buffer);
+    led.start();
+    for (int i = 0; i < buffer.getLength(); i++) {
+      buffer.setRGB(i, 50, 205, 50);
+    }
 
    // leds.blink(2);
     /*for (int i = 0; i < buffer.getLength(); i++){
@@ -199,7 +207,7 @@ public class RobotContainer {
       carriage.setDefaultCommand(new RunCommand(() -> carriage.setManual(-1 * mainControl.getRightY()), carriage));
       slider.setDefaultCommand(new RunCommand(() -> slider.setManual(-1 * mainControl.getLeftY()), slider));
       wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
-      shoulder.setDefaultCommand(new RunCommand(() -> shoulder.setManual(-1 * auxControl.getLeftY()), shoulder));
+      shoulder.setDefaultCommand(new RunCommand(() -> shoulder.setManual(-1 * auxControl.getLeftY() * .35), shoulder));
       intake.setDefaultCommand(new RunCommand(() -> intake.set(0.0), intake));
     }
   }
