@@ -35,6 +35,7 @@ public class ClawPneumaticCommand extends CommandBase {
         pneumatics.gripperRetract();
       }
     
+      
     
      
     // if (/*pipeline == CONE & */ !pneumatics.isExtended()) {

@@ -30,7 +30,8 @@ public final class Constants {
         //mast
         public static final int MAIN_SLIDER_MOTOR = 21; 
         public static final int CARRIAGE_MOTOR = 22;
-        public static final int SHOULDER_MOTOR = 23; 
+        public static final int SHOULDER_MOTOR = 23;
+        public static final int SHOULDER_MOTOR2 = 26;
 
         //claw
         public static final int WRIST_MOTOR = 24;
