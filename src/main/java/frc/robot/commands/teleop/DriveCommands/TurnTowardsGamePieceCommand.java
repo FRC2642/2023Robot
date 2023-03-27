@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.LimelightSubsystem.DetectionType;
+import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
 public class TurnTowardsGamePieceCommand extends CommandBase {
@@ -38,12 +39,15 @@ public class TurnTowardsGamePieceCommand extends CommandBase {
   public void execute() {
     leftJoystick.setFromCartesian(mainControl.getLeftX(), -mainControl.getLeftY());
     leftJoystick.rotate(-90);
+
     
     limelight.setDetectionType(type);
 
     SmartDashboard.putNumber("centerX", limelight.x);
 
-    if (limelight.isDetection) drive.move(leftJoystick, limelight.x * -1 * (1d/37d));
+    leftJoystick.mult(0.15);
+
+    if (limelight.isDetection && limelight.confidence() > 0.25) drive.move(leftJoystick, MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25) );
     else if (leftJoystick.getMagnitude() > 0.1) drive.move(leftJoystick, 0.0);
   }
 

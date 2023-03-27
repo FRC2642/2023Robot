@@ -86,7 +86,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   }
 
   public static double getShoulderAngle() {
-    return absEncoder.getPosition() * DEGREES_PER_TICK + 261;
+    return absEncoder.getPosition() * DEGREES_PER_TICK + 264;
   }
 
   @Override
@@ -119,7 +119,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     MANUAL(-1),
     STARTING_CONFIG(56),
     PICKUP_GROUND(MAX_DEGREES),
-    PICKUP_HUMANPLAYER(MIN_DEGREES),
+    PICKUP_HUMANPLAYER(MIN_DEGREES-10),
     PLACE_CUBE_MID(180),
     PLACE_CUBE_HIGH(150),
     PLACE_CONE_MID(170),

@@ -37,9 +37,9 @@ public class ScoreAndTaxiAuto extends SequentialCommandGroup {
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
-      new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
+      new RunIntakeCommand(intake, 0.2).withTimeout(1),//.raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
       new RunIntakeCommand(intake, -.4).withTimeout(1),
-      new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),
+     // new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),
       //new OpenCloseClawCommand(pneumatics, true),
       //new WaitCommand(2),
       new FollowPathCommand(drive, path, true, 0.0).alongWith(
