@@ -5,17 +5,15 @@
 package frc.robot.commands.autonomous.drive;
 
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
-import frc.robot.utils.DataStreamFilter;
 import frc.robot.utils.VectorR;
 
 public class RecenterDisplacementCommand extends CommandBase {
 
   public static final double RESET_INTERVAL = 0.2;
-  public static final double MIN_CONFIDENCE = 30;
+  public static final double MIN_CONFIDENCE = 10;
 
   LimelightSubsystem limelight;
 
@@ -34,16 +32,12 @@ public class RecenterDisplacementCommand extends CommandBase {
 
   @Override
   public void execute() {
-    if (limelight.getConfidence() > MIN_CONFIDENCE && timer.get() > RESET_INTERVAL) {
+    if (limelight.confidence() > MIN_CONFIDENCE && timer.get() > RESET_INTERVAL) {
       timer.reset();
       VectorR old = DriveSubsystem.getRelativeFieldPosition();
-      DriveSubsystem.resetDisplacement(VectorR.fromCartesian(limelight.x, limelight.y));
-
-      System.out.println(
-        "RESET THE DISPLACEMENT TO: " + DriveSubsystem.getRelativeFieldPosition().toString() + 
-        "ft DIFFERENCE: " + VectorR.subVectors(DriveSubsystem.getRelativeFieldPosition(), old).toString() + "ft CONFIDENCE: " + limelight.getConfidence());
+      DriveSubsystem.resetDisplacement(VectorR.fromCartesian(limelight.botposeX, limelight.botposeY));
         
-    }
+    } 
   }
 
   // Returns true when the command should end.

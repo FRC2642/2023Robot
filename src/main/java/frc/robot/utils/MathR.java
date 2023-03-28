@@ -7,8 +7,16 @@ package frc.robot.utils;
 /** Add your docs here. */
 public class MathR {
 
-    public static double getDistanceToAngleRadians(double current, double desired) {
-        return modulo(((desired) - (current)) + Math.PI, Math.PI * 2.0) - Math.PI;
+    public static double getDistanceToAngle(double currentDegrees, double desiredDegrees) {
+        return modulo(((desiredDegrees) - (currentDegrees)) + 180, 360) - 180;
+    }
+    
+    public static double getDistanceToAngle(double current, double desired, double avoid) {
+        double distance = getDistanceToAngle(current, desired);
+        if (Math.abs(getDistanceToAngle(desired, avoid)) + Math.abs(getDistanceToAngle(current, avoid)) == Math.abs(distance)) {
+            return modulo(distance - 360, 360);
+        }
+        return distance;
     }
 
     public static double modulo(double x, double y) {
@@ -27,29 +35,22 @@ public class MathR {
         return input;
     }
 
-    public static double ticksToDegrees(double ticks, double ticksPerRev) {
-        return ((360 / ticksPerRev) * ticks);
+    public static double limitWhenReached(double input, double min, double max, boolean lowerLimit, boolean upperLimit) {
+        if (lowerLimit && upperLimit) return 0.0;
+        if (lowerLimit) return limit(input, 0, max);
+        if (upperLimit) return limit(input, min, 0);
+        return limit(input, min, max);
     }
 
-    public static double halfOptimize(double current, double setpoint, double fullRotationNum) {
-        // Crossing 0-360 line counterclockwise
-        if ((current + fullRotationNum) - setpoint <= fullRotationNum / 2) {
-            return (current + fullRotationNum);
-        }
-        // Crossing 0-360 line clockwise
-        else if ((current - fullRotationNum) - setpoint >= -fullRotationNum / 2) {
-            return (current - fullRotationNum);
-        }
-        // Not passing line
-        else {
-            return current;
-        }
-
+    public static double ticksToDegrees(double ticks, double ticksPerRev) {
+        return ((360 / ticksPerRev) * ticks);
     }
 
     public static double lerp(double outputMin, double outputMax, double inputMin, double inputMax, double input) {
         return outputMin + (outputMax - outputMin)*(input - inputMin)/(inputMax - inputMin);
     }
+
+    
 
     
 }

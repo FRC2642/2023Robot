@@ -7,49 +7,138 @@ package frc.robot.subsystems.MastSubsystems;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
+import frc.robot.subsystems.interfaces.IPositionable;
+import frc.robot.utils.MathR;
 
-public class SliderSubsystem extends SubsystemBase {
-  /** Creates a new SliderSubsystem. */
+public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
 
-  CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
-  DigitalInput frontSliderLimitSwitch = new DigitalInput(Constants.SLIDER_FRONT_LIMIT_SWITCH);
-  DigitalInput rearSliderLimitSwitch = new DigitalInput(Constants.SLIDER_REAR_LIMIT_SWITCH);
+  public static final double FULL_EXTENSION_PER_TICK = 1d/250d;
+  public static final double AT_SETPOINT_THRESHOLD = 0.05;
 
-  //It's likely that the switch returns "True" when not pressed and vice versa
-  RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
+  private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
+  private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(2);
+  private static RelativeEncoder sliderEncoder;
 
-  public SliderSubsystem() {}
+  private final PIDController sliderPIDController = new PIDController(3, 0, 0);
+  public static SliderPosition currentSetPosition = SliderPosition.RETRACTED;
+  private double speedLimit = 1;
 
-  public void moveSlider(double speed){
-    
-    if (frontSliderLimitSwitch.get() && rearSliderLimitSwitch.get()){
-      sliderMotor.set(speed);
-    }
-    else{
-      if (!(frontSliderLimitSwitch.get()) && speed <= 0){//Ensures the slide doesn't extend when the limit switch is pressed
-        sliderMotor.set(speed);
-      }
-      else if (!(rearSliderLimitSwitch.get()) && speed >= 0){//Ensures the slide doesn't retract when the limit switch is pressed
-        sliderMotor.set(speed);
-      }
+  private boolean hardSetPosition = false;
+  public static boolean protectionEnabled = true;
 
-      else{
-        sliderMotor.set(0);
-      }
-      
-    }
-    
+  public SliderSubsystem() {
+    sliderEncoder = sliderMotor.getEncoder();
+    sliderEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
+    sliderMotor.setOpenLoopRampRate(0.0);
+    sliderMotor.setClosedLoopRampRate(0.0);
+    sliderMotor.setInverted(false);
+    sliderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
-  public double getSliderEncoderTicks(){
+  public void set(SliderPosition pos) {
+    double speed = sliderPIDController.calculate(getSliderExtension(), pos.extension);
+    if (currentSetPosition != pos) hardSetPosition = false;
+
+    if (atSetPosition()) {
+     set(0.0);
+     hardSetPosition = true;
+    }
+    else{
+      set(speed);
+    } 
+ 
+    currentSetPosition = pos;
+  }
+
+  public void set(double speed) {
+    
+    currentSetPosition = SliderPosition.MANUAL;
+    speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1, getSliderExtension() >= 0.9);
+    if (protectionEnabled){
+      if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
+        speed = 0.0;
+      }
+    }
+
+    
+
+
+    if (speed == 0.0) brake.set(true);
+    else brake.set(false);
+
+    /*if (ShoulderSubsystem.getShoulderAngle() <= 180) 
+      sliderMotor.set(speed);
+    else{
+      sliderMotor.set(0.0);
+    }*/
+    sliderMotor.set(speed);
+  }
+  
+  public void setManual(double speed) {
+    brake.set(false);
+    sliderMotor.set(speed);
+  }
+  
+  public static void resetSliderEncoder(SliderPosition pos) {
+    sliderEncoder.setPosition(pos.extension);
+  }
+
+  public static double getSliderExtension(){
     return sliderEncoder.getPosition();
   }
 
   @Override
+  public SliderPosition getSetPosition() {
+    return currentSetPosition;
+  }
+
+  @Override
+  public boolean atSetPosition() {
+    return hardSetPosition || sliderPIDController.atSetpoint();
+  }
+
+  @Override
+  public void setSpeedLimit(double max) {
+    speedLimit = max;
+  }
+
+  @Override
+  public double getSpeedLimit() {
+    return speedLimit;
+  }
+
+  @Override
+  public void setRampRate(double rampRate) {
+    sliderMotor.setOpenLoopRampRate(rampRate);
+  }
+
+  @Override
+  public double getRampRate() {
+    return sliderMotor.getOpenLoopRampRate();
+  }
+  
+  @Override
   public void periodic() {
-    // This method will be called once per scheduler run
+    SmartDashboard.putNumber("Slider Extension", getSliderExtension());
+   // SmartDashboard.putString("Slider", currentSetPosition.toString());
+  }
+  
+  public enum SliderPosition {
+    MANUAL(0),
+    RETRACTED(0),
+    PARTIALLY(0.7),
+    EXTENDED(1.0);
+
+    public double extension;
+    private SliderPosition(double extension) {
+      this.extension = extension;
+    }
   }
 }

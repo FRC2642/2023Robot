@@ -13,37 +13,37 @@ import frc.robot.subsystems.swerve.SwerveModules;
 import frc.robot.utils.TimedVectorDerivative;
 import frc.robot.utils.VectorR;
 
-public class DriveSubsystem extends SubsystemBase{
-  
+public class DriveSubsystem extends SubsystemBase {
 
   // COMPONENTS
-  private final SwerveModules modules;
+  public final SwerveModules modules;
   private static AHRS gyro;
-  
 
   // POSITION TRACKING
+  private static VectorR increment;
   private static VectorR displacement;
   private static VectorR velocity;
   private static TimedVectorDerivative acceleration;
   private static TimedVectorDerivative jerk;
 
-  //OTHER
-  public boolean defenseActivated = true;
+  // OTHER
+  private boolean defensiveMode = true;
   private static double yawOffsetDegrees = 0;
 
-  public  DriveSubsystem() {
+  public DriveSubsystem() {
     modules = new SwerveModules(
         new SwerveModule(Constants.FRONT_RIGHT), new SwerveModule(Constants.FRONT_LEFT),
         new SwerveModule(Constants.BACK_RIGHT), new SwerveModule(Constants.BACK_LEFT));
 
     gyro = new AHRS();
     gyro.reset();
+    gyro.calibrate();
 
+    increment = new VectorR();
     displacement = new VectorR();
     velocity = new VectorR();
     acceleration = new TimedVectorDerivative(velocity);
     jerk = new TimedVectorDerivative(acceleration);
-
   }
 
   /*
@@ -51,42 +51,52 @@ public class DriveSubsystem extends SubsystemBase{
    * positive (+) = forwards/left/left turn CCW
    * negative (-) = backwards/right/right turn CW
    * velocity magnitude (0-1) 1:fastest 0:stopped
-   * turn (0-1) 
+   * turn (0-1)
    * NOTE: the speed of any wheel can reach a maximum of turn + |velocity|
    */
-  public void move(VectorR velocity, double turn) {
+  public void move(VectorR directionalSpeed, double turnSpeed) {
 
-    DriveSubsystem.velocity.setFromCartesian(0, 0);
-
-    VectorR directionalPull = velocity.clone();
-    directionalPull.rotate(Math.toRadians(-getYawDegrees()));
+    velocity.setFromCartesian(0, 0);
+    increment.setFromCartesian(0, 0);
+    
+    VectorR directionalPull = directionalSpeed.clone();
+    directionalPull.rotate(-getYawDegrees());
 
     for (SwerveModule module : modules) {
 
-      double moduleTangent = module.position.getAngle() + Math.toRadians(90);
-      VectorR rotationalPull = VectorR.fromPolar(turn, moduleTangent);
-
+      VectorR rotationalPull = VectorR.fromPolar(turnSpeed, module.info.MODULE_TANGENT_DEG);
       VectorR wheelPull = VectorR.addVectors(directionalPull, rotationalPull);
-      double speed = wheelPull.getMagnitude();
-      double angle = wheelPull.getAngle();
 
-      module.update(speed, angle);
+      module.update(wheelPull.getMagnitude(), wheelPull.getAngle());
 
-      //position tracking
-      var increment = module.getPositionIncrement();
-      increment.mult(1d / 4d);
-      increment.rotate(Math.toRadians(getYawDegrees()));
-      DriveSubsystem.displacement.add(increment);
+      // position tracking
+      var inc = module.getPositionIncrement();
+      inc.mult(1d / 4d);
+      inc.rotate(getYawDegrees());
+      displacement.add(inc);
+      increment.add(inc);
 
       var velocityMeasured = module.getVelocity();
       velocityMeasured.mult(1d / 4d);
-      velocityMeasured.rotate(Math.toRadians(getYawDegrees()));
-      DriveSubsystem.velocity.add(velocityMeasured);
+      velocityMeasured.rotate(getYawDegrees());
+      velocity.add(velocityMeasured);
     }
-    DriveSubsystem.acceleration.update();
-    DriveSubsystem.jerk.update();
+    acceleration.update();
+    jerk.update();
   }
   
+  public void stop() {
+    for (SwerveModule module : modules) {
+      if (defensiveMode)
+        module.stopDefensively();
+      else
+        module.stop();
+    }
+
+    velocity.setFromCartesian(0, 0);
+    acceleration.update();
+    jerk.update();
+  }
 
   /*
    * public void debugWheelDirections(double angle) {
@@ -97,56 +107,40 @@ public class DriveSubsystem extends SubsystemBase{
    * }
    */
 
-  
-  public void setDefensiveMode(boolean defensive) {
-    defenseActivated = defensive;
+  public void setDefensiveMode(boolean activated) {
+    defensiveMode = activated;
   }
-
-  public VectorR getDisplacement(){
-    return displacement;
+  public boolean getDefensiveMode() {
+    return defensiveMode;
   }
-
 
   public static void resetDisplacement(VectorR v) {
     displacement.setFromCartesian(v.getX(), v.getY());
   }
 
 
-  public void setDefenseMode(boolean activated){
-    defenseActivated = activated;
-  }
-
-  public void stop() {
-    for (SwerveModule module : modules) {
-      if (defenseActivated)
-        module.stopDefensively();
-      else
-        module.stop();
-    }
-
-    velocity.setFromCartesian(0, 0);
-    DriveSubsystem.acceleration.update();
-    DriveSubsystem.jerk.update();
-  }
 
   // POSITION DATA
+  public static VectorR getRelativeIncrement() {
+    return increment.clone();
+  }
+  
   public static VectorR getRelativeFieldPosition() {
-    return DriveSubsystem.displacement.clone();
+    return displacement.clone();
   }
 
   public static VectorR getRelativeVelocity() {
-    return DriveSubsystem.velocity.clone();
+    return velocity.clone();
   }
 
-
   public static VectorR getRelativeAcceleration() {
-    return DriveSubsystem.acceleration.clone();
+    return acceleration.clone();
   }
 
   public static VectorR getRelativeJerk() {
-    return DriveSubsystem.jerk.clone();
+    return jerk.clone();
   }
-  
+
   /*
    * positive (+) = left turn CCW
    * negative (-) = right turn CW
@@ -155,40 +149,43 @@ public class DriveSubsystem extends SubsystemBase{
     return -1 * gyro.getYaw() + yawOffsetDegrees;
   }
 
-  public void resetEncoders() {
-    for (var mod : modules)
-      mod.resetDriveEncoder();
-  }
-
-  //+ LEFT
-  public static double getRoll(){
+  // + LEFT
+  public static double getRollDegrees() {
     return gyro.getRoll();
   }
 
-  public static double getPitch(){
+  public static double getPitchDegrees() {
     return gyro.getPitch();
   }
 
   public static void resetGyro(double yawDegrees) {
     gyro.reset();
+    gyro.calibrate();
     yawOffsetDegrees = yawDegrees;
   }
-
-
+  
+  public void resetDriveEncoders() {
+    for (var mod : modules)
+      mod.resetDriveEncoder();
+  }
 
   @Override
   public void periodic() {
-    // modules.debugSmartDashboard();
-    modules.debugSmartDashboard();
-    
+   // modules.debugSmartDashboard();
 
-    SmartDashboard.putNumber("x field", displacement.getX());
-    SmartDashboard.putNumber("y field", displacement.getY());
-
+    SmartDashboard.putNumber("pitch:", getPitchDegrees());
+    SmartDashboard.putNumber("roll:", getRollDegrees());
     SmartDashboard.putNumber("gyro", getYawDegrees());
+   // modules.debugSmartDashboard();
 
-    SmartDashboard.putNumber("distance [ft]", getRelativeFieldPosition().getMagnitude());
-    SmartDashboard.putNumber("speed [ft/sec]", getRelativeVelocity().getMagnitude());
+
+   //  SmartDashboard.putNumber("x field", displacement.getX());
+  //   SmartDashboard.putNumber("y field", displacement.getY());
+
+    // SmartDashboard.putNumber("distance [ft]",
+    // getRelativeFieldPosition().getMagnitude());
+    // SmartDashboard.putNumber("speed [ft/sec]",
+    // getRelativeVelocity().getMagnitude());
     // SmartDashboard.putNumber("angle [degrees]",
     // Math.toDegrees(getRelativeFieldPosition().getAngle()));
     // SmartDashboard.putNumber("speed [ft/s]",

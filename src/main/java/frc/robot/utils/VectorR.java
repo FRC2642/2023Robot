@@ -4,7 +4,7 @@
 
 package frc.robot.utils;
 
-import frc.robot.Constants;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 /** Wrapper class for vectors */
 public class VectorR implements Cloneable {
@@ -21,22 +21,18 @@ public class VectorR implements Cloneable {
     }
 
     public double getAngle() {
-        return Math.atan2(y, x);
+        return Math.toDegrees(Math.atan2(y, x));
     }
 
     public double getMagnitude() {
         return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
     }
 
-    // constructor
     public VectorR() {
         x = 0;
         y = 0;
     }
 
-    // helper functions
-
-    // adds a vector to this vector
     public void add(VectorR... vector) {
         for (var vec : vector) {
             x += vec.x;
@@ -74,6 +70,9 @@ public class VectorR implements Cloneable {
         return v3;
     }
 
+    /*
+     * Subtracts the following vectors from the first vector
+     */
     public static VectorR subVectors(VectorR... vectors) {
         VectorR v3 = vectors[0].clone();
         
@@ -82,16 +81,10 @@ public class VectorR implements Cloneable {
         }
         return v3;
     }
-    
-    public static VectorR subVectors(VectorR v1, VectorR v2) {
-        var v3 = v1.clone();
-        v3.sub(v2);
-        return v3;
-    }
 
-    public void setFromPolar(double distance, double angle) {
-        x = distance * Math.cos(angle);
-        y = distance * Math.sin(angle);
+    public void setFromPolar(double magnitude, double angleDegrees) {
+        x = magnitude * Math.cos(Math.toRadians(angleDegrees));
+        y = magnitude * Math.sin(Math.toRadians(angleDegrees));
     }
 
     public void setFromCartesian(double x, double y) {
@@ -103,8 +96,8 @@ public class VectorR implements Cloneable {
         setFromPolar(mag, getAngle());
     }
 
-    public void setAngle(double rad) {
-        setFromPolar(getMagnitude(), rad);
+    public void setAngle(double degrees) {
+        setFromPolar(getMagnitude(), degrees);
     }
 
     public void setX(double val) {
@@ -120,23 +113,18 @@ public class VectorR implements Cloneable {
         y = v.y;
     }
 
-    // ALWAYS NEGATIVE MAGNITUDE
     public double getTerminalMagnitude() {
         return getMagnitude() * -1;
     }
 
     public double getTerminalAngle() {
-        return getAngle() + Math.PI;
+        return getAngle() + 180;
     }
 
-    @Override
-    public VectorR clone() {
-        return fromCartesian(x, y);
-    }
 
-    public static VectorR fromPolar(double distance, double radians) {
+    public static VectorR fromPolar(double magnitude, double angleDegrees) {
         VectorR v = new VectorR();
-        v.setFromPolar(distance, radians);
+        v.setFromPolar(magnitude, angleDegrees);
         return v;
     }
 
@@ -149,49 +137,28 @@ public class VectorR implements Cloneable {
     public void rotate(double angle) {
         setAngle(getAngle() + angle);
     }
-
-    public static boolean compareVectors(VectorR vector1, VectorR vector2){
-        boolean magCheck = false;
-        boolean angleCheck = false;
-
-        //0.25 speed auto
-        //if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 1){
-        //    magCheck = true;
-        //}
-        //0.5 speed auto
-        //if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 2){
-        //    magCheck = true;
-        //}
-        //0.75 speed auto
-        if (Math.abs(vector1.getMagnitude() - vector2.getMagnitude()) <= 5){
-            magCheck = true;
-        }
-
-        /*if (Math.abs(MathR.halfOptimize(vector1.getAngle(), vector2.getAngle(), Math.toRadians(360))-vector2.getAngle()) <= Math.toRadians(10)){
-            angleCheck = true;
-        }*/
-
-        if (Math.abs(vector1.getAngle() - vector2.getAngle()) <= 5){
-            angleCheck = true;
-        }
-        
-        System.out.println("v1 mag: "+vector1.getMagnitude());
-        System.out.println("v2 mag: "+vector2.getMagnitude());
-
-        
-        System.out.println("magnitude check: "+magCheck);
-        System.out.println("angle check: "+angleCheck);
-        
-        if (magCheck && angleCheck){
-            return true;
-        }
-        else{
-            return false;
-        }
+    
+    @Override
+    public VectorR clone() {
+        return fromCartesian(x, y);
     }
 
     @Override
     public String toString() {
-        return "<" + x + "," + y + ">";
+        return "<" + truncate(x,2) + "," + truncate(y,2) + ">";
+    }
+
+    public boolean compare(VectorR v, double distanceThreshold, double angleDegThreshold) {
+        boolean magnitude = Math.abs(getMagnitude() - v.getMagnitude()) < distanceThreshold;
+        boolean angle = Math.abs(MathR.getDistanceToAngle(getAngle(), v.getAngle())) < angleDegThreshold;
+        return magnitude && angle;
+    }
+
+    public static String truncate(double value, int decimals) {
+        if (value % 1 == 0) return Double.toString(value);
+        String val = Double.toString(value);
+        String[] split = val.split("\\.");
+        if (decimals == 0) return split[0];
+        return split[0] + "." + split[1].substring(0, decimals);
     }
 }

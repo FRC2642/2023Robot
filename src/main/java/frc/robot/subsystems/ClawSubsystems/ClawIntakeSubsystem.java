@@ -5,25 +5,40 @@
 package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxLimitSwitch.Type;
+
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
 public class ClawIntakeSubsystem extends SubsystemBase {
-  CANSparkMax gripperMotor = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
-  DigitalInput gripperLimitSwitch = new DigitalInput(0);
+  
+  private final CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
+  private static SparkMaxLimitSwitch intakeLimitSwitch;
   
   public ClawIntakeSubsystem() {
-
+    intake.setInverted(false);
+    intakeLimitSwitch = intake.getForwardLimitSwitch(Type.kNormallyOpen);
   }
 
-  public void runGripperIntake(double speed) {
-    gripperMotor.set(speed);
+  //Positive = intake, Negative = outake
+  public void set(double speed) {
+    intake.set(speed);
+ //   System.out.println("CLAW SPEED: " + speed);
+  }
+
+  public static boolean isObjectInClaw(){
+    return intakeLimitSwitch.isPressed();
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("Object In Claw", isObjectInClaw());
+   //if (getCurrentCommand() != null) SmartDashboard.putString("COMMAND", getCurrentCommand().getName() );
     // This method will be called once per scheduler run
   }
 }

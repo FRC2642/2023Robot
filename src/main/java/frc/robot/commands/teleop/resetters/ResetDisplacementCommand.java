@@ -10,16 +10,15 @@ import frc.robot.utils.VectorR;
 
 public class ResetDisplacementCommand extends CommandBase {
 
-  final DriveSubsystem drive;
-  
-  public ResetDisplacementCommand(DriveSubsystem drive) {
-    this.drive = drive;
-    addRequirements(drive);
+  private final VectorR position;
+
+  public ResetDisplacementCommand(VectorR position) {
+    this.position = position;
   }
 
   @Override
   public void execute() {
-    drive.resetDisplacement(new VectorR());
+    DriveSubsystem.resetDisplacement(position);
   }
 
   @Override
