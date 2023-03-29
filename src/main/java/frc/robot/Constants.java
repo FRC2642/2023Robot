@@ -3,63 +3,52 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+
 import frc.robot.subsystems.swerve.SwerveModuleInfo;
+import static frc.robot.subsystems.swerve.SwerveModules.ModuleLocation;
+
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 public final class Constants {
 
-    //Ratios
-    public static final double FEET_PER_DISPLACEMENT = 6.52131382735e-5;
-    public static final double MODULE_ANGLE_KP = 0.3;
+    // Ratios
+    public static final double FEET_PER_DISPLACEMENT = 6.1078e-5;//6.52131382735e-5;
+    public static final double MODULE_ANGLE_KP = 0.00524;
     public static final double FOOT_PER_METER = 3.28084;
-    public static final double DRIFT_PER_DEGREE = 0.01805556;
-    
-    //Controlers
+
+    // Controllers
     public static final int DRIVE_CONTROL_PORT = 0;
     public static final int AUX_CONTROL_PORT = 1;
+    public static final int AUX_BUTTON_BOARD_PORT = 2;
 
-    //Motors
+    // Swerve
+    public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1, ModuleLocation.FRONT_RIGHT);
+    public static final SwerveModuleInfo FRONT_LEFT = new SwerveModuleInfo(2, 1, 11, 360, 66.7, 1, 1, ModuleLocation.FRONT_LEFT);
+    public static final SwerveModuleInfo BACK_RIGHT = new SwerveModuleInfo(6, 5, 13, 360, 287.9, -1, -1, ModuleLocation.BACK_RIGHT);
+    public static final SwerveModuleInfo BACK_LEFT = new SwerveModuleInfo(4, 9, 12, 360, 0.3, -1, 1, ModuleLocation.BACK_LEFT);
 
-        //swerve
-        public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1);
-        public static final SwerveModuleInfo FRONT_LEFT = new SwerveModuleInfo(2, 1, 11, 360, 66.7, 1, 1);
-        public static final SwerveModuleInfo BACK_RIGHT = new SwerveModuleInfo(6, 5, 13, 360, 287.9, -1, -1);
-        public static final SwerveModuleInfo BACK_LEFT = new SwerveModuleInfo(4, 3, 12, 360, 0.3, -1, 1);
+    // Mast
+    public static final int MAIN_SLIDER_MOTOR = 21;
+    public static final int CARRIAGE_MOTOR = 22;
+    public static final int SHOULDER_MOTOR_1 = 23;
+    public static final int SHOULDER_MOTOR_2 = 26;
 
-        //mast
-        public static final int MAIN_SLIDER_MOTOR = 21; 
-        public static final int CARRIAGE_MOTOR = 22;
-        public static final int SHOULDER_MOTOR = 23; 
+    // Claw
+    public static final int WRIST_MOTOR = 24;
+    public static final int GRIPPER_INTAKE_MOTOR = 25;
 
-        //claw
-        public static final int WRIST_MOTOR = 24;
-        public static final int GRIPPER_INTAKE_MOTOR = 25;
+    // Gripper
+    public static final int GRIPPER_SOLENOID_CHANNEL = 0;
 
-    
-    //Limit Switches
+    //LEDS
+    public static final int LED_PORT = 3;
+    public static final int LED_LENGTH = 60;
 
-        //Slider
-        public static final int SLIDER_REAR_LIMIT_SWITCH = 1;
-        public static final int SLIDER_FRONT_LIMIT_SWITCH = 2;
-    
-        //Carriage
-        public static final int CARRIAGE_BACK_LIMIT_SWITCH = 3;
-        public static final int CARRIAGE_FRONT_LIMIT_SWITCH = 4;
-
-        //Shoulder
-        public static final int SHOULDER_FRONT_LIMIT_SWITCH = 5;
-        public static final int SHOULDER_REAR_LIMIT_SWITCH = 6;
-
-        //Wrist
-        public static final int WRIST_LIMIT_SWITCH = 7;
-
-    //Solenoids
-
-        //gripper
-        public static final int GRIPPER_SOLENOID_CHANNEL = 0;
-
-    //Other
+    // Other
     public static final String TEST_PATH = "New New New Path.wpilib.json";
 
+    public static final double FIELD_X = 54d + 1d/12d;
+    public static final double FIELD_Y = 26d + 7d/12d;
 
 }
-

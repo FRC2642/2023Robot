@@ -49,8 +49,10 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.utils.MathR;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -63,7 +65,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
-  public static boolean testMode = false;
+ 
   private RobotContainer m_robotContainer;
 
   /**
@@ -92,6 +94,8 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
+    
+    RobotContainer.DEBUG = (int)SmartDashboard.getNumber("DEBUG MODE", 0) != 0;
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
     // commands, running already-scheduled commands, removing finished or
@@ -99,6 +103,7 @@ public class Robot extends TimedRobot {
     // and running subsystem periodic() methods. This must be called from the
     // robot's periodic
     // block in order for anything in the Command-based framework to work.
+
     CommandScheduler.getInstance().run();
   }
 
@@ -118,8 +123,9 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void autonomousInit() {
+    m_robotContainer.autonomousInit();
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-    testMode = false;
+    
 
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
@@ -141,8 +147,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-
-    testMode = false;
+    m_robotContainer.teleopInit();
   }
 
   /** This function is called periodically during operator control. */
@@ -154,12 +159,8 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     // Cancels all running commands at the start of test mode.
-    CommandScheduler.getInstance().cancelAll();
-    testMode=true;
-  }
-
-  public static Boolean isOnTestMode(){
-    return testMode;
+   // CommandScheduler.getInstance().cancelAll();
+    m_robotContainer.testInit();
   }
 
   /** This function is called periodically during test mode. */

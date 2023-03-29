@@ -4,128 +4,131 @@
 
 package frc.robot.subsystems.MastSubsystems;
 
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.revrobotics.CANSparkMax;
-import com.revrobotics.SparkMaxAnalogSensor.Mode;
 import com.revrobotics.SparkMaxRelativeEncoder.Type;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxAlternateEncoder;
 import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
 
-import edu.wpi.first.util.sendable.Sendable;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.CounterBase.EncodingType;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import com.revrobotics.SparkMaxLimitSwitch;
+import frc.robot.subsystems.interfaces.IPositionable;
+import frc.robot.utils.MathR;
 
-public class ShoulderSubsystem extends SubsystemBase {
-  /** Creates a new ShoulderSubsystem. */
-  CANSparkMax shoulder = new CANSparkMax(Constants.SHOULDER_MOTOR, MotorType.kBrushed);
+public class ShoulderSubsystem extends SubsystemBase implements IPositionable<ShoulderSubsystem.ShoulderPosition> {
 
-  private static SparkMaxLimitSwitch frontShoulderLimitSwitch;
-  private static SparkMaxLimitSwitch rearShoulderLimitSwitch;
+  public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
+  public static final double INCLINE_DEGREES = 23d;
+  public static final double MAX_DEGREES = 190;//213;
+  public static final double MIN_DEGREES = 25;//20;
+  public static final double AT_SETPOINT_THRESHOLD = 3d;
 
-  public boolean protectionEnabled = true;
-  public boolean maxedOut = false;
+  private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR_1, MotorType.kBrushed);
+  private final CANSparkMax shoulderMotorFollower = new CANSparkMax(Constants.SHOULDER_MOTOR_2, MotorType.kBrushed);
+  private static SparkMaxAnalogSensor absEncoder;
 
-  static RelativeEncoder shoulderEncoderRelative1;
-//5 MAX, 4.22 START, 0 MIN
-  public static void resetShoulderEncoder() {
-    shoulderEncoderRelative1.setPosition(4.22);
-  }
+  private final PIDController shoulderPIDController = new PIDController(0.01, 0.0, 0.0);
+  private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
+  private double speedLimit = 1.0;
 
   public ShoulderSubsystem() {
-   
-    //shoulderEncoderAnalog = shoulder.get(Mode.kRelative);
-    shoulderEncoderRelative1 = shoulder.getEncoder(Type.kQuadrature, 4096);
-    resetShoulderEncoder();
-    //shoulderEncoderRelative1 = shoulder.getAlternateEncoder(Type.kQuadrature, 4);
-   // frontShoulderLimitSwitch = shoulder.getForwardLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-   // rearShoulderLimitSwitch = shoulder.getReverseLimitSwitch(SparkMaxLimitSwitch.Type.kNormallyOpen);
-  }
-/* 
-  public boolean getFrontShoulderLimitSwitch(){
-    return false;//rontShoulderLimitSwitch.isPressed();
+    absEncoder = shoulderMotor.getAnalog(Mode.kAbsolute);
+    absEncoder.setPositionConversionFactor(1.0);
+    shoulderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
+    shoulderMotor.setInverted(false);
+    // shoulderMotorFollower.setInverted(false);
+    shoulderMotorFollower.follow(shoulderMotor);
   }
 
-  public boolean getRearShoulderLimitSwitch(){
-    return false;//rearShoulderLimitSwitch.isPressed();
-  }*/
+ // public static double SLOW_DOWN_MAX_ANGLE = 180;
+ // public static double SLOW_DOWN_MIN_ANGLE = 50;
 
-  public void move(double speed){
-    /*if(!getFrontShoulderLimitSwitch() && !getRearShoulderLimitSwitch() && Math.abs(speed) >= 0.1){
-      //Move if limit switches are false
-      shoulder.set(speed);
-    }
-    else if(getFrontShoulderLimitSwitch() && speed <= -0.1){
-        //Dont move further than front switch
-        shoulder.set(speed);
-      }
-    else if(getRearShoulderLimitSwitch() && speed >= 0.1){
-      //Dont move further than rear switch
-      shoulder.set(speed);
-    }
-    else{
-      //Stop
-      shoulder.set(speed);
+  // Negative = up, Positive = down
+  public void set(double speed) {
+    currentSetPosition = ShoulderPosition.MANUAL;
+
+    /*if ((speed > 0 && getShoulderAngle() > 113) || (speed < 0 && getShoulderAngle() < 113)) {
+      speed *= (Math.abs(Math.sin(Math.toRadians(getShoulderAngle() - INCLINE_DEGREES)))+0.2);
     }*/
-    maxedOut = false;
-     if (protectionEnabled) {
-      if (shoulderEncoderRelative1.getPosition() >= 5){
-        if (speed <= -0.1){
-          shoulder.set(speed);
-        }
-        else{
-          maxedOut = true;
-          shoulder.set(0.0);
-        }
-      }
-  
-      else if (shoulderEncoderRelative1.getPosition() < 0.05) {
-        if (speed >= 0.1){
-          shoulder.set(speed);
-        }
-        else{
-          maxedOut = true;
-          shoulder.set(0.0);
-        }
-      }
-      else{
-        shoulder.set(speed);
-      }
-      
-    }
-   else {
-      shoulder.set(speed);
-    }
 
-    SmartDashboard.putBoolean("maxed", maxedOut);
-   
+    speed *= (Math.abs(Math.cos(Math.toRadians(getShoulderAngle()))) + 0.1);
 
+    shoulderMotor.set(
+        MathR.limitWhenReached(speed, -speedLimit, speedLimit, getShoulderAngle() <= MIN_DEGREES,
+            getShoulderAngle() >= MAX_DEGREES));
   }
 
-   /*  public static boolean isShoulderBack(){
-      return rearShoulderLim
-      itSwitch.isPressed();
-    } */
+  public void set(ShoulderPosition pos) {
+    double speed = shoulderPIDController.calculate(getShoulderAngle(), pos.angle);
 
-    public static double getEncoderTicks(){
-      return 0.0;//shoulderEncoder.getPosition();
-    }
+    if (!atSetPosition())
+      set(speed);
+    else
+      set(0.0);
 
+    currentSetPosition = pos;
+  }
+  
+  public void setManual(double speed) {
+    shoulderMotor.set(speed);
+  }
+
+  public boolean atSetPosition() {
+    return shoulderPIDController.atSetpoint();
+  }
+
+  public ShoulderPosition getSetPosition() {
+    return currentSetPosition;
+  }
+
+  public static double getShoulderAngle() {
+    return absEncoder.getPosition() * DEGREES_PER_TICK + 264;
+  }
+
+  @Override
+  public void setSpeedLimit(double max) {
+    speedLimit = max;
+  }
+
+  @Override
+  public double getSpeedLimit() {
+    return speedLimit;
+  }
+
+  @Override
+  public void setRampRate(double rampRate) {
+    shoulderMotor.setOpenLoopRampRate(rampRate);
+  }
+
+  @Override
+  public double getRampRate() {
+    return shoulderMotor.getOpenLoopRampRate();
+  }
 
   @Override
   public void periodic() {
-    
-    SmartDashboard.putBoolean("shoulderProtected", protectionEnabled);
-   // if (shoulderEncoderAnalog != null) SmartDashboard.putNumber("Shoulder encoder analog", shoulderEncoderAnalog.getPosition());
-    if (shoulderEncoderRelative1 != null) SmartDashboard.putNumber("Shoulder encoder", shoulderEncoderRelative1.getPosition());
- //   if (shoulderEncoderRelative2 != null) SmartDashboard.putNumber("Shoulder encoder relative 2", shoulderEncoderRelative2.getPosition());
-   // SmartDashboard.putNumber("Shoulder current", shoulder.getOutputCurrent());
-    
+    SmartDashboard.putNumber("Shoulder Angle", getShoulderAngle());
+    //SmartDashboard.putString("Shoulder", currentSetPosition.toString());
+  }
 
-    
+  public enum ShoulderPosition {
+    MANUAL(-1),
+    STARTING_CONFIG(56),
+    PICKUP_GROUND(MAX_DEGREES),
+    PICKUP_HUMANPLAYER(MIN_DEGREES-10),
+    PLACE_CUBE_MID(180),
+    PLACE_CUBE_HIGH(150),
+    PLACE_CONE_MID(170),
+    PLACE_CONE_HIGH(MIN_DEGREES+10);
+
+    public double angle;
+
+    private ShoulderPosition(double angle) {
+      this.angle = angle;
+    }
   }
 }
