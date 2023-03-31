@@ -24,8 +24,8 @@ public class DriveFacingObjectCommand extends DriveDirectionCommand {
   public void execute() {
     camera.setDetectionType(objectType);
 
-    if (camera.isDetection && camera.confidence() > 5)
-      turnSpeed = MathR.limit(camera.x * (-1d/27d), -0.5, 0.5);
+    if (camera.isDetection && camera.confidence() > 0.5)
+      turnSpeed = MathR.limit(camera.x * (-1d/65d), -0.25, 0.25);
     
     super.execute();
   }
