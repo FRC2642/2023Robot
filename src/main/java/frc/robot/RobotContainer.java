@@ -113,7 +113,7 @@ public class RobotContainer {
         new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
     autoChooser.addOption("Three Cube", new TWOCUBESHOOTAutoCommand(drive));
     
-    autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight));
+    autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
     autoChooser.addOption("RS High Cone High Cube", new RSHIGHCONEAutoCommand(drive, clawLimelight));
     /*
      * autoChooser.addOption("[BSCUBE] Barrier Side Cube",
