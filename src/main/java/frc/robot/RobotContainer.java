@@ -2,8 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -56,6 +58,12 @@ import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 
+import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
+
 public class RobotContainer {
   private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
   private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
@@ -72,7 +80,11 @@ public class RobotContainer {
   private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
   private final ClawWristSubsystem wrist = new ClawWristSubsystem();
   //private final LEDSubsystem leds = new LEDSubsystem();
-
+  private final CANdle candle = new CANdle(0);
+  private final int ledCount = 68;
+  private final Animation rainbowAnimation = new RainbowAnimation(0.7, 0.8, ledCount);
+  private final Animation blueAllianceLarsonAnimation = new LarsonAnimation(0, 0, 255, 0, 0.99, ledCount, BounceMode.Back, 7);
+  private final Animation redAllianceLarsonAnimation = new LarsonAnimation(255, 0, 0, 0, 0.99, ledCount, BounceMode.Back, 7); 
   //AddressableLED led = new AddressableLED(3);
   //AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
 
@@ -124,6 +136,13 @@ public class RobotContainer {
     //leds.blink(1);
     // Button bindings
     
+    CANdleConfiguration configAll = new CANdleConfiguration();
+    configAll.statusLedOffWhenActive = true;
+    configAll.disableWhenLOS = false;
+    configAll.stripType = LEDStripType.RGB;
+    configAll.brightnessScalar = 0.1;
+    configAll.vBatOutputMode = VBatOutputMode.Modulated;
+    candle.configAllSettings(configAll, 100);
    
   }
 
@@ -218,5 +237,26 @@ public class RobotContainer {
 
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+  }
+  public void periodic() {
+    lednumber++;
+    if(mainControl.getAButton() == true){
+      candle.setLEDs(128,0,128,0,0,ledCount);
+    }
+    else if(mainControl.getXButton() == true || mainControl.getBButton() == true){
+      candle.setLEDs(255, 255, 0, 0, 0, ledCount);
+    }
+    else if (DriverStation.getAlliance() == Alliance.Blue){
+      candle.setLEDs(0, 0, 255, 0, 0, ledCount);
+    }
+    else if (DriverStation.getAlliance() == Alliance.Red){
+      candle.setLEDs(255, 0, 0, 0, 0, ledCount);
+    }
+    else{
+     for (int i = 0; i < lednumber; i++){
+      candle.setLEDs(0, 0, 255, 0, 0, i);
+
+     }
+    }
   }
 }
