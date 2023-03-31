@@ -23,8 +23,8 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
   public static final double INCLINE_DEGREES = 23d;
-  public static final double MAX_DEGREES = 190;//213;
-  public static final double MIN_DEGREES = 25;//20;
+  public static final double MAX_DEGREES = 198;//213;
+  public static final double MIN_DEGREES = 20;//20;
   public static final double AT_SETPOINT_THRESHOLD = 3d;
 
   private final CANSparkMax shoulderMotor = new CANSparkMax(Constants.SHOULDER_MOTOR_1, MotorType.kBrushed);
@@ -118,8 +118,8 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   public enum ShoulderPosition {
     MANUAL(-1),
     STARTING_CONFIG(56),
-    PICKUP_GROUND(MAX_DEGREES),
-    PICKUP_HUMANPLAYER(MIN_DEGREES-10),
+    PICKUP_GROUND(MAX_DEGREES-2),
+    PICKUP_HUMANPLAYER(MIN_DEGREES-3),
     PLACE_CUBE_MID(180),
     PLACE_CUBE_HIGH(150),
     PLACE_CONE_MID(170),
