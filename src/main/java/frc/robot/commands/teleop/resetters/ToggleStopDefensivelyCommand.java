@@ -9,7 +9,7 @@ import frc.robot.subsystems.DriveSubsystem;
 
 public class ToggleStopDefensivelyCommand extends CommandBase {
 
-  final DriveSubsystem drive;
+  private final DriveSubsystem drive;
   
   public ToggleStopDefensivelyCommand(DriveSubsystem drive) {
     this.drive = drive;
@@ -18,7 +18,7 @@ public class ToggleStopDefensivelyCommand extends CommandBase {
 
   @Override
   public void execute() {
-    drive.setDefensiveMode(!drive.defenseActivated);
+    drive.setDefensiveMode(!drive.getDefensiveMode());
   }
 
   @Override

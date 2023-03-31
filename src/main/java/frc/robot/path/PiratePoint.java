@@ -8,10 +8,10 @@ import frc.robot.utils.VectorR;
 
 /** Add your docs here. */
 public class PiratePoint implements Comparable<PiratePoint> {
+    
     public final VectorR position;
     public final double heading;
     public final double time;
-
     public final boolean stopPoint;
 
     public PiratePoint(double x, double y, double heading, double time, Boolean stopPoint) {
@@ -21,6 +21,10 @@ public class PiratePoint implements Comparable<PiratePoint> {
         this.stopPoint = stopPoint;
     }
 
+    public PiratePoint clone() {
+        return new PiratePoint(position.getX(), position.getY(), heading, time, stopPoint);
+    }
+
     @Override
     public int compareTo(PiratePoint arg0) {
         return Double.compare(time, arg0.time);
@@ -28,6 +32,8 @@ public class PiratePoint implements Comparable<PiratePoint> {
 
     @Override
     public String toString() {
-        return "{[pos: " + position.toString() + "ft] [t: " + time + "s] [head: " + Math.toDegrees(heading) + "deg]}";
+        return "{[pos: " + position.toString() + "ft] [t: " + VectorR.truncate(time, 2) + "s] [head: " + VectorR.truncate(heading, 0) + "deg]}";
     }
+
+    
 }

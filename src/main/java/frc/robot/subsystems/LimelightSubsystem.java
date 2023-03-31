@@ -9,11 +9,14 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.utils.DataStreamJitterDetector;
 
 public class LimelightSubsystem extends SubsystemBase {
+
+  private final String networkTableName;
 
   /*
    * Limelight Detection pipeline, NOTE: pipeline order must follow enum order
@@ -73,9 +76,12 @@ public class LimelightSubsystem extends SubsystemBase {
 
   private final DataStreamJitterDetector jitterDetectorX = new DataStreamJitterDetector();
 
-   private final DataStreamJitterDetector jitterDetectorY = new DataStreamJitterDetector();
+  private final DataStreamJitterDetector jitterDetectorY = new DataStreamJitterDetector();
+
   public double confidence() {
-    return detectionError == DetectionError.SUCCESS ? (((jitterDetectorX.getConfidence()) + jitterDetectorY.getConfidence()) / 2) : -1.0;
+    return detectionError == DetectionError.SUCCESS
+        ? (((jitterDetectorX.getConfidence()) + jitterDetectorY.getConfidence()) / 2)
+        : -1.0;
   }
 
   // private double x;
@@ -83,13 +89,13 @@ public class LimelightSubsystem extends SubsystemBase {
   // private double area;
   private NetworkTable limelightTable;
 
-  public void initialize() {
-    limelightTable = NetworkTableInstance.getDefault().getTable("limelight");
+  private void initialize() {
+    limelightTable = NetworkTableInstance.getDefault().getTable(networkTableName);
     jitterDetectorX.reset();
     jitterDetectorY.reset();
   }
 
-  public boolean isInitialized() {
+  private boolean isInitialized() {
     return limelightTable != null;
   }
 
@@ -108,7 +114,7 @@ public class LimelightSubsystem extends SubsystemBase {
   public double botposeYRot;
   public double botposeZRot;
 
-  public void reset() {
+  private void reset() {
     x = 0;
     y = 0;
     a = -1;
@@ -149,10 +155,10 @@ public class LimelightSubsystem extends SubsystemBase {
 
     if (detectionType == DetectionType.FIDUCIAL) {
       jitterDetectorX.update(botposeX);
-       jitterDetectorY.update(botposeY);
+      jitterDetectorY.update(botposeY);
     } else {
       jitterDetectorX.update(x);
-       jitterDetectorY.update(y);
+      jitterDetectorY.update(y);
 
     }
 
@@ -181,16 +187,8 @@ public class LimelightSubsystem extends SubsystemBase {
     return DetectionError.SUCCESS;
   }
 
-  SendableChooser<LimelightSubsystem.DetectionType> visiontype = new SendableChooser<>();
-
-  public LimelightSubsystem() {
-
-    //visiontype.setDefaultOption("cones", LimelightSubsystem.DetectionType.CONE);
-    //visiontype.addOption("cubes", LimelightSubsystem.DetectionType.CUBE);
-    //visiontype.addOption("fiducial", LimelightSubsystem.DetectionType.FIDUCIAL);
-    //visiontype.addOption("tape", LimelightSubsystem.DetectionType.RETROREFLECTIVE);
-
-    //SmartDashboard.putData(visiontype);
+  public LimelightSubsystem(String networkTableName) {
+    this.networkTableName = networkTableName;
   }
 
   @Override
@@ -199,15 +197,9 @@ public class LimelightSubsystem extends SubsystemBase {
       detectionError = update();
     } else {
       initialize();
+      System.out.println("LIMELIGHT---------Initializing: [" + limelightTable + "] ----------- Error: " + detectionError.toString());
     }
 
-   // setDetectionType(visiontype.getSelected());
-
-   // SmartDashboard.putNumber("confidence", confidence());
-   // SmartDashboard.putNumber("x vision", x);
-  //  SmartDashboard.putNumber("y vision", y);
-   // SmartDashboard.putNumber("botpose x", botposeX);
-   // SmartDashboard.putNumber("botpose y", botposeY);
-   // SmartDashboard.putString("vision status", detectionError.toString());
+    SmartDashboard.putNumber(networkTableName+ "X", x);
   }
 }
