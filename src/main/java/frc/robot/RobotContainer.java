@@ -238,25 +238,4 @@ public class RobotContainer {
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
   }
-  public void periodic() {
-    lednumber++;
-    if(mainControl.getAButton() == true){
-      candle.setLEDs(128,0,128,0,0,ledCount);
-    }
-    else if(mainControl.getXButton() == true || mainControl.getBButton() == true){
-      candle.setLEDs(255, 255, 0, 0, 0, ledCount);
-    }
-    else if (DriverStation.getAlliance() == Alliance.Blue){
-      candle.setLEDs(0, 0, 255, 0, 0, ledCount);
-    }
-    else if (DriverStation.getAlliance() == Alliance.Red){
-      candle.setLEDs(255, 0, 0, 0, 0, ledCount);
-    }
-    else{
-     for (int i = 0; i < lednumber; i++){
-      candle.setLEDs(0, 0, 255, 0, 0, i);
-
-     }
-    }
-  }
 }

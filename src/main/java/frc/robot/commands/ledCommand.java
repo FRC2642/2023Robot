@@ -4,39 +4,59 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix.led.Animation;
+import com.ctre.phoenix.led.ColorFlowAnimation;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Constants;
 import frc.robot.subsystems.LEDs;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class ledCommand extends CommandBase {
-  private final LEDs ledS;
+  private final LEDs leds;
   private final XboxController main;
-  public ledCommand(LEDs ledS, XboxController main) {
-    this.ledS = ledS;
+  private final Joystick buttonBoard;
+  
+  final Animation flowAnimation = new ColorFlowAnimation(50, 205, 50, 255, 1, Constants.LED_LENGTH, Direction.Forward);
+
+  public ledCommand(LEDs leds, XboxController main, Joystick buttonBoard) {
+    this.leds = leds;
     this.main = main;
+    this.buttonBoard = buttonBoard;
+
+    
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    if(mainControl.getAButton() == true){
-      LEDs.setLEDCOLOR(128,0,128);
+    if (buttonBoard.getRawButton(10)){
+      LEDs.candle.animate(flowAnimation);
     }
-    else if(mainControl.getXButton() == true || mainControl.getBButton() == true){
-      LEDs.setLEDCOLOR(255, 255, 0);
+    else if (main.getAButton()){
+      LEDs.setLEDCOLOR(100, 0, 200);
     }
-    else if (DriverStation.getAlliance() == Alliance.Blue){
-      LEDs.setLEDCOLOR(0, 0, 255);
+    else if (main.getBButton() || main.getXButton()){
+      LEDs.setLEDCOLOR(0, 255, 255);
     }
-    else if (DriverStation.getAlliance() == Alliance.Red){
-      LEDs.setLEDCOLOR(255, 0, 0);
+    else{
+      if (DriverStation.getAlliance() == Alliance.Blue){
+        LEDs.setLEDCOLOR(0, 0, 255);
+      }
+      else{
+        LEDs.setLEDCOLOR(255, 0, 0);
+      }
     }
+
   }
 
   // Called once the command ends or is interrupted.
