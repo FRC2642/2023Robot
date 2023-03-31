@@ -2,8 +2,10 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -14,7 +16,9 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.autonomous.fullAutos.BSCONEAutoCommand;
+import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
+import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
+import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
 import frc.robot.commands.autonomous.fullAutos.TWOCUBESHOOTAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BALANCEAutoCommand;
@@ -23,6 +27,7 @@ import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.RSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
+import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
 import frc.robot.commands.autonomous.positionable.SetSliderCommand;
 import frc.robot.commands.autonomous.positionable.SetWristCommand;
@@ -34,7 +39,6 @@ import frc.robot.commands.teleop.ClawCommands.TeleopIntakeCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsGamePieceCommand;
-import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopCarriageCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopShoulderCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopSliderCommand;
@@ -60,6 +64,12 @@ import frc.robot.utils.Easings.Functions;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+
+import com.ctre.phoenix.led.*;
+import com.ctre.phoenix.led.CANdle.LEDStripType;
+import com.ctre.phoenix.led.CANdle.VBatOutputMode;
+import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
+import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 
 public class RobotContainer {
   public final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
@@ -240,6 +250,20 @@ public class RobotContainer {
 
   public void testInit() {
 
+  }
+
+  private void configureButtonBindings() {
+  //  new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
+ //   new POVButton(mainControl, 180).whileTrue(new RampCommand(drive, VectorR.fromCartesian(0, 0), true));
+  //  new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
+  //  new JoystickButton(mainControl, Button.kA.value)
+ //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
+  //  new JoystickButton(mainControl, Button.kB.value).whileTrue(
+ //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
+ //   new JoystickButton(mainControl, Button.kX.value)
+ //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
+ //   new JoystickButton(mainControl, Button.kY.value).whileTrue(
+ //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
   }
 
   public Command getAutonomousCommand() {
