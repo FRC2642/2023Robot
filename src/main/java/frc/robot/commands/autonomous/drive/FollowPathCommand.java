@@ -12,13 +12,18 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.MathR;
+import frc.robot.utils.VectorR;
 import frc.robot.path.*;
 
 public class FollowPathCommand extends CommandBase {
 
   public static final double HEADING_KP = 0.00027925;
   public static final double MOVEMENT_KP = .016;
-  public static final double PRECISION = 0.05;
+  public static final double BASE_PRECISION = 0.05;
+  public static final double TIME_TO_CORRECT_FROM_START = 1.5;
+
+  public double lookAheadTime = BASE_PRECISION;
+  public final Double startingLookAheadTime;
 
   private final DriveSubsystem drive;
   private final Timer timer = new Timer();
@@ -29,19 +34,23 @@ public class FollowPathCommand extends CommandBase {
   private double currentTime;
   private final boolean recenterDisplacementToFirstPoint;
 
-  public FollowPathCommand(DriveSubsystem drive, PiratePath path, boolean recenterDisplacementToFirstPoint) {
+  public FollowPathCommand(DriveSubsystem drive, PiratePath path, boolean recenterDisplacementToFirstPoint, double additionalLookaheadTime) {
     this.drive = drive;
     notAdjustedPath = path;
     this.recenterDisplacementToFirstPoint = recenterDisplacementToFirstPoint;
+
+    if (additionalLookaheadTime != 0.0) startingLookAheadTime = BASE_PRECISION + additionalLookaheadTime;
+    else startingLookAheadTime = null;
+    
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
 
-    if (notAdjustedPath != null && DriverStation.getAlliance() == Alliance.Blue && notAdjustedPath.allianceDependent)
-      setPath(notAdjustedPath.getBlueAlliance());
-    else
+    // if (notAdjustedPath != null && notAdjustedPath.allianceDependent && DriverStation.getAlliance() == Alliance.Blue)
+    //   setPath(notAdjustedPath.getBlueAlliance());
+    // else
       setPath(notAdjustedPath);
 
     startPath();
@@ -78,13 +87,24 @@ public class FollowPathCommand extends CommandBase {
 
   @Override
   public void execute() {
+    if (!isStarted()) {
+      drive.stop();
+      return;
+    }
+
+    if (startingLookAheadTime == null) lookAheadTime = BASE_PRECISION;
+    else {
+      lookAheadTime = MathR.lerp(startingLookAheadTime, BASE_PRECISION, 0.0, TIME_TO_CORRECT_FROM_START, timer.get());
+      lookAheadTime = MathR.limit(lookAheadTime, BASE_PRECISION, startingLookAheadTime);
+    }
+
     currentTime = timer.get() + path.getFirst().time;
 
-    while ((nextPoint == null || nextPoint.time - currentTime < PRECISION) && iterator.hasNext())
+    while ((nextPoint == null || nextPoint.time - currentTime < lookAheadTime) && iterator.hasNext())
       nextPoint = iterator.next();
 
     var delta_t = nextPoint.time - currentTime;
-
+    
     var velocity = nextPoint.position.clone();
     velocity.sub(DriveSubsystem.getRelativeFieldPosition());
     velocity.mult(MOVEMENT_KP / delta_t);
@@ -96,6 +116,6 @@ public class FollowPathCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return timer.get() + path.getFirst().time > path.getLastTime();
+    return currentTime > path.getLastTime();
   }
 }

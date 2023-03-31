@@ -6,6 +6,7 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import edu.wpi.first.wpilibj.PneumaticHub;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
@@ -20,15 +21,16 @@ public class ClawGripperSubsystem extends SubsystemBase {
   }
 
   public void set(boolean open) {
-    gripperSolenoid.set(open);
+    gripperSolenoid.set(!open);
   }
 
   public static boolean isOpen(){
-    return gripperSolenoid.get();
+    return !gripperSolenoid.get();
   }
 
   @Override
   public void periodic() {
+    SmartDashboard.putBoolean("OPEN", isOpen());
     // This method will be called once per scheduler run
   }
 }

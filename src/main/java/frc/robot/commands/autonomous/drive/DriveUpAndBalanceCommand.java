@@ -12,8 +12,8 @@ import frc.robot.utils.VectorR;
 public class DriveUpAndBalanceCommand extends SequentialCommandGroup {
   public DriveUpAndBalanceCommand(DriveSubsystem drive) {
     addCommands(
-      new DriveToTiltCommand(drive, VectorR.fromPolar(0.3, Math.PI), -10, false),
-      new DriveToTiltCommand(drive, VectorR.fromPolar(0.15, Math.PI), -7, true),
+      new DriveToTiltCommand(drive, VectorR.fromPolar(0.3, 180), -10, false),
+      new DriveToTiltCommand(drive, VectorR.fromPolar(0.15, 180), -7, true),
       new WaitCommand(2),
       new DriveDistanceCommand(drive, VectorR.fromPolar(0.2, 0), 0.5)
     );

@@ -18,6 +18,8 @@ public class DriveDirectionCommand extends CommandBase {
   protected VectorR velocity;
   protected Double heading;
 
+  protected Double turnSpeed = null;
+
   protected final VectorR localDisplacement = new VectorR();
 
   public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity, double heading) {
@@ -29,22 +31,22 @@ public class DriveDirectionCommand extends CommandBase {
   public DriveDirectionCommand(DriveSubsystem drive, VectorR velocity) {
     this.drive = drive;
     this.velocity = velocity;
-    heading = Double.NaN;
+    heading = null;
     addRequirements(drive);
   }
 
   @Override
   public void initialize() {
     localDisplacement.setFromCartesian(0, 0);
-    if (heading == Double.NaN) heading = DriveSubsystem.getYawDegrees();
+    if (heading == null) heading = DriveSubsystem.getYawDegrees();
   }
 
   @Override
   public void execute() {
     localDisplacement.add(DriveSubsystem.getRelativeIncrement());
 
-    double turnSpeed = TURN_KP * MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), heading);
-  
+    if (turnSpeed == null) turnSpeed = TURN_KP * MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), heading);
+
     VectorR rotatedDisplacement = localDisplacement.clone();
     rotatedDisplacement.rotate(-velocity.getAngle());
     VectorR antiStrafe = VectorR.fromPolar(rotatedDisplacement.getY(), velocity.getAngle() - 90);
@@ -52,6 +54,7 @@ public class DriveDirectionCommand extends CommandBase {
     VectorR driveSpeed = VectorR.addVectors(velocity, antiStrafe);
 
     drive.move(driveSpeed,  MathR.limit(turnSpeed, -1, 1));
+    turnSpeed = null;
   }
 
   @Override

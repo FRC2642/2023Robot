@@ -9,6 +9,7 @@ import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -18,46 +19,78 @@ import frc.robot.utils.MathR;
 
 public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
 
-  public static final double FULL_EXTENSION_PER_TICK = 1d / 240d;
+  public static final double FULL_EXTENSION_PER_TICK = 1d/250d;
+  public static final double AT_SETPOINT_THRESHOLD = 0.05;
 
   private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
-  private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(1);
-  private final RelativeEncoder sliderEncoder = sliderMotor.getEncoder();
+  private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(2);
+  private static RelativeEncoder sliderEncoder;
 
-  private final PIDController sliderPIDController = new PIDController(0.5, 0, 0);
-  private SliderPosition currentSetPosition = SliderPosition.RETRACTED;
+  private final PIDController sliderPIDController = new PIDController(3, 0, 0);
+  public static SliderPosition currentSetPosition = SliderPosition.RETRACTED;
   private double speedLimit = 1;
 
+  private boolean hardSetPosition = false;
+  public static boolean protectionEnabled = true;
+
   public SliderSubsystem() {
+    sliderEncoder = sliderMotor.getEncoder();
     sliderEncoder.setPositionConversionFactor(FULL_EXTENSION_PER_TICK);
     sliderMotor.setOpenLoopRampRate(0.0);
     sliderMotor.setClosedLoopRampRate(0.0);
     sliderMotor.setInverted(false);
+    sliderPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
   public void set(SliderPosition pos) {
     double speed = sliderPIDController.calculate(getSliderExtension(), pos.extension);
-    
-    if (!atSetPosition()) set(speed);
-    else set(0.0);
+    if (currentSetPosition != pos) hardSetPosition = false;
 
+    if (atSetPosition()) {
+     set(0.0);
+     hardSetPosition = true;
+    }
+    else{
+      set(speed);
+    } 
+ 
     currentSetPosition = pos;
   }
 
   public void set(double speed) {
-    currentSetPosition = SliderPosition.MANUAL;
     
+    currentSetPosition = SliderPosition.MANUAL;
+    speed = MathR.limitWhenReached(speed, -speedLimit, speedLimit, getSliderExtension() <= 0.1, getSliderExtension() >= 0.9);
+    if (protectionEnabled){
+      if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
+        speed = 0.0;
+      }
+    }
+
+    
+
+
     if (speed == 0.0) brake.set(true);
     else brake.set(false);
 
-    sliderMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
+    /*if (ShoulderSubsystem.getShoulderAngle() <= 180) 
+      sliderMotor.set(speed);
+    else{
+      sliderMotor.set(0.0);
+    }*/
+    sliderMotor.set(speed);
   }
   
-  public void resetSliderEncoder(SliderPosition pos) {
+  public void setManual(double speed) {
+    brake.set(false);
+    sliderMotor.set(speed);
+  }
+  
+  public static void resetSliderEncoder(SliderPosition pos) {
     sliderEncoder.setPosition(pos.extension);
   }
 
-  public double getSliderExtension(){
+  public static double getSliderExtension(){
     return sliderEncoder.getPosition();
   }
 
@@ -68,7 +101,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
 
   @Override
   public boolean atSetPosition() {
-    return sliderPIDController.atSetpoint();
+    return hardSetPosition || sliderPIDController.atSetpoint();
   }
 
   @Override
@@ -94,13 +127,14 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Slider Extension", getSliderExtension());
+   // SmartDashboard.putString("Slider", currentSetPosition.toString());
   }
   
   public enum SliderPosition {
-    MANUAL(-1),
+    MANUAL(0),
     RETRACTED(0),
     PARTIALLY(0.7),
-    EXTENDED(1);
+    EXTENDED(1.0);
 
     public double extension;
     private SliderPosition(double extension) {

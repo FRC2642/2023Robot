@@ -6,6 +6,7 @@ package frc.robot.commands.teleop.MastCommands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
 import edu.wpi.first.math.controller.PIDController;
@@ -24,17 +25,31 @@ public class TeleopCarriageCommand extends CommandBase {
   
   @Override
   public void initialize() {
-    carriage.setSpeedLimit(0.5);
-    carriage.setRampRate(0.25);
+    carriage.setSpeedLimit(0.8);
+    carriage.setRampRate(1);
   }
 
+  boolean override = true;
   @Override
   public void execute() {
     //make sure robot wont pull claw into sliders
-    if (auxControl.getXButtonPressed()) {
+     /*if (auxControl.getAButtonPressed()) {
       extended = !extended;
+      override = false;
     }
-    carriage.set(extended ? CarriagePosition.EXTENDED : CarriagePosition.MANUAL);
+    if (override == false){
+      carriage.set(extended ? CarriagePosition.EXTENDED : CarriagePosition.MANUAL); 
+    }*/
+   
+    if (Math.abs(auxControl.getRightY()) > 0.1) {
+      override = true;
+      carriage.set(-1 * auxControl.getRightY());
+    }
+    else carriage.set(0.0);
+
+   // SmartDashboard.putData("front limitswitch", carriage.isCarriageUp());
+    
+
   }
 
   @Override
