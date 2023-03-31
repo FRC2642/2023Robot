@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autonomous.fullAutos;
+package frc.robot.commands.autonomous.fullAutos.real;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -47,7 +47,7 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
   /** Creates a new ScoreHighTaxiBalanceAuto. */
   public BALANCEAutoCommand(SliderSubsystem sliders, ClawGripperSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ClawIntakeSubsystem intake) {
 
-    PiratePath path = new PiratePath();
+    PiratePath path = new PiratePath(false);
     path.add(new PiratePoint(0, 0, 180, 0, false));
     path.add(new PiratePoint(2, 0, 180, 0.9, true));
     path.fillWithSubPointsEasing(0.05, Functions.easeOutExpo);

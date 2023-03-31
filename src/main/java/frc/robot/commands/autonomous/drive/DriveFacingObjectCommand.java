@@ -24,8 +24,12 @@ public class DriveFacingObjectCommand extends DriveDirectionCommand {
   public void execute() {
     camera.setDetectionType(objectType);
 
-    if (camera.isDetection && camera.confidence() > 0.5)
-      turnSpeed = MathR.limit(camera.x * (-1d/65d), -0.25, 0.25);
+  //  if (camera.isDetection && camera.confidence() > 0.5)
+  //    turnSpeed = MathR.limit(camera.x * (-1d/65d), -0.25, 0.25);
+
+    if (camera.isDetection && camera.confidence() > 0.5) {
+      heading = DriveSubsystem.getYawDegrees() - camera.x;
+    }
     
     super.execute();
   }
