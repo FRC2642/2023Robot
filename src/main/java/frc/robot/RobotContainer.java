@@ -53,7 +53,7 @@ import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 
 public class RobotContainer {
   private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
- // private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
+  private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
 
   private final DriveSubsystem drive = new DriveSubsystem();
   private final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight");
@@ -116,10 +116,6 @@ public class RobotContainer {
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 
-    // mindsensors led class
-    //CANLight lights = new CANLight(Constants.LED_PORT);
-    
-    //leds.blink(1);
     // Button bindings
     
     CANdleConfiguration configAll = new CANdleConfiguration();
