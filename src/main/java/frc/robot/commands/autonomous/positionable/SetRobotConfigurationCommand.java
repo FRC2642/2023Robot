@@ -33,7 +33,7 @@ public class SetRobotConfigurationCommand extends ParallelCommandGroup {
     PLACE_CONE_HIGH(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_CONE_HIGH),
     PICKUP_FLOOR(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.PICKUP_GROUND),
     STARTING_CONFIG(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.STARTING_CONFIG),
-    PICKUP_HUMAN_PLAYER(SliderPosition.RETRACTED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_CONE_HIGH);
+    PICKUP_HUMAN_PLAYER(SliderPosition.RETRACTED, CarriagePosition.EXTENDED, ShoulderPosition.PICKUP_HUMANPLAYER);
 
     public final SliderPosition sliderPos;
     public final CarriagePosition carriagePos;

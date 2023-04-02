@@ -16,11 +16,13 @@ import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
+import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
@@ -51,17 +53,18 @@ public class RSHIGHCUBEAutoCommand extends SequentialCommandGroup {
       new ResetGyroCommand(180),
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
+      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
       
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
-      new RunIntakeCommand(intake, -.4).withTimeout(0.5),
+      new RunIntakeCommand(intake, -.2).withTimeout(0.5),
 
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
         new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND),
       new FollowPathCommand(drive, driveToCube, true, 0)),
 
-      new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(1.5).raceWith(new RunIntakeCommand(intake, 0.4)),
+      new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(2).raceWith(new RunIntakeCommand(intake, 0.4)),
     //  new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, sliders, carriage).alongWith(
-      new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, driveBackToPlace, false, 0.5).alongWith(new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_HUMANPLAYER))),
+      new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, driveBackToPlace, false, 0.5).alongWith(new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_HUMANPLAYER).withTimeout(3))),
 
    //   new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage),
       new RunIntakeCommand(intake, -0.2).withTimeout(1.5),

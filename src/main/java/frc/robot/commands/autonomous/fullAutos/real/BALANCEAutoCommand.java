@@ -61,7 +61,7 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
-      new RunIntakeCommand(intake, -.4).withTimeout(1),
+      new RunIntakeCommand(intake, -.2).withTimeout(1),
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), -10, false).andThen(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), 10, true, 2, 0.3),
@@ -72,7 +72,7 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.0, 180), 10, true, 3, 0.35),
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.2, 180), 7, false ,3, 0.15),
         new RunCommand(() -> drive.stop(), drive).withTimeout(0.5),
-        new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 0), 0.46))
+        new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 0), 0.44))
       ),
       new RunCommand(() -> {
         drive.setDefensiveMode(true);

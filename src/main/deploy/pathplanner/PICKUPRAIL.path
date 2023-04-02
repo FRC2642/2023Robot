@@ -37,7 +37,7 @@
       },
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 0.1,
+      "velOverride": 0.5,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -62,7 +62,7 @@
       },
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 0.1,
+      "velOverride": 0.6,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -112,7 +112,7 @@
       },
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 0.1,
+      "velOverride": 0.5,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {
@@ -137,7 +137,7 @@
       },
       "holonomicAngle": 0,
       "isReversal": false,
-      "velOverride": 0.1,
+      "velOverride": 0.6,
       "isLocked": false,
       "isStopPoint": false,
       "stopEvent": {

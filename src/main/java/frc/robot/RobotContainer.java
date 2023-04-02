@@ -25,6 +25,7 @@ import frc.robot.commands.autonomous.fullAutos.real.BALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.RSHIGHCUBEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.STOPBALANCEAutoCommand;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
@@ -126,7 +127,7 @@ public class RobotContainer {
    // autoChooser.addOption("Three Cube", new TWOCUBESHOOTAutoCommand(drive));
     
   //  autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
-    autoChooser.addOption("RS High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    autoChooser.addOption("RS (Bump Side) High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
     autoChooser.addOption("BS High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
     /*
      * autoChooser.addOption("[BSCUBE] Barrier Side Cube",
@@ -207,6 +208,9 @@ public class RobotContainer {
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
 
       // BUTTONS
+
+      new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder));
+
       new JoystickButton(auxButtonBoard, 8)
           .onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
       new JoystickButton(auxButtonBoard, 1)
@@ -250,20 +254,6 @@ public class RobotContainer {
 
   public void testInit() {
 
-  }
-
-  private void configureButtonBindings() {
-  //  new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
- //   new POVButton(mainControl, 180).whileTrue(new RampCommand(drive, VectorR.fromCartesian(0, 0), true));
-  //  new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
-  //  new JoystickButton(mainControl, Button.kA.value)
- //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
-  //  new JoystickButton(mainControl, Button.kB.value).whileTrue(
- //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
- //   new JoystickButton(mainControl, Button.kX.value)
- //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
- //   new JoystickButton(mainControl, Button.kY.value).whileTrue(
- //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
   }
 
   public Command getAutonomousCommand() {

@@ -8,6 +8,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 import frc.robot.subsystems.interfaces.IPositionable;
 import frc.robot.utils.MathR;
 
@@ -53,9 +54,11 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   public void set(double speed) {
     currentSetPosition = CarriagePosition.MANUAL;
 
+    
     if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
        speed = 0.0;
     }
+    
     carriageMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
   }
 
