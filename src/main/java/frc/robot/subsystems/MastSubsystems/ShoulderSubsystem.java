@@ -32,7 +32,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
   private static SparkMaxAnalogSensor absEncoder;
 
   private final PIDController shoulderPIDController = new PIDController(0.01, 0.0, 0.0);
-  private ShoulderPosition currentSetPosition = ShoulderPosition.STARTING_CONFIG;
+  private ShoulderPosition currentSetPosition = ShoulderPosition.TRAVEL_MODE;
   private double speedLimit = 1.0;
 
   public ShoulderSubsystem() {
@@ -117,7 +117,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public enum ShoulderPosition {
     MANUAL(-1),
-    STARTING_CONFIG(35),
+    TRAVEL_MODE(35),
     PICKUP_GROUND(MAX_DEGREES+10),
     PICKUP_HUMANPLAYER(20),
     PLACE_CONE_MID(160),

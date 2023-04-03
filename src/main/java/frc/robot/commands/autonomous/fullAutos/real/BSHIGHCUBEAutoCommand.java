@@ -47,6 +47,7 @@ public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
 
     var driveToCube = paths.get(0);
     var driveBackToPlace = paths.get(1);
+    var driveToNextCube = paths.get(2);
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
     addCommands(
@@ -66,13 +67,13 @@ public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
       new FollowPathCommand(drive, driveToCube, true, 0)),
 
       new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(3).raceWith(new RunIntakeCommand(intake, 0.4)),
-    //  new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, sliders, carriage).alongWith(
+    
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, driveBackToPlace, false, 0.5).alongWith(new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_HUMANPLAYER))),
 
-   //   new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage),
-      new RunIntakeCommand(intake, -0.2).withTimeout(1.5),
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)
-   //   new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)
+      new RunIntakeCommand(intake, -0.2).withTimeout(0.5),
+      new FollowPathCommand(drive, driveToNextCube, false, 0.5).alongWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage))
+   
       );
   }
 }

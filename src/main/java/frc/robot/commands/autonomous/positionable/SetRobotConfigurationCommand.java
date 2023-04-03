@@ -32,7 +32,7 @@ public class SetRobotConfigurationCommand extends ParallelCommandGroup {
   public enum RobotConfiguration {
     PLACE_CONE_HIGH(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_CONE_HIGH),
     PICKUP_FLOOR(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.PICKUP_GROUND),
-    STARTING_CONFIG(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.STARTING_CONFIG),
+    TRAVEL_MODE(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.TRAVEL_MODE),
     PICKUP_HUMAN_PLAYER(SliderPosition.RETRACTED, CarriagePosition.EXTENDED, ShoulderPosition.PICKUP_HUMANPLAYER),
     PLACE_CONE_MID(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.PLACE_CONE_MID);
 

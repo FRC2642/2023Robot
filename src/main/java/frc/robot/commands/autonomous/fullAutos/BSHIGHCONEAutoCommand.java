@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autonomous.fullAutos.real;
+package frc.robot.commands.autonomous.fullAutos;
 
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -36,24 +36,28 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
 
     var driveToCube = paths.get(0);
     var driveBackToPlace = paths.get(1);
-    // Add your commands in the addCommands() call, e.g.
-    // addCommands(new FooCommand(), new BarCommand());
+    var driveToCone = paths.get(2);
+
     addCommands(
-   //   new RunCommand(()->{
-   //     shoulder.set(0.2);
-   //   }, shoulder).withTimeout(0.5),
-   //   new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
-  //    new OpenCloseClawCommand(gripper, true),
-   //   new WaitCommand(1),
-   //   new OpenCloseClawCommand(gripper, false),
-   //   new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage),
-      new FollowPathCommand(drive, driveToCube, true, 0),
-      new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(2),//.raceWith(new RunIntakeCommand(intake, 0.4)),
-    //  new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, sliders, carriage).alongWith(
-      new FollowPathCommand(drive, driveBackToPlace, false, 0.5)
-   //   new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage),
-   //   new RunIntakeCommand(intake, -0.5),
-   //   new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)
-      );
+      new RunCommand(()->{
+        shoulder.set(0.2);
+      }, shoulder).withTimeout(0.5),
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
+      new OpenCloseClawCommand(gripper, true),
+      new WaitCommand(1),
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
+        new FollowPathCommand(drive, driveToCube, true, 0)),
+      
+      new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(2).raceWith(new RunIntakeCommand(intake, 0.4)),
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage).alongWith(
+        new FollowPathCommand(drive, driveBackToPlace, false, 0.5)),
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage),
+      new RunIntakeCommand(intake, -0.5),
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
+        new FollowPathCommand(drive, driveToCone, false, 0.5)
+      )
+    );
   }
 }

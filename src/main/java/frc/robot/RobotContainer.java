@@ -19,13 +19,13 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
-import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
+import frc.robot.commands.autonomous.fullAutos.BSHIGHCONEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.STOPBALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.TWOCUBESHOOTAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BALANCEAutoCommand;
-import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.RSHIGHCUBEAutoCommand;
-import frc.robot.commands.autonomous.fullAutos.real.STOPBALANCEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.ScoreAndTaxiAuto;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
@@ -126,8 +126,8 @@ public class RobotContainer {
    // autoChooser.addOption("Three Cube", new TWOCUBESHOOTAutoCommand(drive));
     
   //  autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
-    autoChooser.addOption("RS (Bump Side) High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
-    autoChooser.addOption("BS High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    autoChooser.addOption("Bump Side High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    autoChooser.addOption("Flat Side High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
     /*
      * autoChooser.addOption("[BSCUBE] Barrier Side Cube",
      * new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder,
@@ -181,7 +181,7 @@ public class RobotContainer {
      * leds.setData(buffer);
      */
     CommandScheduler.getInstance().cancelAll();
-    SmartDashboard.putData("Starting Config", new SetShoulderCommand(shoulder, () -> ShoulderPosition.STARTING_CONFIG));
+    SmartDashboard.putData("Starting Config", new SetShoulderCommand(shoulder, () -> ShoulderPosition.TRAVEL_MODE));
     // SmartDashboard.putData("EXTEND", new SetSliderCommand(slider, () -> SliderPosition.EXTENDED));
    //  SmartDashboard.putData("RECTRACT", new SetSliderCommand(slider, () -> SliderPosition.RETRACTED));
     // SmartDashboard.putData(new SetWristCommand(wrist,
@@ -189,12 +189,12 @@ public class RobotContainer {
 
     if (!DEBUG) {
       new JoystickButton(auxControl, 1).onTrue(
-          new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage)
+          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)))
               .withTimeout(5));
       // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)));
 
       new JoystickButton(auxControl, 2).onTrue(
-          new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).withTimeout(5));
+          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
 
       // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)));
 
@@ -209,12 +209,12 @@ public class RobotContainer {
       // BUTTONS
 
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder));
-      new JoystickButton(auxButtonBoard, 7).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage));
+      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
 
       new JoystickButton(auxButtonBoard, 8)
-          .onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
       new JoystickButton(auxButtonBoard, 1)
-          .onTrue(new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, slider, carriage));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.EXTENDED;
