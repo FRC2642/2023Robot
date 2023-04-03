@@ -16,22 +16,20 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import frc.robot.commands.autonomous.fullAutos.BSCONEAutoCommand;
+import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
+import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
+import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.fullAutos.BALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
-import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
+import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
 import frc.robot.commands.autonomous.positionable.SetSliderCommand;
-import frc.robot.commands.autonomous.positionable.SetWristCommand;
-import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
-import frc.robot.commands.autonomous.fullAutos.BALANCEAutoCommand;
-import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopGripperCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopIntakeCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
 import frc.robot.commands.teleop.DriveCommands.JoystickOrientedDriveCommand;
 import frc.robot.commands.teleop.DriveCommands.TurnTowardsGamePieceCommand;
-import frc.robot.commands.teleop.DriveCommands.TurnTowardsVisionCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopCarriageCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopShoulderCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopSliderCommand;
@@ -130,10 +128,6 @@ public class RobotContainer {
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 
-    // mindsensors led class
-    //CANLight lights = new CANLight(Constants.LED_PORT);
-    
-    //leds.blink(1);
     // Button bindings
     
     CANdleConfiguration configAll = new CANdleConfiguration();
@@ -233,6 +227,20 @@ public class RobotContainer {
 
   public void testInit() {
 
+  }
+
+  private void configureButtonBindings() {
+  //  new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
+ //   new POVButton(mainControl, 180).whileTrue(new RampCommand(drive, VectorR.fromCartesian(0, 0), true));
+  //  new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
+  //  new JoystickButton(mainControl, Button.kA.value)
+ //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
+  //  new JoystickButton(mainControl, Button.kB.value).whileTrue(
+ //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
+ //   new JoystickButton(mainControl, Button.kX.value)
+ //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
+ //   new JoystickButton(mainControl, Button.kY.value).whileTrue(
+ //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
   }
 
   public Command getAutonomousCommand() {

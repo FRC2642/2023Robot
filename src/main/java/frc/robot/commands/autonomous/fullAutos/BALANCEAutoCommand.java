@@ -60,37 +60,25 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       
-     // new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
-     // new RunIntakeCommand(intake, -.4).withTimeout(1),
-     // new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
+      new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
+      new RunIntakeCommand(intake, -.4).withTimeout(1),
+      new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), -10, false).andThen(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), 10, true, 2, 0.3),
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.1, 0), 2, false, 2, 0.35),
        
-       // new DriveDistanceCommand(drive, VectorR.fromPolar(0.2, 0), 1.5),
+       
         new FollowPathCommand(drive, path, true, 0.0),
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.0, 180), 10, true, 3, 0.35),
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.2, 180), 7, false ,3, 0.15),
         new RunCommand(() -> drive.stop(), drive).withTimeout(0.5),
-        new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 0), 0.46)),
-     // ),
+        new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 0), 0.46))
+      ),
       new RunCommand(() -> {
         drive.setDefensiveMode(true);
         drive.stop();
       }, drive).withTimeout(1.0)
-/* 
-      new ConditionalCommand(
-        new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 180), 0.025), 
-        new ConditionalCommand(
-          new DriveDistanceCommand(drive, VectorR.fromPolar(0.125, 0), 0.025), 
-          new RunCommand(() -> {
-            drive.setDefensiveMode(true);
-            drive.stop();
-          }, drive), () -> DriveSubsystem.getRollDegrees() < -10), 
-        () -> DriveSubsystem.getRollDegrees() > 10)
 
-       */
-     // new DriveUpAndBalanceBackwardsCommand(drive) 
     ); 
   }
 }
