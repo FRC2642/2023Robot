@@ -49,14 +49,14 @@ public class TeleopWristCommand extends CommandBase {
     }
     else {
       
-    wrist.setSpeedLimit(0.3);
+    wrist.setSpeedLimit(0.4);
     
     if (auxControl.getRawButtonPressed(8)) wrist.set(WristPosition.DIAGONAL1);
     else if (auxControl.getRawButtonPressed(7)) wrist.set(WristPosition.DIAGONAL2);
 
       switch (auxControl.getPOV()) {
         case 0: {
-          wrist.set(WristPosition.HORIZONTAL2);
+          wrist.set(WristPosition.HORIZONTAL1);
           break;
         }
         case 90: {
@@ -68,7 +68,7 @@ public class TeleopWristCommand extends CommandBase {
           break;
         }
         case 180: {
-          wrist.set(WristPosition.HORIZONTAL1);
+          wrist.set(WristPosition.HORIZONTAL2);
           break;
         }
         default: {
