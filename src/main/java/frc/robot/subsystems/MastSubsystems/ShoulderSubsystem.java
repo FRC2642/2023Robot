@@ -120,9 +120,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
     STARTING_CONFIG(35),
     PICKUP_GROUND(MAX_DEGREES+10),
     PICKUP_HUMANPLAYER(20),
-    PLACE_CUBE_MID(180),
-    PLACE_CUBE_HIGH(150),
-    PLACE_CONE_MID(170),
+    PLACE_CONE_MID(160),
     PLACE_CONE_HIGH(MIN_DEGREES+30);
     public double angle;
 

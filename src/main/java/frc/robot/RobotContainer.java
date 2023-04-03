@@ -34,7 +34,6 @@ import frc.robot.commands.autonomous.positionable.SetSliderCommand;
 import frc.robot.commands.autonomous.positionable.SetWristCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.autonomous.drive.DriveFacingObjectCommand;
-import frc.robot.commands.autonomous.fullAutos.BSCUBEAutoCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopGripperCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopIntakeCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
@@ -210,6 +209,7 @@ public class RobotContainer {
       // BUTTONS
 
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder));
+      new JoystickButton(auxButtonBoard, 7).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage));
 
       new JoystickButton(auxButtonBoard, 8)
           .onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
