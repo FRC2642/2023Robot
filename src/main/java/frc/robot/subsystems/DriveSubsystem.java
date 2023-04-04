@@ -171,7 +171,7 @@ public class DriveSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
-   // modules.debugSmartDashboard();
+    modules.debugSmartDashboard();
 
     SmartDashboard.putNumber("pitch:", getPitchDegrees());
     SmartDashboard.putNumber("roll:", getRollDegrees());
@@ -179,8 +179,8 @@ public class DriveSubsystem extends SubsystemBase {
    // modules.debugSmartDashboard();
 
 
-   //  SmartDashboard.putNumber("x field", displacement.getX());
-  //   SmartDashboard.putNumber("y field", displacement.getY());
+     SmartDashboard.putNumber("x field", displacement.getX());
+     SmartDashboard.putNumber("y field", displacement.getY());
 
     // SmartDashboard.putNumber("distance [ft]",
     // getRelativeFieldPosition().getMagnitude());

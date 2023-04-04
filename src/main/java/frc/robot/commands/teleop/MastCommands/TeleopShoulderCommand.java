@@ -22,7 +22,7 @@ public class TeleopShoulderCommand extends CommandBase {
 
   @Override
   public void initialize() {
-    shoulder.setSpeedLimit(0.3);
+    shoulder.setSpeedLimit(0.4);
     shoulder.setRampRate(1);
   }
   @Override

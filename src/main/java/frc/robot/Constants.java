@@ -23,10 +23,10 @@ public final class Constants {
     public static final int AUX_BUTTON_BOARD_PORT = 2;
 
     // Swerve
-    public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 62.2, 1, -1, ModuleLocation.FRONT_RIGHT);
-    public static final SwerveModuleInfo FRONT_LEFT = new SwerveModuleInfo(2, 1, 11, 360, 66.7, 1, 1, ModuleLocation.FRONT_LEFT);
-    public static final SwerveModuleInfo BACK_RIGHT = new SwerveModuleInfo(6, 5, 13, 360, 287.9, -1, -1, ModuleLocation.BACK_RIGHT);
-    public static final SwerveModuleInfo BACK_LEFT = new SwerveModuleInfo(4, 9, 12, 360, 0.3, -1, 1, ModuleLocation.BACK_LEFT);
+    public static final SwerveModuleInfo FRONT_RIGHT = new SwerveModuleInfo(8, 7, 14, 360, 64.599, 1, -1, ModuleLocation.FRONT_RIGHT);
+    public static final SwerveModuleInfo FRONT_LEFT = new SwerveModuleInfo(2, 1, 11, 360, 67.5, 1, 1, ModuleLocation.FRONT_LEFT);
+    public static final SwerveModuleInfo BACK_RIGHT = new SwerveModuleInfo(6, 5, 13, 360, 288.28, -1, -1, ModuleLocation.BACK_RIGHT);
+    public static final SwerveModuleInfo BACK_LEFT = new SwerveModuleInfo(4, 9, 12, 360, 1.2304, -1, 1, ModuleLocation.BACK_LEFT);
 
     // Mast
     public static final int MAIN_SLIDER_MOTOR = 21;
@@ -42,7 +42,7 @@ public final class Constants {
     public static final int GRIPPER_SOLENOID_CHANNEL = 0;
 
     //LEDS
-    public static final int LED_PORT = 3;
+    public static final int LED_PORT = 17;
     public static final int LED_LENGTH = 60;
 
     // Other
