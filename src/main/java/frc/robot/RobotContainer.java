@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
+import frc.robot.commands.autonomous.fullAutos.BSBOTTOMLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.BSHIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.STOPBALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.TWOCUBESHOOTAutoCommand;
@@ -50,6 +51,7 @@ import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
@@ -65,11 +67,6 @@ import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 
-import com.ctre.phoenix.led.*;
-import com.ctre.phoenix.led.CANdle.LEDStripType;
-import com.ctre.phoenix.led.CANdle.VBatOutputMode;
-import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
-import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 
 public class RobotContainer {
   public final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
@@ -86,7 +83,8 @@ public class RobotContainer {
   public final SliderSubsystem slider = new SliderSubsystem();
   public final ShoulderSubsystem shoulder = new ShoulderSubsystem();
   public final ClawWristSubsystem wrist = new ClawWristSubsystem();
-  // private final LEDSubsystem leds = new LEDSubsystem();
+  public final LEDs leds = new LEDs();
+
 
   // AddressableLED led = new AddressableLED(3);
   // AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
@@ -137,6 +135,7 @@ public class RobotContainer {
      * wrist, intake, gripper));
      */
     autoChooser.addOption("Balance High Cube", new BALANCEAutoCommand(slider, gripper, drive, carriage, intake));
+    autoChooser.addOption("Low link", new BSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, clawLimelight));
     // autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new
     // BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist,
     // intake, gripper));
@@ -189,7 +188,7 @@ public class RobotContainer {
 
     if (!DEBUG) {
       new JoystickButton(auxControl, 1).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)))
+          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
               .withTimeout(5));
       // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)));
 
@@ -212,9 +211,9 @@ public class RobotContainer {
       new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
 
       new JoystickButton(auxButtonBoard, 8)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
       new JoystickButton(auxButtonBoard, 1)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.EXTENDED;

@@ -35,15 +35,16 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
     var shootFirstCube = paths.get(1);
     var getSecondCube = paths.get(2);
     var shootSecondCube = paths.get(3);
+    var goToField = paths.get(4);
 
     addCommands(
       new RunCommand(()->{
         shoulder.set(0.2);
       }, shoulder).withTimeout(0.5),
 
-      new RunIntakeCommand(intake, 0.2),
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage),
-      new RunIntakeCommand(intake, -0.5),
+      new RunIntakeCommand(intake, 0.2).raceWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage)),
+      new RunIntakeCommand(intake, -0.5).withTimeout(0.3),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(
         new FollowPathCommand(drive, getFirstCube, true, 0)
@@ -54,7 +55,7 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootFirstCube, false, 0.5).alongWith(
         new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage))
       ),
-      new RunIntakeCommand(intake, -0.5),
+      new RunIntakeCommand(intake, -0.5).withTimeout(0.3),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(
         new FollowPathCommand(drive, getSecondCube, false, 0.5)
@@ -65,7 +66,9 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
         new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage))
       ),
 
-      new RunIntakeCommand(intake, -0.5)
+      new RunIntakeCommand(intake, -0.5).withTimeout(0.3),
+
+      new FollowPathCommand(drive, goToField, false, 0.5)
       
 
     );

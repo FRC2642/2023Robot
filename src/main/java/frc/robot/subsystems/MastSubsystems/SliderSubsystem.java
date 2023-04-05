@@ -133,7 +133,7 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   public enum SliderPosition {
     MANUAL(0),
     RETRACTED(0),
-    PARTIALLY(0.7),
+    PARTIALLY(0.2),
     EXTENDED(1.0);
 
     public double extension;

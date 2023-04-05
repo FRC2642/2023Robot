@@ -25,12 +25,12 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public static final double DEGREES_PER_TICK = 180d/22d;
   public static final double MAX_DEGREES = 280d;
   public static final double MIN_DEGREES = 27d;
-  public static final double AT_SETPOINT_THRESHOLD = 2d;
+  public static final double AT_SETPOINT_THRESHOLD = 1d;
 
   private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
   private static RelativeEncoder wristEncoder;
   
-  private final PIDController wristPIDController = new PIDController/*(0.02, 0.02, 0.0);*/(0.02, 0.002, 0.0);
+  private final PIDController wristPIDController = new PIDController/*(0.02, 0.02, 0.0);*/(0.02, 0.008, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
