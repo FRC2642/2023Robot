@@ -43,7 +43,7 @@ public final class Constants {
 
     //LEDS
     public static final int LED_PORT = 17;
-    public static final int LED_LENGTH = 60;
+    public static final int LED_LENGTH = 194;
 
     // Other
     public static final String TEST_PATH = "New New New Path.wpilib.json";

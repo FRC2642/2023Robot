@@ -1,30 +1,26 @@
 /* The 2023 Prayer
  * 
+ * To Kyle, whose code will never be perfect enough and will always be rewritten
+ * To Thomas, and the uh-oh button that never was
+ * To Kaiji, who worked on complex image processing code that came up a little short compared to a $400 limelight
+ * To Alec, thank you for rewriting Black Pearl for us to use
  * 
  * 
+ * To Arianna, who left to join the scouting team
+ * To Saline, who left to join the engineering team
+ * To Hadleigh, who left to join the design team
  * 
+ * To everyone else, whose code was rewritten a hundred times over
  * 
+ * RIP Thin Mints, which were only eaten once
+ * RIP Uh-oh button, which was so close to becoming a reality
+ * RIP Joonoh's Claw prototypes 1-58, 59 was better
  * 
+ * Thank you limelight, for being a gamechanger for us while also being a pain in the butt
+ * Thank you swerve modules, for not having to have wheel watchers to work correctly
+ * Thank you path planner, for allowing us to create a 34 cube auto 
  * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
- * 
+ * And finally, to robot.go(), which was not accepted by everyone and was deleted forever
  * 
  */
 
@@ -54,11 +50,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
-import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
-import frc.robot.utils.MathR;
 
 /**
  * The VM is configured to automatically run this class, and to call the
