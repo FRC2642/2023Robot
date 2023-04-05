@@ -40,8 +40,8 @@ public class PiratePath extends TreeSet<PiratePoint> {
     /*
      * Creates an empty path
      */
-    public PiratePath() {
-        allianceDependent = false;
+    public PiratePath(boolean allianceDependent) {
+        this.allianceDependent = allianceDependent;
         name = "unnamed";
     }
 
@@ -87,7 +87,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
 
     public PiratePath getBlueAlliance() {
 
-        PiratePath bluePath = new PiratePath();
+        PiratePath bluePath = new PiratePath(true);
         bluePath.name = "BLUE " + this.name;
 
         for (var pt : this) {
@@ -103,14 +103,14 @@ public class PiratePath extends TreeSet<PiratePoint> {
     public ArrayList<PiratePath> getSubPaths() {
         ArrayList<PiratePath> paths = new ArrayList<>();
 
-        PiratePath current = new PiratePath();
+        PiratePath current = new PiratePath(true);
         int index = 0;
         for (var pt : this) {
             current.add(pt);
             if (pt.stopPoint && pt.time != 0.0) {
                 current.name = this.name + "[" + index + "]";
                 paths.add(current);
-                current = new PiratePath();
+                current = new PiratePath(true);
                 index++;
             }
         }

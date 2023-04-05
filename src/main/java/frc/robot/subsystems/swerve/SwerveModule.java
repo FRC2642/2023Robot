@@ -23,7 +23,7 @@ public class SwerveModule {
   // HARDWARE
   public final WPI_TalonFX angleMotor;
   private final WPI_TalonFX driveMotor;
-  private final CANCoder orientationEncoder;
+  public final CANCoder orientationEncoder;
 
   // INFORMATION
   public final SwerveModuleInfo info;

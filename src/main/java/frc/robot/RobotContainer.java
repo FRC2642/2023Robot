@@ -19,12 +19,21 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.drive.DriveDirectionCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
-import frc.robot.commands.autonomous.fullAutos.BALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.ScoreAndTaxiAuto;
+import frc.robot.commands.autonomous.fullAutos.TWOCUBESHOOTAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.BALANCEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCONEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCUBEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.RSHIGHCUBEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.real.STOPBALANCEAutoCommand;
+import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
 import frc.robot.commands.autonomous.positionable.SetSliderCommand;
+import frc.robot.commands.autonomous.positionable.SetWristCommand;
+import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
+import frc.robot.commands.autonomous.drive.DriveFacingObjectCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopGripperCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopIntakeCommand;
 import frc.robot.commands.teleop.ClawCommands.TeleopWristCommand;
@@ -63,44 +72,44 @@ import com.ctre.phoenix.led.ColorFlowAnimation.Direction;
 import com.ctre.phoenix.led.LarsonAnimation.BounceMode;
 
 public class RobotContainer {
-  private final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
-  private final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
+  public final XboxController mainControl = new XboxController(Constants.DRIVE_CONTROL_PORT);
+  public final XboxController auxControl = new XboxController(Constants.AUX_CONTROL_PORT);
   public final Joystick auxButtonBoard = new Joystick(Constants.AUX_BUTTON_BOARD_PORT);
 
-  private final DriveSubsystem drive = new DriveSubsystem();
-  private final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight");
-  //private final LimelightSubsystem poleLimelight = new LimelightSubsystem("polelimelight");
-  
-  private final ClawGripperSubsystem gripper = new ClawGripperSubsystem();
-  private final CarriageSubsystem carriage = new CarriageSubsystem();
-  private final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
-  private final SliderSubsystem slider = new SliderSubsystem();
-  private final ShoulderSubsystem shoulder = new ShoulderSubsystem();
-  private final ClawWristSubsystem wrist = new ClawWristSubsystem();
-  //private final LEDSubsystem leds = new LEDSubsystem();
-  private final CANdle candle = new CANdle(0);
-  private final int ledCount = 68;
-  private final Animation rainbowAnimation = new RainbowAnimation(0.7, 0.8, ledCount);
-  private final Animation blueAllianceLarsonAnimation = new LarsonAnimation(0, 0, 255, 0, 0.99, ledCount, BounceMode.Back, 7);
-  private final Animation redAllianceLarsonAnimation = new LarsonAnimation(255, 0, 0, 0, 0.99, ledCount, BounceMode.Back, 7); 
-  //AddressableLED led = new AddressableLED(3);
-  //AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
+  public final DriveSubsystem drive = new DriveSubsystem();
+  public final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight-back");
+  public final LimelightSubsystem poleLimelight = new LimelightSubsystem("limelight-front");
 
-  private final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  private final PiratePath taxiPath = new PiratePath();
+  public final ClawGripperSubsystem gripper = new ClawGripperSubsystem();
+  public final CarriageSubsystem carriage = new CarriageSubsystem();
+  public final ClawIntakeSubsystem intake = new ClawIntakeSubsystem();
+  public final SliderSubsystem slider = new SliderSubsystem();
+  public final ShoulderSubsystem shoulder = new ShoulderSubsystem();
+  public final ClawWristSubsystem wrist = new ClawWristSubsystem();
+  // private final LEDSubsystem leds = new LEDSubsystem();
+
+  // AddressableLED led = new AddressableLED(3);
+  // AddressableLEDBuffer buffer = new AddressableLEDBuffer(1);
+
+  public final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
+  public final PiratePath taxiPath = new PiratePath(false);
 
   public static boolean DEBUG = false;
 
-  //public static final AddressableLED leds = new AddressableLED(Constants.LED_PORT);
-  //private final AddressableLEDBuffer buffer = new AddressableLEDBuffer(Constants.LED_LENGTH);
+  // public static final AddressableLED leds = new
+  // AddressableLED(Constants.LED_PORT);
+  // private final AddressableLEDBuffer buffer = new
+  // AddressableLEDBuffer(Constants.LED_LENGTH);
 
   // private final ASCUBEAutoCommand auto_1_ASCUBE;
 
   public RobotContainer() {
 
-    /*leds.setLength(buffer.getLength());
-    leds.setData(buffer);
-    leds.start();*/
+    /*
+     * leds.setLength(buffer.getLength());
+     * leds.setData(buffer);
+     * leds.start();
+     */
     taxiPath.add(new PiratePoint(0, 0, 180, 0, false));
     taxiPath.add(new PiratePoint(14.5, 0, 180, 8, false));
     taxiPath.fillWithSubPointsEasing(0.01, Functions.easeInOutCubic);
@@ -112,32 +121,40 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
-    autoChooser.addOption("Mobility High Cube", new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
-    /*autoChooser.addOption("[BSCUBE] Barrier Side Cube",
-        new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
-    autoChooser.addOption("[RSCUBE] Rail Side Cube",
-        new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));*/
-    autoChooser.addOption("Balance High Cube", new BALANCEAutoCommand(slider, gripper, drive, carriage, intake));//.alongWith(new RunCommand(() -> shoulder.set(ShoulderPosition.STARTING_CONFIG), shoulder)));
-    //autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist, intake, gripper));
+    autoChooser.addOption("Mobility High Cube",
+        new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
+   // autoChooser.addOption("Three Cube", new TWOCUBESHOOTAutoCommand(drive));
+    
+  //  autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    autoChooser.addOption("RS (Bump Side) High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    autoChooser.addOption("BS High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    /*
+     * autoChooser.addOption("[BSCUBE] Barrier Side Cube",
+     * new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder,
+     * wrist, intake, gripper));
+     * autoChooser.addOption("[RSCUBE] Rail Side Cube",
+     * new BSCONEAutoCommand(drive, clawLimelight, carriage, slider, shoulder,
+     * wrist, intake, gripper));
+     */
+    autoChooser.addOption("Balance High Cube", new BALANCEAutoCommand(slider, gripper, drive, carriage, intake));
+    // autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new
+    // BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist,
+    // intake, gripper));
     // SmartDashboard
     SmartDashboard.putData(autoChooser);
 
     SmartDashboard.putData(new ResetWristEncoderCommand(WristPosition.HORIZONTAL1));
-    //SmartDashboard.putData(new ResetGyroCommand(0.0));
-   // SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
+    // SmartDashboard.putData(new ResetGyroCommand(0.0));
+    // SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 
+    // mindsensors led class
+    // CANLight lights = new CANLight(Constants.LED_PORT);
+
+    // leds.blink(1);
     // Button bindings
-    
-    CANdleConfiguration configAll = new CANdleConfiguration();
-    configAll.statusLedOffWhenActive = true;
-    configAll.disableWhenLOS = false;
-    configAll.stripType = LEDStripType.RGB;
-    configAll.brightnessScalar = 0.1;
-    configAll.vBatOutputMode = VBatOutputMode.Modulated;
-    candle.configAllSettings(configAll, 100);
-   
+
   }
 
   public void autonomousInit() {
@@ -150,45 +167,54 @@ public class RobotContainer {
   }
 
   public void teleopInit() {
-  //  led.setData(buffer);
-   // led.start();
-   // for (int i = 0; i < buffer.getLength(); i++) {
-   //   buffer.setRGB(i, 50, 205, 50);
-   // }
+    // led.setData(buffer);
+    // led.start();
+    // for (int i = 0; i < buffer.getLength(); i++) {
+    // buffer.setRGB(i, 50, 205, 50);
+    // }
 
-   // leds.blink(2);
-    /*for (int i = 0; i < buffer.getLength(); i++){
-      buffer.setRGB(i, 120, 190, 33);
-    }
-    leds.setData(buffer);*/
+    // leds.blink(2);
+    /*
+     * for (int i = 0; i < buffer.getLength(); i++){
+     * buffer.setRGB(i, 120, 190, 33);
+     * }
+     * leds.setData(buffer);
+     */
     CommandScheduler.getInstance().cancelAll();
     SmartDashboard.putData("Starting Config", new SetShoulderCommand(shoulder, () -> ShoulderPosition.STARTING_CONFIG));
-    // SmartDashboard.putData(new SetCarriageCommand(carriage,
-    // CarriagePosition.EXTENDED));
+    // SmartDashboard.putData("EXTEND", new SetSliderCommand(slider, () -> SliderPosition.EXTENDED));
+   //  SmartDashboard.putData("RECTRACT", new SetSliderCommand(slider, () -> SliderPosition.RETRACTED));
     // SmartDashboard.putData(new SetWristCommand(wrist,
     // WristPosition.HORIZONTAL1));
 
-    if (!DEBUG) {  
+    if (!DEBUG) {
       new JoystickButton(auxControl, 1).onTrue(
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).withTimeout(5));
-     // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)));
+          new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage)
+              .withTimeout(5));
+      // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)));
 
       new JoystickButton(auxControl, 2).onTrue(
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).withTimeout(5));
-      
-    //  .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)));
+          new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).withTimeout(5));
+
+      // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)));
 
       drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
       gripper.setDefaultCommand(new TeleopGripperCommand(gripper, auxControl));
       carriage.setDefaultCommand(new TeleopCarriageCommand(carriage, auxControl));
       intake.setDefaultCommand(new TeleopIntakeCommand(intake, auxControl));
-      slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));   
+      slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));
       shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
-      
-      //BUTTONS
-      new JoystickButton(auxButtonBoard, 8).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
-      new JoystickButton(auxButtonBoard, 1).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, slider, carriage));
+
+      // BUTTONS
+
+      new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder));
+      new JoystickButton(auxButtonBoard, 7).onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage));
+
+      new JoystickButton(auxButtonBoard, 8)
+          .onTrue(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage));
+      new JoystickButton(auxButtonBoard, 1)
+          .onTrue(new SetRobotConfigurationCommand(RobotConfiguration.STARTING_CONFIG, shoulder, slider, carriage));
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.EXTENDED;
@@ -201,21 +227,22 @@ public class RobotContainer {
         SliderSubsystem.protectionEnabled = true;
         return SliderSubsystem.currentSetPosition;
       }));
-    new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(180));
- //   new JoystickButton(mainControl, Button.kA.value)
-//    .whileTrue(new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.CONE));
-//new JoystickButton(mainControl, Button.kB.value).whileTrue(
- //   new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
-//new JoystickButton(mainControl, Button.kX.value)
-   // .whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.CONE, mainControl));
- //new JoystickButton(mainControl, Button.kY.value).whileTrue(
-   // new TurnTowardsVisionCommand(drive, clawLimelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
+      new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(180).andThen(new ResetDisplacementCommand(new VectorR())));
+      
+      new JoystickButton(mainControl, Button.kX.value)
+          .whileTrue(
+              new TurnTowardsGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, mainControl));
 
-
-      //NEW LIMELIGHT CODE
-      new JoystickButton(mainControl, Button.kY.value).whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.RETROREFLECTIVE, mainControl));
-    }
-    else {
+      new JoystickButton(mainControl, Button.kB.value)
+      .whileTrue(
+          new TurnTowardsGamePieceCommand(drive, poleLimelight, LimelightSubsystem.DetectionType.CONE, mainControl));
+      
+      new JoystickButton(mainControl, Button.kA.value)
+          .whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.CUBE, mainControl));
+      // NEW LIMELIGHT CODE
+      new JoystickButton(mainControl, Button.kY.value)
+          .whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));
+    } else {
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
       carriage.setDefaultCommand(new RunCommand(() -> carriage.setManual(-1 * mainControl.getRightY()), carriage));
       slider.setDefaultCommand(new RunCommand(() -> slider.setManual(-1 * mainControl.getLeftY()), slider));
@@ -229,21 +256,8 @@ public class RobotContainer {
 
   }
 
-  private void configureButtonBindings() {
-  //  new POVButton(mainControl, 0).whileTrue(new ResetGyro(drive));
- //   new POVButton(mainControl, 180).whileTrue(new RampCommand(drive, VectorR.fromCartesian(0, 0), true));
-  //  new POVButton(mainControl, 270).whileTrue(new ToggleStopDefensivelyCommand(drive));
-  //  new JoystickButton(mainControl, Button.kA.value)
- //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CONE));
-  //  new JoystickButton(mainControl, Button.kB.value).whileTrue(
- //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.FIDUCIAL));
- //   new JoystickButton(mainControl, Button.kX.value)
- //       .whileTrue(new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.CUBE));
- //   new JoystickButton(mainControl, Button.kY.value).whileTrue(
- //       new TurnTowardsVisionCommand(drive, limelight, mainControl, LimelightSubsystem.DetectionType.RETROREFLECTIVE));
-  }
-
   public Command getAutonomousCommand() {
     return autoChooser.getSelected();
+
   }
 }

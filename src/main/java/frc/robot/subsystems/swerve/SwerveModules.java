@@ -48,11 +48,11 @@ public class SwerveModules implements Iterable<SwerveModule> {
 
    
   public void debugSmartDashboard() {
-    /*  SmartDashboard.putNumber("FR", frontRight.driveMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("FL", frontLeft.driveMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("BR", backRight.driveMotor.getSelectedSensorPosition());
-    SmartDashboard.putNumber("BL", backLeft.driveMotor.getSelectedSensorPosition());
-
+    SmartDashboard.putNumber("FR", frontRight.orientationEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("FL", frontLeft.orientationEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("BR", backRight.orientationEncoder.getAbsolutePosition());
+    SmartDashboard.putNumber("BL", backLeft.orientationEncoder.getAbsolutePosition());
+/* 
     SmartDashboard.putNumber("FR heading", frontRight.getWheelOrientationDegrees());
     SmartDashboard.putNumber("FL heading", frontLeft.getWheelOrientationDegrees());
     SmartDashboard.putNumber("BR heading", backRight.getWheelOrientationDegrees());
