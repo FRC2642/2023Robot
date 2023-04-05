@@ -68,7 +68,7 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
 
       new RunIntakeCommand(intake, -0.5).withTimeout(0.3),
 
-      new FollowPathCommand(drive, goToField, false, 0.5)
+      new FollowPathCommand(drive, goToField, false, 0.5).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage))
       
 
     );

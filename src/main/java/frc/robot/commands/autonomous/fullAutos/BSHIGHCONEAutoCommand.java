@@ -30,7 +30,7 @@ import frc.robot.utils.Easings.Functions;
 public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
   /** Creates a new TWOCUBESHOOTAutoCommand. */
   public BSHIGHCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders) {
-    PiratePath path = new PiratePath("PICKUP");
+    PiratePath path = new PiratePath("BSCONE");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
 
