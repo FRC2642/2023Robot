@@ -135,7 +135,7 @@ public class RobotContainer {
      * wrist, intake, gripper));
      */
     autoChooser.addOption("Balance High Cube", new BALANCEAutoCommand(slider, gripper, drive, carriage, intake));
-    autoChooser.addOption("Low link", new BSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, clawLimelight));
+    autoChooser.addOption("Flat Side 3 Low Cube", new BSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, clawLimelight));
     // autoChooser.addOption("[BSCUBE] Barrier Side 2 Cubes", new
     // BSCUBEAutoCommand(drive, clawLimelight, carriage, slider, shoulder, wrist,
     // intake, gripper));
@@ -193,7 +193,7 @@ public class RobotContainer {
       // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1)));
 
       new JoystickButton(auxControl, 2).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
+          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
 
       // .raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)));
 
