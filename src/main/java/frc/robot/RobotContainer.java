@@ -96,11 +96,11 @@ public class RobotContainer {
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
     autoChooser.addOption("Mobility High Cube",
         new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
-    autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
+    autoChooser.addOption("BS High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider, wrist));
     autoChooser.addOption("Bump Side High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
     autoChooser.addOption("Flat Side High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider));
     autoChooser.addOption("Balance High Cube", new BALANCEAutoCommand(slider, gripper, drive, carriage, intake));
-    autoChooser.addOption("Flat Side 3 Low Cube", new BSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, clawLimelight));
+    autoChooser.addOption("Flat Side 3 Low Cube", new BSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, gripper, clawLimelight));
 
     SmartDashboard.putData(autoChooser);
 
@@ -116,7 +116,7 @@ public class RobotContainer {
     drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
     carriage.setDefaultCommand(new RunCommand(() -> carriage.set(0.0), carriage));
     slider.setDefaultCommand(new RunCommand(() -> slider.set(0.0), slider));
-    wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
+    wrist.setDefaultCommand(new RunCommand(() -> wrist.set(), wrist));
     shoulder.setDefaultCommand(new RunCommand(() -> shoulder.set(0.0), shoulder));
     intake.setDefaultCommand(new RunCommand(() -> intake.set(0.0), intake));
   }
@@ -126,14 +126,6 @@ public class RobotContainer {
     SmartDashboard.putData("Starting Config", new SetShoulderCommand(shoulder, () -> ShoulderPosition.TRAVEL_MODE));
 
     if (!DEBUG) {
-      new JoystickButton(auxControl, 1).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
-              .withTimeout(5));
-     
-      new JoystickButton(auxControl, 2).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
-
-      
       drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
       gripper.setDefaultCommand(new TeleopGripperCommand(gripper, auxControl));
       carriage.setDefaultCommand(new TeleopCarriageCommand(carriage, auxControl));
@@ -141,9 +133,17 @@ public class RobotContainer {
       slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));
       shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
+      leds.setDefaultCommand(new SetLEDsCommand(leds, ()->LEDPattern.RAINBOW));
 
       // BUTTONS
 
+      //Fully extend button
+      new JoystickButton(auxControl, 1).onTrue(
+          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
+              .withTimeout(5));
+      //Fully retract button
+      new JoystickButton(auxControl, 2).onTrue(
+          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
       //Override button
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder));
       //Mid cone button
@@ -192,7 +192,7 @@ public class RobotContainer {
       wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
       shoulder.setDefaultCommand(new RunCommand(() -> shoulder.setManual(-1 * auxControl.getLeftY() * .35), shoulder));
       intake.setDefaultCommand(new RunCommand(() -> intake.set(0.0), intake));
-      leds.setDefaultCommand(new SetLEDsCommand(leds, ()->LEDPattern.RAINBOW));
+      
     }
   }
 

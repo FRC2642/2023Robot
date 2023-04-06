@@ -4,18 +4,27 @@
 
 package frc.robot.commands.autonomous.claw;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 
 public class EndWhenObjectInClawCommand extends CommandBase {
-  private final boolean endInClaw;
+  
+  private double secondsToWait;
+  private Timer timer = new Timer();
 
-  public EndWhenObjectInClawCommand(boolean endInClaw) {
-    this.endInClaw = endInClaw;
+  public EndWhenObjectInClawCommand(double secondsToWait) {
+    this.secondsToWait = secondsToWait;
+  }
+
+  @Override
+  public void initialize(){
+    timer.reset();
+    timer.start();
   }
   
   @Override
   public boolean isFinished() {
-    return endInClaw && ClawIntakeSubsystem.isObjectInClaw();
+    return timer.get() > secondsToWait && ClawIntakeSubsystem.isObjectInClaw();
   }
 }

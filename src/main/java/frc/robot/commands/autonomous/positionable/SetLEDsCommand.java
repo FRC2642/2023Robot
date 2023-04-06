@@ -17,6 +17,7 @@ public class SetLEDsCommand extends CommandBase {
   public SetLEDsCommand(LEDs leds, Supplier<LEDPattern> pattern) {
     this.leds = leds;
     this.pattern = pattern;
+    addRequirements(leds);
   }
 
   // Called when the command is initially scheduled.
@@ -36,6 +37,6 @@ public class SetLEDsCommand extends CommandBase {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

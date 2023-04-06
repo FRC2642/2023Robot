@@ -30,6 +30,8 @@ public class DriveFacingObjectCommand extends DriveDirectionCommand {
     if (camera.isDetection && camera.confidence() > 0.5) {
       heading = DriveSubsystem.getYawDegrees() - camera.x;
     }
+
+    velocity.setAngle(heading+180);
     
     super.execute();
   }

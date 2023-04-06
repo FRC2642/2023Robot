@@ -5,6 +5,7 @@
 package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxLimitSwitch;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxLimitSwitch.Type;
@@ -17,8 +18,10 @@ import frc.robot.Constants;
 
 public class ClawIntakeSubsystem extends SubsystemBase {
   
-  private final CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
+  private static final CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
+  private static final RelativeEncoder encoder = intake.getEncoder();
   private static SparkMaxLimitSwitch intakeLimitSwitch;
+  private static double speed;
   
   public ClawIntakeSubsystem() {
     intake.setInverted(false);
@@ -27,18 +30,17 @@ public class ClawIntakeSubsystem extends SubsystemBase {
 
   //Positive = intake, Negative = outake
   public void set(double speed) {
+    this.speed = speed;
     intake.set(speed);
- //   System.out.println("CLAW SPEED: " + speed);
   }
 
+
   public static boolean isObjectInClaw(){
-    return intakeLimitSwitch.isPressed();
+    return encoder.getVelocity() <= 1 && speed > 0.1;
   }
 
   @Override
   public void periodic() {
     SmartDashboard.putBoolean("Object In Claw", isObjectInClaw());
-   //if (getCurrentCommand() != null) SmartDashboard.putString("COMMAND", getCurrentCommand().getName() );
-    // This method will be called once per scheduler run
   }
 }

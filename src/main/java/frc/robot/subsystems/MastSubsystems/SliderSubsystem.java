@@ -67,17 +67,9 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
       }
     }
 
-    
-
-
     if (speed == 0.0) brake.set(true);
     else brake.set(false);
 
-    /*if (ShoulderSubsystem.getShoulderAngle() <= 180) 
-      sliderMotor.set(speed);
-    else{
-      sliderMotor.set(0.0);
-    }*/
     sliderMotor.set(speed);
   }
   

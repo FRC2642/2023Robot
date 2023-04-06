@@ -37,6 +37,6 @@ public class SetWristCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return wrist.atSetPosition();
+    return false;
   }
 }

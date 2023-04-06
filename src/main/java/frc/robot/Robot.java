@@ -91,7 +91,6 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void robotPeriodic() {
-    
     RobotContainer.DEBUG = (int)SmartDashboard.getNumber("DEBUG MODE", 0) != 0;
     // Runs the Scheduler. This is responsible for polling buttons, adding
     // newly-scheduled
@@ -136,6 +135,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during autonomous. */
   @Override
   public void autonomousPeriodic() {
+
   }
 
   @Override

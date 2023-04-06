@@ -55,7 +55,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     currentSetPosition = CarriagePosition.MANUAL;
 
     
-    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
+    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || speed < 0 && ShoulderSubsystem.getShoulderAngle() < 30) {
        speed = 0.0;
     }
     

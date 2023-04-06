@@ -21,7 +21,7 @@ public class IntakeObjectCommand extends SequentialCommandGroup {
     
     addCommands(
       new OpenCloseClawCommand(claw, true),
-      new RunIntakeCommand(intake, 0.5).raceWith(new EndWhenObjectInClawCommand(true))
+      new RunIntakeCommand(intake, 0.5).raceWith(new EndWhenObjectInClawCommand(0))
     );
     if (object == GamePieceType.CONE) addCommands(
       new OpenCloseClawCommand(claw, false),

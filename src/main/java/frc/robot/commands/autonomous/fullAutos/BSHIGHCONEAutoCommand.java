@@ -4,23 +4,34 @@
 
 package frc.robot.commands.autonomous.fullAutos;
 
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.autonomous.claw.EndWhenObjectInClawCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
 import frc.robot.commands.autonomous.drive.DriveFacingObjectCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
+import frc.robot.commands.autonomous.positionable.SetWristCommand;
+import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
+import frc.robot.commands.teleop.resetters.ResetGyroCommand;
+import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
+import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
+import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
 import frc.robot.utils.VectorR;
 import frc.robot.utils.Easings.Functions;
 
@@ -29,7 +40,7 @@ import frc.robot.utils.Easings.Functions;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
   /** Creates a new TWOCUBESHOOTAutoCommand. */
-  public BSHIGHCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders) {
+  public BSHIGHCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders, ClawWristSubsystem wrist) {
     PiratePath path = new PiratePath("BSCONE");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
@@ -39,25 +50,35 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
     var driveToCone = paths.get(2);
 
     addCommands(
+      new InstantCommand(() -> {
+        drive.setDefensiveMode(true);
+      }, drive),
+      new ResetGyroCommand(180),
+      new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
+      new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
+      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
+
+
       new RunCommand(()->{
         shoulder.set(0.2);
-      }, shoulder).withTimeout(0.5),
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage),
+      }, shoulder).withTimeout(0.8),
+      new OpenCloseClawCommand(gripper, false),
+      new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL2).raceWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage)),
+
       new OpenCloseClawCommand(gripper, true),
-      new WaitCommand(1),
+      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage),
+      new FollowPathCommand(drive, driveToCube, true, 0).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)),
+    
+      (new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.25, 0)).withTimeout(2).raceWith(new RunIntakeCommand(intake, 0.4), new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1))).raceWith(new EndWhenObjectInClawCommand(0.5)),
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage).alongWith(
+        new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2), new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1)),
+      
+      new RunIntakeCommand(intake, -0.3).withTimeout(0.3),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
-        new FollowPathCommand(drive, driveToCube, true, 0)),
-      
-      new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(2).raceWith(new RunIntakeCommand(intake, 0.4)),
-      
-      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage).alongWith(
-        new FollowPathCommand(drive, driveBackToPlace, false, 0.5)),
-      
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage),
-      new RunIntakeCommand(intake, -0.5),
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
-        new FollowPathCommand(drive, driveToCone, false, 0.5)
-      )
+        new FollowPathCommand(drive, driveToCone, false, 0.5), new OpenCloseClawCommand(gripper, false)
+      ).raceWith(new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1))
     );
   }
 }
