@@ -139,21 +139,22 @@ public class RobotContainer {
 
       //Fully extend button
       new JoystickButton(auxControl, 1).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
+          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
               .withTimeout(5));
       //Fully retract button
       new JoystickButton(auxControl, 2).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
+          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
       //Override button
-      new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder));
+      new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
       //Mid cone button
-      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5).alongWith(new SetLEDsCommand(leds, ()->LEDPattern.STROBE_YELLOW)));
+      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).alongWith(new SetLEDsCommand(leds, ()->LEDPattern.STROBE_YELLOW)));
       //Human button
       new JoystickButton(auxButtonBoard, 8)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).withTimeout(5));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));
+      //Travel button
       new JoystickButton(auxButtonBoard, 1)
+        .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
       //Extend slider button
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))).withTimeout(5));
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.EXTENDED;
@@ -170,7 +171,6 @@ public class RobotContainer {
       }));
       //Reset Gyro D-Pad
       new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(180).andThen(new ResetDisplacementCommand(new VectorR())));
-      
       //Floor cone detection
       new JoystickButton(mainControl, Button.kX.value)
           .whileTrue(

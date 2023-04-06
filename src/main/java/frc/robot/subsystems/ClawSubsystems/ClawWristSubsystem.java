@@ -10,6 +10,8 @@ import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.interfaces.IPositionable;
 import frc.robot.utils.MathR;
 
@@ -54,9 +56,13 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   //Positive = CCW, negative = CW
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
-    wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
-    //SmartDashboard.putNumber("wrist speed", wristMotor.get());
-    //SmartDashboard.putNumber("wrist convo", wristEncoder.getPositionConversionFactor());
+
+    if (ShoulderSubsystem.getShoulderAngle() <= 30 && CarriageSubsystem.getCarriageExtension() <= 0.2){
+      wristMotor.set(0.0);
+    }
+    else{
+      wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
+    }
     
   }
 
@@ -64,7 +70,6 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
     currentSetPosition = pos;
     if (!atSetPosition()) set(wristPIDController.calculate(getWristAngle(), pos.angle));
     else set(0.0);
-  //  System.out.println("cur: " + getWristAngle() + " des: " + pos.angle + " pow: " + wristMotor.get());
     currentSetPosition = pos;
   }
   

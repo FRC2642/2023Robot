@@ -74,7 +74,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     return bottomLimitSwitch.isPressed();
   }
 
-  public double getCarriageExtension() {
+  public static double getCarriageExtension() {
     return carriageEncoder.getPosition();
   }
 
