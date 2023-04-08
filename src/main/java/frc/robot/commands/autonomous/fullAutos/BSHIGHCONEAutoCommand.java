@@ -68,9 +68,9 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       new OpenCloseClawCommand(gripper, true),
       new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage),
         
-      new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.15, 2.5, intake, 0.4, gripper).alongWith(
+      new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.15, 2.5).alongWith(
         new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)).raceWith(
-          new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1)),
+          new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1), new RunIntakeCommand(intake, 0.4)),
         
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage).alongWith(

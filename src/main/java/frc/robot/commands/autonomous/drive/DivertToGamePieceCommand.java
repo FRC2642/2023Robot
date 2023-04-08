@@ -23,11 +23,9 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   double visionSpeed;
   double timeAfterStartToDivert;
   Timer visionTimer = new Timer();
-  ClawIntakeSubsystem intake;
-  double intakeSpeed;
-  ClawGripperSubsystem gripper;
+  
 
-  public DivertToGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType object, PiratePath path, boolean recenterDisplacementToFirstPoint, double additionalLookaheadTime, double visionSpeed, double timeAfterStartToDivert, ClawIntakeSubsystem intake, double intakeSpeed, ClawGripperSubsystem gripper) {
+  public DivertToGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType object, PiratePath path, boolean recenterDisplacementToFirstPoint, double additionalLookaheadTime, double visionSpeed, double timeAfterStartToDivert) {
     super(drive, path, recenterDisplacementToFirstPoint, additionalLookaheadTime);
     this.drive = drive;
     this.limelight = limelight;
@@ -35,9 +33,6 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
     this.path = path;
     this.visionSpeed = visionSpeed;
     this.timeAfterStartToDivert = timeAfterStartToDivert;
-    this.intake = intake;
-    this.gripper = gripper;
-    this.intakeSpeed = intakeSpeed;
     addRequirements(drive);
   }
 
@@ -55,8 +50,6 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   public void execute() {
     
     if (visionTimer.get() > timeAfterStartToDivert && limelight.isDetection && limelight.confidence() > 1){
-      gripper.set(object == LimelightSubsystem.DetectionType.CUBE);
-      intake.set(intakeSpeed);
       drive.move(VectorR.fromPolar(visionSpeed, DriveSubsystem.getYawDegrees() + limelight.x + 180), MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25));
     }
     else{
