@@ -22,7 +22,7 @@ public class SetSliderCommand extends CommandBase {
   @Override
   public void initialize() {
     sliders.setSpeedLimit(1.0);
-    sliders.setRampRate(1);
+    sliders.setRampRate(0.25);
   }
   
   @Override

@@ -104,7 +104,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putBoolean("RED", DriverStation.getAlliance() == Alliance.Red);
     SmartDashboard.putBoolean("BLUE", DriverStation.getAlliance() == Alliance.Blue);
 
-    if (Math.abs(m_robotContainer.auxControl.getLeftY()) > 0.1 && m_robotContainer.shoulder.getCurrentCommand().getName() != m_robotContainer.shoulder.getDefaultCommand().getName()) m_robotContainer.shoulder.getCurrentCommand().cancel();
+    if (m_robotContainer.shoulder.getCurrentCommand() != null && Math.abs(m_robotContainer.auxControl.getLeftY()) > 0.1 && m_robotContainer.shoulder.getCurrentCommand().getName() != m_robotContainer.shoulder.getDefaultCommand().getName()) m_robotContainer.shoulder.getCurrentCommand().cancel();
+    if (m_robotContainer.wrist.getCurrentCommand() != null && (m_robotContainer.auxControl.getXButton() == true || m_robotContainer.auxControl.getYButton() == true) && m_robotContainer.wrist.getCurrentCommand().getName() != m_robotContainer.wrist.getDefaultCommand().getName()) m_robotContainer.wrist.getCurrentCommand().cancel();
     CommandScheduler.getInstance().run();
   }
 

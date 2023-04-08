@@ -55,7 +55,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     currentSetPosition = CarriagePosition.MANUAL;
 
     
-    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || speed < 0 && ShoulderSubsystem.getShoulderAngle() < 30) {
+    if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180) || speed < 0 && ShoulderSubsystem.getShoulderAngle() < 20) {
        speed = 0.0;
     }
     
@@ -125,6 +125,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   public enum CarriagePosition {
     EXTENDED(1),
     RETRACTED(0),
+    CHUTE(0.25),
     MANUAL(-1);
 
     public final double extension;

@@ -2,7 +2,7 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.teleop.DriveCommands;
+package frc.robot.commands.autonomous.drive;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,20 +13,20 @@ import frc.robot.subsystems.LimelightSubsystem.DetectionType;
 import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
 
-public class TurnTowardsGamePieceCommand extends CommandBase {
+public class DriveTowardsGamePieceCommand extends CommandBase {
 
   DriveSubsystem drive;
-  XboxController mainControl;
   LimelightSubsystem limelight;
   LimelightSubsystem.DetectionType type;
+  double speed;
 
   final VectorR leftJoystick = new VectorR();
 
-  public TurnTowardsGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType type, XboxController mainControl) {
+  public DriveTowardsGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType type, double speed) {
     this.drive = drive;
     this.limelight = limelight;
     this.type = type;
-    this.mainControl = mainControl;
+    this.speed = speed;
     addRequirements(drive, limelight);
   }
 
@@ -37,13 +37,12 @@ public class TurnTowardsGamePieceCommand extends CommandBase {
 
   @Override
   public void execute() {
-    leftJoystick.setFromCartesian(mainControl.getLeftX(), -mainControl.getLeftY());
-    leftJoystick.rotate(-90);
+    leftJoystick.setFromCartesian(speed, DriveSubsystem.getYawDegrees() + limelight.x + 180);
+    //leftJoystick.rotate(-90);
 
     
     limelight.setDetectionType(type);
 
-    leftJoystick.mult(0.15);
 
     if (limelight.isDetection && limelight.confidence() > 0.25) drive.move(leftJoystick, MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25) );
     else if (leftJoystick.getMagnitude() > 0.1) drive.move(leftJoystick, 0.0);

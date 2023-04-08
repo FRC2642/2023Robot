@@ -32,7 +32,6 @@ import frc.robot.commands.teleop.DriveCommands.TurnTowardsGamePieceCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopCarriageCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopShoulderCommand;
 import frc.robot.commands.teleop.MastCommands.TeleopSliderCommand;
-import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.path.PiratePoint;
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
@@ -104,7 +103,6 @@ public class RobotContainer {
 
     SmartDashboard.putData(autoChooser);
 
-    SmartDashboard.putData(new ResetWristEncoderCommand(WristPosition.HORIZONTAL1));
     
     // SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
@@ -133,7 +131,7 @@ public class RobotContainer {
       slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));
       shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
-      leds.setDefaultCommand(new SetLEDsCommand(leds, ()->LEDPattern.RAINBOW));
+      leds.setDefaultCommand(new SetLEDsCommand(leds, mainControl, auxControl));
 
       // BUTTONS
 
@@ -146,8 +144,8 @@ public class RobotContainer {
           (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
       //Override button
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
-      //Mid cone button
-      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_MID, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))).alongWith(new SetLEDsCommand(leds, ()->LEDPattern.STROBE_YELLOW)));
+      //Chute button
+      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));
       //Human button
       new JoystickButton(auxButtonBoard, 8)
           .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));

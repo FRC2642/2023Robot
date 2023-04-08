@@ -10,14 +10,13 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autonomous.claw.EndWhenObjectInClawCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
-import frc.robot.commands.autonomous.drive.DriveFacingObjectCommand;
+import frc.robot.commands.autonomous.drive.DriveTowardsGamePieceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
-import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -55,7 +54,6 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
       new ResetGyroCommand(180),
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
-      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
 
 
       new OpenCloseClawCommand(pneumatics, true),
@@ -65,39 +63,34 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
 
       new RunIntakeCommand(intake, 0.2).raceWith(
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage)),
-      new OpenCloseClawCommand(pneumatics, false).alongWith(
-      new RunIntakeCommand(intake, -0.2).withTimeout(0.3)),
+      
+      new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
 
-      new OpenCloseClawCommand(pneumatics, true),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(
         new FollowPathCommand(drive, getFirstCube, true, 0)
       ),
-      new DriveFacingObjectCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(2).raceWith(
-        new RunIntakeCommand(intake, 0.4)
-      ).raceWith(
-        new EndWhenObjectInClawCommand(0.5)
-      ),
+
+      new DriveTowardsGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, 0.15).raceWith(new RunIntakeCommand(intake, 0.4), new EndWhenObjectInClawCommand(0.5)),
+
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootFirstCube, false, 0.5).alongWith(
         new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage))
       ),
-      new OpenCloseClawCommand(pneumatics, false).alongWith(
-      new RunIntakeCommand(intake, -1).withTimeout(0.3)),
+      
+      new RunIntakeCommand(intake, -1).withTimeout(0.3),
 
-      new OpenCloseClawCommand(pneumatics, true),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(
         new FollowPathCommand(drive, getSecondCube, false, 0.5)
       ),
       
       
-      new DriveFacingObjectCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 40)).withTimeout(2).raceWith(new RunIntakeCommand(intake, 0.4)).raceWith(new EndWhenObjectInClawCommand(0.5)),
+      new DriveTowardsGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, 0.15).raceWith(new RunIntakeCommand(intake, 0.4), new EndWhenObjectInClawCommand(0.25)),
       
 
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootSecondCube, false, 0.5).alongWith(
         new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage))
       ),
       
-      new OpenCloseClawCommand(pneumatics, false).alongWith(
-      new RunIntakeCommand(intake, -1).withTimeout(0.3)),
+      new RunIntakeCommand(intake, -1).withTimeout(0.3),
 
       new FollowPathCommand(drive, goToField, false, 0.5).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage))
       

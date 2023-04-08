@@ -6,17 +6,20 @@ package frc.robot.commands.autonomous.positionable;
 
 import java.util.function.Supplier;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LEDs;
+import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.LEDs.LEDPattern;
 
 public class SetLEDsCommand extends CommandBase {
   /** Creates a new SetLEDsCommand. */
-  private LEDs leds;
-  private Supplier<LEDPattern> pattern;
-  public SetLEDsCommand(LEDs leds, Supplier<LEDPattern> pattern) {
-    this.leds = leds;
-    this.pattern = pattern;
+  private XboxController mainControl;
+  private XboxController auxControl;
+  public SetLEDsCommand(LEDs leds, XboxController mainControl, XboxController auxControl) {
+    this.mainControl = mainControl;
+    this.auxControl = auxControl;
     addRequirements(leds);
   }
 
@@ -27,7 +30,25 @@ public class SetLEDsCommand extends CommandBase {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    leds.animateLEDs(pattern.get());
+    if (mainControl.getRightStickButton()){
+      LEDs.animateLEDs(LEDPattern.STROBE_YELLOW);
+    }
+    else if (mainControl.getLeftStickButton()){
+      LEDs.animateLEDs(LEDPattern.STROBE_PURPLE);
+    }
+    else if (auxControl.getRightStickButton()){
+      LEDs.animateLEDs(LEDPattern.RAINBOW);
+    }
+    else if (Math.abs(DriveSubsystem.getRollDegrees()) > 20 || Math.abs(DriveSubsystem.getPitchDegrees()) > 20){
+      LEDs.animateLEDs(LEDPattern.FLASHING_RED);
+    }
+    else if (ClawIntakeSubsystem.isObjectInClaw()) {
+      LEDs.animateLEDs(LEDPattern.SOLID_GREEN);
+    }
+    else{
+      LEDs.animateLEDs(LEDPattern.OFF);
+    }
+    
   }
 
   // Called once the command ends or is interrupted.

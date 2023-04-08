@@ -6,7 +6,10 @@ package frc.robot.subsystems.ClawSubsystems;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxAbsoluteEncoder;
+import com.revrobotics.SparkMaxAnalogSensor;
 import com.revrobotics.SparkMaxPIDController;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import com.revrobotics.CANSparkMax.ControlType;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -16,7 +19,8 @@ import frc.robot.subsystems.interfaces.IPositionable;
 import frc.robot.utils.MathR;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxRelativeEncoder.Type;
+import com.revrobotics.SparkMaxAnalogSensor.Mode;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -24,40 +28,37 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ClawWristSubsystem extends SubsystemBase implements IPositionable<ClawWristSubsystem.WristPosition> {
   
-  public static final double DEGREES_PER_TICK = 180d/22d;
+  public static final double DEGREES_PER_TICK = 360;
   public static final double MAX_DEGREES = 280d;
   public static final double MIN_DEGREES = 27d;
   public static final double AT_SETPOINT_THRESHOLD = 1d;
 
-  private final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
-  private static RelativeEncoder wristEncoder;
+  private static final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
+  private static SparkMaxAbsoluteEncoder wristEncoder;
   
-  private final PIDController wristPIDController = new PIDController/*(0.02, 0.02, 0.0);*/(0.02, 0.008, 0.0);
+  private final PIDController wristPIDController = new PIDController(0.05, 0, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
   /** Creates a new ClawWristSubsystem. */
   public ClawWristSubsystem() {
-    wristEncoder = wristMotor.getEncoder(Type.kQuadrature, 4);
+
+    wristEncoder = wristMotor.getAbsoluteEncoder(SparkMaxAbsoluteEncoder.Type.kDutyCycle);
     wristEncoder.setPositionConversionFactor(DEGREES_PER_TICK);
-    wristEncoder.setInverted(true);
     wristMotor.setInverted(false);
     wristPIDController.setTolerance(AT_SETPOINT_THRESHOLD);
   }
 
   public static double getWristAngle() {
-    return wristEncoder.getPosition();
+    return wristEncoder.getPosition()+45;
   }
 
-  public static void resetWristEncoder(WristPosition pos) {
-    wristEncoder.setPosition(pos.angle);
-  }
 
   //Positive = CCW, negative = CW
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
 
-    if (ShoulderSubsystem.getShoulderAngle() <= 30 && CarriageSubsystem.getCarriageExtension() <= 0.2){
+    if (ShoulderSubsystem.getShoulderAngle() <= 30 && CarriageSubsystem.getCarriageExtension() <= 0.2 || ((getWristAngle() > 360 && speed > 0) || (getWristAngle() < 180 && speed < 0))){
       wristMotor.set(0.0);
     }
     else{
@@ -74,7 +75,12 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   }
   
   public void set() {
-    set(currentSetPosition);
+    if (currentSetPosition == WristPosition.MANUAL){
+      set(0.0);
+    }
+    else{
+      set(currentSetPosition);
+    }
   }
 
   public boolean atSetPosition() {

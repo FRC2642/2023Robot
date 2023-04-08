@@ -8,9 +8,10 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import frc.robot.commands.autonomous.claw.EndWhenObjectInClawCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
-import frc.robot.commands.autonomous.drive.DriveFacingObjectCommand;
+import frc.robot.commands.autonomous.drive.DriveTowardsGamePieceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
@@ -19,7 +20,6 @@ import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.R
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
-import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -57,7 +57,6 @@ public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
       new ResetGyroCommand(180),
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
-      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
       
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
       new RunIntakeCommand(intake, -.2).withTimeout(0.5),
@@ -66,7 +65,7 @@ public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
         new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND),
       new FollowPathCommand(drive, driveToCube, true, 0)),
 
-      new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.15, 0)).withTimeout(3).raceWith(new RunIntakeCommand(intake, 0.4)),
+      new DriveTowardsGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, 0.15).raceWith(new RunIntakeCommand(intake, 0.4), new EndWhenObjectInClawCommand(0.25)),
     
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, driveBackToPlace, false, 0.5).alongWith(new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_HUMANPLAYER))),
 

@@ -36,7 +36,7 @@ public class TeleopWristCommand extends CommandBase {
 
     if (manualControl) {
       
-    wrist.setSpeedLimit(0.6);
+    wrist.setSpeedLimit(1.0);
       if (auxControl.getXButton()){
         wrist.set(-1.0);
       }
@@ -49,7 +49,7 @@ public class TeleopWristCommand extends CommandBase {
     }
     else {
       
-    wrist.setSpeedLimit(0.4);
+    wrist.setSpeedLimit(1.0);
     
     if (auxControl.getRawButtonPressed(8)) wrist.set(WristPosition.DIAGONAL1);
     else if (auxControl.getRawButtonPressed(7)) wrist.set(WristPosition.DIAGONAL2);

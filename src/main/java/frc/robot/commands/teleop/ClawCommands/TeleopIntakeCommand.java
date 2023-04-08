@@ -7,6 +7,8 @@ package frc.robot.commands.teleop.ClawCommands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.LEDs.LEDPattern;
+import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 
 public class TeleopIntakeCommand extends CommandBase {
@@ -15,6 +17,7 @@ public class TeleopIntakeCommand extends CommandBase {
   private final XboxController auxControl;
 
   public TeleopIntakeCommand(ClawIntakeSubsystem intake, XboxController auxControl) {
+    
     this.intake = intake;
     this.auxControl = auxControl;
     addRequirements(intake);
@@ -22,11 +25,12 @@ public class TeleopIntakeCommand extends CommandBase {
 
   @Override
   public void execute() {
+    
     double speed = 0;
 
     if (auxControl.getRightTriggerAxis() > 0.2) {
       speed = Math.pow(auxControl.getRightTriggerAxis(), 2);
-    } 
+    }
     else if (auxControl.getLeftTriggerAxis() > 0.2) {
       speed = -Math.pow(auxControl.getLeftTriggerAxis(), 2);
     }

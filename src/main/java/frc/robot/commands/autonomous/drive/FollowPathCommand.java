@@ -70,6 +70,7 @@ public class FollowPathCommand extends CommandBase {
     timer.reset();
     timer.start();
     currentTime = timer.get() + path.getFirst().time;
+    nextPoint = null;
     if (recenterDisplacementToFirstPoint) {
       DriveSubsystem.resetDisplacement(path.getFirst().position);
       DriveSubsystem.resetGyro(path.getFirst().heading);

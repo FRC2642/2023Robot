@@ -14,7 +14,6 @@ import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetShoulderCommand;
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
-import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
@@ -36,7 +35,6 @@ public class ScoreAndTaxiAuto extends SequentialCommandGroup {
     addCommands(
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
-      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
       new RunIntakeCommand(intake, 0.2).withTimeout(1),//.raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
       new RunIntakeCommand(intake, -.4).withTimeout(1),
      // new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED),

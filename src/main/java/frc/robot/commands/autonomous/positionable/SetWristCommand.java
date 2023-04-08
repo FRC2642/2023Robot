@@ -21,7 +21,7 @@ public class SetWristCommand extends CommandBase {
   }
   @Override
   public void initialize() {
-    wrist.setSpeedLimit(0.5);
+    wrist.setSpeedLimit(1.0);
     wrist.setRampRate(0);
   }
 

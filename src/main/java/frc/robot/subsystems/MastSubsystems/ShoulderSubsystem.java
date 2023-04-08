@@ -23,7 +23,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
   public static final double INCLINE_DEGREES = 23d;
-  public static final double MAX_DEGREES = 190;//213;
+  public static final double MAX_DEGREES = 200;//213;
   public static final double MIN_DEGREES = 20;//20;
   public static final double AT_SETPOINT_THRESHOLD = 10d;
 
@@ -116,11 +116,12 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public enum ShoulderPosition {
     MANUAL(-1),
-    TRAVEL_MODE(40),
-    PICKUP_GROUND(MAX_DEGREES+10),
+    TRAVEL_MODE(50),
+    CHUTE(MIN_DEGREES),
+    PICKUP_GROUND(MAX_DEGREES),
     PICKUP_HUMANPLAYER(20),
     PLACE_CONE_MID(160),
-    PLACE_CONE_HIGH(MIN_DEGREES+10),
+    PLACE_CONE_HIGH(MIN_DEGREES+20),
     SHOOT_CUBE(MAX_DEGREES-40);
     public double angle;
 

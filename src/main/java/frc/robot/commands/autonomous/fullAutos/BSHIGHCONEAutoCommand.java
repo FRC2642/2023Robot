@@ -11,14 +11,14 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.autonomous.claw.EndWhenObjectInClawCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
-import frc.robot.commands.autonomous.drive.DriveFacingObjectCommand;
+import frc.robot.commands.autonomous.drive.DivertToGamePieceCommand;
+import frc.robot.commands.autonomous.drive.DriveTowardsGamePieceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetWristCommand;
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
-import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
 import frc.robot.path.PiratePath;
 import frc.robot.subsystems.DriveSubsystem;
@@ -56,22 +56,23 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       new ResetGyroCommand(180),
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
-      new ResetWristEncoderCommand(WristPosition.HORIZONTAL1),
 
-
+      new OpenCloseClawCommand(gripper, false),
       new RunCommand(()->{
         shoulder.set(0.2);
       }, shoulder).withTimeout(0.8),
-      new OpenCloseClawCommand(gripper, false),
+      
       new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL2).raceWith(
       new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage)),
 
       new OpenCloseClawCommand(gripper, true),
       new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage),
-      new FollowPathCommand(drive, driveToCube, true, 0).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)),
-    
-      (new DriveFacingObjectCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, VectorR.fromPolar(0.25, 0)).withTimeout(2).raceWith(new RunIntakeCommand(intake, 0.4), new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1))).raceWith(new EndWhenObjectInClawCommand(0.5)),
-      
+        
+      new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.15, 2.5, intake, 0.4, gripper).alongWith(
+        new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)).raceWith(
+          new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1)),
+        
+
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage).alongWith(
         new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2), new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1)),
       
@@ -79,6 +80,8 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
         new FollowPathCommand(drive, driveToCone, false, 0.5), new OpenCloseClawCommand(gripper, false)
       ).raceWith(new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1))
+
+      
     );
   }
 }

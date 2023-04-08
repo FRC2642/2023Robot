@@ -23,7 +23,6 @@ import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.R
 import frc.robot.commands.teleop.resetters.ResetCarriageEncoderCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
-import frc.robot.commands.teleop.resetters.ResetWristEncoderCommand;
 import frc.robot.path.PiratePath;
 import frc.robot.path.PiratePoint;
 import frc.robot.subsystems.DriveSubsystem;
