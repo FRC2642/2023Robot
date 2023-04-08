@@ -42,9 +42,9 @@ import frc.robot.utils.Easings.Functions;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class STOPBALANCEAutoCommand extends SequentialCommandGroup {
+public class FASTBALANCEAutoCommand extends SequentialCommandGroup {
   /** Creates a new ScoreHighTaxiBalanceAuto. */
-  public STOPBALANCEAutoCommand(SliderSubsystem sliders, ClawGripperSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ClawIntakeSubsystem intake) {
+  public FASTBALANCEAutoCommand(SliderSubsystem sliders, ClawGripperSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ClawIntakeSubsystem intake) {
 
     PiratePath path = new PiratePath(false);
     path.add(new PiratePoint(0, 0, 180, 0, false));
@@ -60,7 +60,7 @@ public class STOPBALANCEAutoCommand extends SequentialCommandGroup {
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
-      new RunIntakeCommand(intake, -.2).withTimeout(1),
+      new RunIntakeCommand(intake, -.2).withTimeout(0.3),
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), -10, false).andThen(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), 10, true, 2, 0.3),

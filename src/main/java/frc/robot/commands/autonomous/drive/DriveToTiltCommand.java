@@ -53,7 +53,6 @@ public class DriveToTiltCommand extends DriveDirectionCommand {
         MathR.lerp(startSpeed, changeSpeed, 0.0, changeSpeedTime, timer.get()), 
         changeSpeed, startSpeed));
 
-    System.out.println("vel mag: " + velocity.getMagnitude());
     super.execute();
   }
   

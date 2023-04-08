@@ -59,7 +59,7 @@ public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       
       new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
-      new RunIntakeCommand(intake, -.2).withTimeout(0.5),
+      new RunIntakeCommand(intake, -.2).withTimeout(0.3),
 
       new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
         new SetShoulderCommand(shoulder, () -> ShoulderPosition.PICKUP_GROUND),

@@ -38,7 +38,6 @@ public class DriveTowardsGamePieceCommand extends CommandBase {
   @Override
   public void execute() {
     leftJoystick.setFromCartesian(speed, DriveSubsystem.getYawDegrees() + limelight.x + 180);
-    //leftJoystick.rotate(-90);
 
     
     limelight.setDetectionType(type);
