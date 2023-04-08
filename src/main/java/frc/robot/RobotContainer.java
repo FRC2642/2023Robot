@@ -187,7 +187,7 @@ public class RobotContainer {
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
       carriage.setDefaultCommand(new RunCommand(() -> carriage.setManual(-1 * mainControl.getRightY()), carriage));
       slider.setDefaultCommand(new RunCommand(() -> slider.setManual(-1 * mainControl.getLeftY()), slider));
-      wrist.setDefaultCommand(new RunCommand(() -> wrist.set(0.0), wrist));
+      wrist.setDefaultCommand(new RunCommand(() -> wrist.setManual(auxControl.getRightY()), wrist));
       shoulder.setDefaultCommand(new RunCommand(() -> shoulder.setManual(-1 * auxControl.getLeftY() * .35), shoulder));
       intake.setDefaultCommand(new RunCommand(() -> intake.set(0.0), intake));
       

@@ -36,7 +36,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   private static final CANSparkMax wristMotor = new CANSparkMax(24, MotorType.kBrushed);
   private static SparkMaxAbsoluteEncoder wristEncoder;
   
-  private final PIDController wristPIDController = new PIDController(0.05, 0, 0.0);
+  private final PIDController wristPIDController = new PIDController(0.02, 0, 0.0);
   private WristPosition currentSetPosition = WristPosition.MANUAL;
   private double speedLimit = 1.0;
   
@@ -50,7 +50,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   }
 
   public static double getWristAngle() {
-    return wristEncoder.getPosition()+45;
+    return MathR.getDistanceToAngle(0, wristEncoder.getPosition()+106.4, 300)+180;
   }
 
 
@@ -65,6 +65,10 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
       wristMotor.set(MathR.limit(speed, -speedLimit, speedLimit));
     }
     
+  }
+
+  public void setManual(double speed) {
+    wristMotor.set(speed);
   }
 
   public void set(WristPosition pos) {
@@ -120,8 +124,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   
   public enum WristPosition {
     MANUAL(-1),
-    HORIZONTAL2(360),
-    HORIZONTAL1(180),
+    HORIZONTAL2(180),
+    HORIZONTAL1(360),
     DIAGONAL1(225),
     DIAGONAL2(315),
     VERTICAL1(270);
