@@ -63,22 +63,22 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       }, shoulder).withTimeout(0.8),
       
       
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, sliders, carriage).alongWith(new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL2)),
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist),
 
       new OpenCloseClawCommand(gripper, true),
-      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage),
+      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage, wrist),
         
       new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.15, 2.5).alongWith(
-        new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage)).alongWith(
-          new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1), new RunIntakeCommand(intake, 0.4)),
+        new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist)).alongWith(
+          new RunIntakeCommand(intake, 0.4)),
         
 
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage).alongWith(
-        new FollowPathCommand(drive, driveBackToPlace, false, 0.5), new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1)).raceWith(new RunIntakeCommand(intake, 0.2)),
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
+        new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
       
       new RunIntakeCommand(intake, -0.3).withTimeout(0.3),
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage).alongWith(
-        new FollowPathCommand(drive, driveToCone, false, 0.5), new OpenCloseClawCommand(gripper, false), new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1)
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
+        new FollowPathCommand(drive, driveToCone, false, 0.5), new OpenCloseClawCommand(gripper, false)
       )
 
       

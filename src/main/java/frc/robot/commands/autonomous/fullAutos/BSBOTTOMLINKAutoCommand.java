@@ -22,6 +22,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
@@ -36,7 +37,7 @@ import frc.robot.utils.Easings.Functions;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
   /** Creates a new BSBOTTOMLINKAutoCommand. */
-  public BSBOTTOMLINKAutoCommand(DriveSubsystem drive, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage, ClawIntakeSubsystem intake, ClawGripperSubsystem pneumatics, LimelightSubsystem camera) {
+  public BSBOTTOMLINKAutoCommand(DriveSubsystem drive, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage, ClawIntakeSubsystem intake, ClawGripperSubsystem pneumatics, ClawWristSubsystem wrist, LimelightSubsystem camera) {
     PiratePath path = new PiratePath("2CUBESHOOT V1");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
@@ -62,23 +63,23 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
       }, shoulder).withTimeout(0.8),
 
       new RunIntakeCommand(intake, 0.2).raceWith(
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage)),
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)),
       
       new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
 
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist).alongWith(
         new FollowPathCommand(drive, getFirstCube, true, 0)
       ),
 
       new DriveTowardsGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, 0.15).raceWith(new RunIntakeCommand(intake, 0.4), new EndWhenObjectInClawCommand(0.5)),
 
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootFirstCube, false, 0.5).alongWith(
-        new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage))
+        new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage, wrist))
       ),
       
       new RunIntakeCommand(intake, -1).withTimeout(0.3),
 
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist).alongWith(
         new FollowPathCommand(drive, getSecondCube, false, 0.5)
       ),
       
@@ -87,12 +88,12 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
       
 
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootSecondCube, false, 0.5).alongWith(
-        new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage))
+        new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage, wrist))
       ),
       
       new RunIntakeCommand(intake, -1).withTimeout(0.3),
 
-      new FollowPathCommand(drive, goToField, false, 0.5).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage))
+      new FollowPathCommand(drive, goToField, false, 0.5).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist))
       
 
     );

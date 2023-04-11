@@ -43,7 +43,7 @@ public class DriveTowardsGamePieceCommand extends CommandBase {
     limelight.setDetectionType(type);
 
 
-    if (limelight.isDetection && limelight.confidence() > 0.25) drive.move(velocity, MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25) );
+    if (limelight.isDetection && limelight.confidence() > 0.25) drive.move(velocity, MathR.limit(limelight.x * -1 * (1d/70d), -0.25, 0.25) );
     
     else{
       drive.move(VectorR.fromPolar(0.1, 0),  MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25));

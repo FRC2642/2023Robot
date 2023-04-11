@@ -25,6 +25,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
+import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
@@ -40,7 +41,7 @@ import frc.robot.utils.Easings.Functions;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
   /** Creates a new TWOCUBESHOOTAutoCommand. */
-  public BSHIGHCUBEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders) {
+  public BSHIGHCUBEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders, ClawWristSubsystem wrist) {
     PiratePath path = new PiratePath("BSCUBE");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
@@ -71,7 +72,7 @@ public class BSHIGHCUBEAutoCommand extends SequentialCommandGroup {
 
       new RunIntakeCommand(intake, -0.2).withTimeout(0.5),
       new FollowPathCommand(drive, driveToNextCube, false, 0.5).alongWith(
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage))
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist))
    
       );
   }
