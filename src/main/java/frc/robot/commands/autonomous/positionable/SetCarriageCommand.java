@@ -38,6 +38,9 @@ public class SetCarriageCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    if (carriage.atSetPosition()){
+      System.out.println("Carriage done");
+    }
     return carriage.atSetPosition();
   }
 }

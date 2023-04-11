@@ -137,21 +137,21 @@ public class RobotContainer {
 
       //Fully extend button
       new JoystickButton(auxControl, 1).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
+          (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2)))
               .withTimeout(5));
       //Fully retract button
       new JoystickButton(auxControl, 2).onTrue(
-          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
+          (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
       //Override button
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
       //Chute button
-      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));
+      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));
       //Human button
       new JoystickButton(auxButtonBoard, 8)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL2))));
       //Travel button
       new JoystickButton(auxButtonBoard, 1)
-        .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).raceWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
+        .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage).alongWith(new SetWristCommand(wrist, () -> WristPosition.HORIZONTAL1))));
       //Extend slider button
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;

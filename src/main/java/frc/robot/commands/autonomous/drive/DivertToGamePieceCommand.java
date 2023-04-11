@@ -23,6 +23,7 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   double visionSpeed;
   double timeAfterStartToDivert;
   Timer visionTimer = new Timer();
+  Timer intakeTimer = new Timer();
   
 
   public DivertToGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType object, PiratePath path, boolean recenterDisplacementToFirstPoint, double additionalLookaheadTime, double visionSpeed, double timeAfterStartToDivert) {
@@ -43,15 +44,23 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
     limelight.setDetectionType(object);
     visionTimer.reset();
     visionTimer.start();
+    intakeTimer.reset();
+    intakeTimer.start();
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     
+    
     if (visionTimer.get() > timeAfterStartToDivert && limelight.isDetection && limelight.confidence() > 1){
-      drive.move(VectorR.fromPolar(visionSpeed, DriveSubsystem.getYawDegrees() + limelight.x + 180), MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25));
+      drive.move(VectorR.fromPolar(visionSpeed, DriveSubsystem.getYawDegrees() + limelight.x + 180), MathR.limit(limelight.x * -1 * (1d/70d), -0.25, 0.25));
     }
+    else if (super.isFinished()){
+      drive.move(VectorR.fromPolar(0.15, DriveSubsystem.getYawDegrees()), MathR.limit(limelight.x * -1 * (1d/45d), -0.25, 0.25));
+    }
+
     else{
       super.execute();
     }
@@ -66,6 +75,11 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return ClawIntakeSubsystem.isObjectInClaw();
+    if (intakeTimer.get() > 1){
+      return ClawIntakeSubsystem.isObjectInClaw();
+    }
+    else{
+      return false;
+    }
   }
 }

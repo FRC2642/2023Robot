@@ -21,8 +21,8 @@ public class SetShoulderCommand extends CommandBase {
   }
   @Override
   public void initialize() {
-    shoulder.setSpeedLimit(0.5);
-    shoulder.setRampRate(3);
+    shoulder.setSpeedLimit(0.7);
+    shoulder.setRampRate(2);
   }
   
   @Override
@@ -37,6 +37,9 @@ public class SetShoulderCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    return shoulder.atSetPosition();
+    if (shoulder.atSetPosition()){
+      System.out.println("Shoulder done");
+    }
+    return shoulder.atSetPosition();  
   }
 }

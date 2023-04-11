@@ -37,6 +37,9 @@ public class SetSliderCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
+    if (sliders.atSetPosition()){
+      System.out.println("Slider done");
+    }
     return sliders.atSetPosition();
   }
 }
