@@ -55,10 +55,10 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
     
     
     if (visionTimer.get() > timeAfterStartToDivert && limelight.isDetection && limelight.confidence() > 0.25){
-      drive.move(VectorR.fromPolar(visionSpeed, DriveSubsystem.getYawDegrees() + limelight.x + 180), MathR.limit(limelight.x * -1 * (1d/70d), -0.25, 0.25));
+      drive.move(VectorR.fromPolar(visionSpeed, 0), MathR.limit(limelight.x * -1 * (1d/90d), -0.20, 0.20));
     }
     else if (super.isFinished()){
-      drive.move(VectorR.fromPolar(0.15, DriveSubsystem.getYawDegrees()), MathR.limit(limelight.x * -1 * (1d/70d), -0.25, 0.25));
+      drive.move(VectorR.fromPolar(0.20, 0), MathR.limit(limelight.x * -1 * (1d/90d), -0.20, 0.20));
     }
 
     else{

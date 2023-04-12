@@ -20,23 +20,24 @@ public class ClawIntakeSubsystem extends SubsystemBase {
   
   private static final CANSparkMax intake = new CANSparkMax(Constants.GRIPPER_INTAKE_MOTOR, MotorType.kBrushless);
   private static final RelativeEncoder encoder = intake.getEncoder();
-  private static SparkMaxLimitSwitch intakeLimitSwitch;
+  
   private static double speed;
   
   public ClawIntakeSubsystem() {
     intake.setInverted(false);
-    intakeLimitSwitch = intake.getForwardLimitSwitch(Type.kNormallyOpen);
+    
   }
 
   //Positive = intake, Negative = outake
   public void set(double speed) {
-    this.speed = speed;
+    ClawIntakeSubsystem.speed = speed;
     intake.set(speed);
   }
 
 
   public static boolean isObjectInClaw(){
-    return encoder.getVelocity() <= 1 && speed > 0.1;
+    
+    return Math.abs(encoder.getVelocity()) <= 10 && speed > 0.1;
   }
 
   @Override

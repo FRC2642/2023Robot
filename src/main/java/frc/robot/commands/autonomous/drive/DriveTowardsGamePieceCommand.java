@@ -37,7 +37,7 @@ public class DriveTowardsGamePieceCommand extends CommandBase {
 
   @Override
   public void execute() {
-    velocity.setFromCartesian(speed, DriveSubsystem.getYawDegrees() + limelight.x + 180);
+    velocity.setFromPolar(speed, DriveSubsystem.getYawDegrees() + limelight.x + 180);
 
     
     limelight.setDetectionType(type);

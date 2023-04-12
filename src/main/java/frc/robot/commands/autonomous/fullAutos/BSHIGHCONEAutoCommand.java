@@ -63,25 +63,37 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       }, shoulder).withTimeout(0.8),
       
       
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist),
-
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
+      new WaitCommand(0.2),
       new OpenCloseClawCommand(gripper, true),
-      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage, wrist),
+      new WaitCommand(0.2),
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(new WaitCommand(0.5).andThen(
+        (new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.20, 2.5).alongWith(
+        /*new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist))*/).raceWith(
+          new RunIntakeCommand(intake, 0.4))
+
+      ))),
         
-      new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.15, 2.5).alongWith(
-        new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist)).alongWith(
-          new RunIntakeCommand(intake, 0.4)),
+      
+
         
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
+        
         new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
+      
       
       new RunIntakeCommand(intake, -0.3).withTimeout(0.3),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
         new FollowPathCommand(drive, driveToCone, false, 0.5), new OpenCloseClawCommand(gripper, false)
-      )
-
+      ),
+      new DriveTowardsGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, 0.15).raceWith(new RunIntakeCommand(intake, 1)).withTimeout(2)
       
+
+       
+
     );
   }
 }

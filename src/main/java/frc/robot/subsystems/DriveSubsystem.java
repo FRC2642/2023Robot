@@ -36,7 +36,6 @@ public class DriveSubsystem extends SubsystemBase {
         new SwerveModule(Constants.BACK_RIGHT), new SwerveModule(Constants.BACK_LEFT));
 
     gyro = new AHRS();
-    gyro.reset();
     gyro.calibrate();
 
     increment = new VectorR();
