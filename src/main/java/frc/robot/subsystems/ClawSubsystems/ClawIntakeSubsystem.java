@@ -36,7 +36,6 @@ public class ClawIntakeSubsystem extends SubsystemBase {
 
 
   public static boolean isObjectInClaw(){
-    
     return Math.abs(encoder.getVelocity()) <= 10 && speed > 0.1;
   }
 

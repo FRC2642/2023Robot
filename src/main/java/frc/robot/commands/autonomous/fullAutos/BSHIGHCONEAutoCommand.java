@@ -59,8 +59,8 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
 
       new OpenCloseClawCommand(gripper, false),
       new RunCommand(()->{
-        shoulder.set(0.2);
-      }, shoulder).withTimeout(0.8),
+        shoulder.set(0.7);
+      }, shoulder).withTimeout(0.3),
       
       
       
@@ -69,11 +69,11 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       new OpenCloseClawCommand(gripper, true),
       new WaitCommand(0.2),
       
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(new WaitCommand(0.5).andThen(
-        (new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.20, 2.5).alongWith(
+      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
+        new WaitCommand(0.5).andThen(
+        (new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.20, 2.5)
         /*new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist))*/).raceWith(
-          new RunIntakeCommand(intake, 0.4))
-
+          new RunIntakeCommand(intake, 0.4)
       ))),
         
       
@@ -85,11 +85,13 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
         new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
       
       
-      new RunIntakeCommand(intake, -0.3).withTimeout(0.3),
+      new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
-        new FollowPathCommand(drive, driveToCone, false, 0.5), new OpenCloseClawCommand(gripper, false)
-      ),
-      new DriveTowardsGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, 0.15).raceWith(new RunIntakeCommand(intake, 1)).withTimeout(2)
+        new OpenCloseClawCommand(gripper, false),
+        new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, driveToCone, false, 0.5, 0.4, 2.5).raceWith(new RunIntakeCommand(intake, 1))
+      
+      )
+      
       
 
        

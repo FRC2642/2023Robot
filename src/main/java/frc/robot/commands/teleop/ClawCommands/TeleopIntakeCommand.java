@@ -28,11 +28,11 @@ public class TeleopIntakeCommand extends CommandBase {
     
     double speed = 0;
 
-    if (auxControl.getRightTriggerAxis() > 0.2) {
-      speed = Math.pow(auxControl.getRightTriggerAxis(), 2);
+    if (auxControl.getRightTriggerAxis() > 0.05) {
+      speed = Math.pow(auxControl.getRightTriggerAxis(), 3);
     }
-    else if (auxControl.getLeftTriggerAxis() > 0.2) {
-      speed = -Math.pow(auxControl.getLeftTriggerAxis(), 2);
+    else if (auxControl.getLeftTriggerAxis() > 0.05) {
+      speed = -Math.pow(auxControl.getLeftTriggerAxis(), 3);
     }
     if (ClawGripperSubsystem.isOpen() && speed > 0) {
       speed *= 0.54;

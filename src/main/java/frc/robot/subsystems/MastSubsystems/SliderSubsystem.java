@@ -20,7 +20,7 @@ import frc.robot.utils.MathR;
 public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
 
   public static final double FULL_EXTENSION_PER_TICK = 1d/248d;
-  public static final double AT_SETPOINT_THRESHOLD = 0.09;
+  public static final double AT_SETPOINT_THRESHOLD = 0.12;
 
   private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
   private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(2);
@@ -64,10 +64,13 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
     if (protectionEnabled){
       if ((speed > 0 && ShoulderSubsystem.getShoulderAngle() > 180)) {
         speed = 0.0;
+        
       }
     }
 
-    if (speed == 0.0) brake.set(true);
+    if (speed == 0.0) {
+      brake.set(true);
+    }
     else brake.set(false);
 
     sliderMotor.set(speed);
@@ -119,12 +122,14 @@ public class SliderSubsystem extends SubsystemBase implements IPositionable<Slid
   @Override
   public void periodic() {
     SmartDashboard.putNumber("Slider Extension", getSliderExtension());
+    SmartDashboard.putBoolean("Slider AT", atSetPosition());
    // SmartDashboard.putString("Slider", currentSetPosition.toString());
   }
   
   public enum SliderPosition {
     MANUAL(0),
-    RETRACTED(0),
+    ZERO(0.0),
+    RETRACTED(-0.1),
     PARTIALLY(0.2),
     EXTENDED(1.0);
 

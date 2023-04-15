@@ -42,9 +42,6 @@ public class SetLEDsCommand extends CommandBase {
     else if (Math.abs(DriveSubsystem.getRollDegrees()) > 20 || Math.abs(DriveSubsystem.getPitchDegrees()) > 20){
       LEDs.animateLEDs(LEDPattern.FLASHING_RED);
     }
-    else if (ClawIntakeSubsystem.isObjectInClaw()) {
-      LEDs.animateLEDs(LEDPattern.SOLID_GREEN);
-    }
     else{
       LEDs.animateLEDs(LEDPattern.OFF);
     }

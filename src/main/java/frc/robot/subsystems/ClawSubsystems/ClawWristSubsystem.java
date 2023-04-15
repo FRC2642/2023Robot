@@ -124,8 +124,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   
   public enum WristPosition {
     MANUAL(-1),
-    HORIZONTAL2(180),
-    HORIZONTAL1(360),
+    HORIZONTAL2(360),
+    HORIZONTAL1(180),
     DIAGONAL1(225),
     DIAGONAL2(315),
     VERTICAL1(270);

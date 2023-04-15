@@ -105,7 +105,7 @@ public class RobotContainer {
 
     
     // SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
-    SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.RETRACTED));
+    SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.ZERO));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 
   }
@@ -148,6 +148,9 @@ public class RobotContainer {
       //Human button
       new JoystickButton(auxButtonBoard, 8)
           .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
+      //Ground pickyp button
+      new JoystickButton(auxButtonBoard, 9)
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_GROUND_CONE, shoulder, slider, carriage, wrist)));
       //Travel button
       new JoystickButton(auxButtonBoard, 1)
         .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
@@ -183,6 +186,7 @@ public class RobotContainer {
       new JoystickButton(mainControl, Button.kY.value)
           .whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));
     } else {
+      leds.setDefaultCommand(new RunCommand(() -> LEDs.animateLEDs(LEDPattern.STROBE_BLUE), leds));
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
       carriage.setDefaultCommand(new RunCommand(() -> carriage.setManual(-1 * mainControl.getRightY()), carriage));
       slider.setDefaultCommand(new RunCommand(() -> slider.setManual(-1 * mainControl.getLeftY()), slider));
