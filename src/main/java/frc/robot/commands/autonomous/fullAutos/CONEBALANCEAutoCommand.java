@@ -2,12 +2,13 @@
 // Open Source Software; you can modify and/or share it under the terms of
 // the WPILib BSD license file in the root directory of this project.
 
-package frc.robot.commands.autonomous.fullAutos.real;
+package frc.robot.commands.autonomous.fullAutos;
 
 import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
 import frc.robot.commands.autonomous.drive.DriveDistanceCommand;
@@ -42,9 +43,9 @@ import frc.robot.utils.Easings.Functions;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class BALANCEAutoCommand extends SequentialCommandGroup {
+public class CONEBALANCEAutoCommand extends SequentialCommandGroup {
   /** Creates a new ScoreHighTaxiBalanceAuto. */
-  public BALANCEAutoCommand(SliderSubsystem sliders, ClawGripperSubsystem pneumatics, DriveSubsystem drive, CarriageSubsystem carriage, ClawIntakeSubsystem intake) {
+  public CONEBALANCEAutoCommand(SliderSubsystem sliders, ClawGripperSubsystem gripper, DriveSubsystem drive, CarriageSubsystem carriage, ClawIntakeSubsystem intake, ShoulderSubsystem shoulder, ClawWristSubsystem wrist) {
 
     PiratePath path = new PiratePath(false);
     path.add(new PiratePoint(0, 0, 180, 0, false));
@@ -59,9 +60,19 @@ public class BALANCEAutoCommand extends SequentialCommandGroup {
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
       
-      new RunIntakeCommand(intake, 0.2).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)),
-      new RunIntakeCommand(intake, -.2).withTimeout(1),
-      new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED).alongWith(
+      new OpenCloseClawCommand(gripper, false),
+      new RunCommand(()->{
+        shoulder.set(0.7);
+      }, shoulder).withTimeout(0.3),
+      
+      
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
+      new WaitCommand(0.2),
+      new OpenCloseClawCommand(gripper, true),
+      new WaitCommand(0.2),
+      
+      new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, sliders, carriage, wrist).alongWith(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), -10, false).andThen(
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.35, 0), 10, true, 2, 0.3),
         new DriveToTiltCommand(drive, VectorR.fromPolar(0.1, 0), 2, false, 2, 0.35),

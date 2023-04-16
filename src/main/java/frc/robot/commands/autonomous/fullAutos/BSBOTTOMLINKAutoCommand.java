@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.commands.autonomous.claw.EndWhenObjectInClawCommand;
 import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
+import frc.robot.commands.autonomous.drive.DivertToGamePieceCommand;
 import frc.robot.commands.autonomous.drive.DriveTowardsGamePieceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
@@ -58,40 +59,31 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
 
 
       new OpenCloseClawCommand(pneumatics, true),
-      new RunCommand(()->{
-        shoulder.set(0.2);
-      }, shoulder).withTimeout(0.8),
-
-      new RunIntakeCommand(intake, 0.2).raceWith(
-      new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)),
+      new RunIntakeCommand(intake, 0.2).withTimeout(0.3),
+      new RunIntakeCommand(intake, -0.5).withTimeout(0.3),
       
-      new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist).alongWith(
-        new FollowPathCommand(drive, getFirstCube, true, 0)
-      ),
+        new DivertToGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, getFirstCube, true, 0, 0.2, 2.5, true)
+      ).raceWith(new RunIntakeCommand(intake, 0.4)),
 
-      new DriveTowardsGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, 0.15).raceWith(new RunIntakeCommand(intake, 0.4), new EndWhenObjectInClawCommand(0.5)),
 
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootFirstCube, false, 0.5).alongWith(
         new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage, wrist))
       ),
       
-      new RunIntakeCommand(intake, -1).withTimeout(0.3),
+      new RunIntakeCommand(intake, -0.8).withTimeout(0.3),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist).alongWith(
-        new FollowPathCommand(drive, getSecondCube, false, 0.5)
-      ),
+        new DivertToGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, getSecondCube, false, 0.5, 0.2, 2, true)
+      ).raceWith(new RunIntakeCommand(intake, 0.4)),
       
       
-      new DriveTowardsGamePieceCommand(drive, camera, LimelightSubsystem.DetectionType.CUBE, 0.15).raceWith(new RunIntakeCommand(intake, 0.4), new EndWhenObjectInClawCommand(0.25)),
-      
-
       new RunIntakeCommand(intake, 0.2).raceWith(new FollowPathCommand(drive, shootSecondCube, false, 0.5).alongWith(
         new SetRobotConfigurationCommand(RobotConfiguration.SHOOT_CUBE, shoulder, slider, carriage, wrist))
       ),
       
-      new RunIntakeCommand(intake, -1).withTimeout(0.3),
+      new RunIntakeCommand(intake, -0.8).withTimeout(0.3),
 
       new FollowPathCommand(drive, goToField, false, 0.5).alongWith(new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist))
       

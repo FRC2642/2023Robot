@@ -24,11 +24,13 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   double timeAfterStartToDivert;
   Timer visionTimer = new Timer();
   Timer intakeTimer = new Timer();
+  boolean endWhenIntaken;
   
 
-  public DivertToGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType object, PiratePath path, boolean recenterDisplacementToFirstPoint, double additionalLookaheadTime, double visionSpeed, double timeAfterStartToDivert) {
+  public DivertToGamePieceCommand(DriveSubsystem drive, LimelightSubsystem limelight, LimelightSubsystem.DetectionType object, PiratePath path, boolean recenterDisplacementToFirstPoint, double additionalLookaheadTime, double visionSpeed, double timeAfterStartToDivert,  boolean endWhenIntaken) {
     super(drive, path, recenterDisplacementToFirstPoint, additionalLookaheadTime);
     this.drive = drive;
+    this.endWhenIntaken = endWhenIntaken;
     this.limelight = limelight;
     this.object = object;
     this.path = path;
@@ -52,13 +54,17 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
+    double addedAngle = 0;
+    if (endWhenIntaken){
+      addedAngle = 180;
+    }
     
     if (visionTimer.get() > timeAfterStartToDivert && limelight.isDetection && limelight.confidence() > 0.25){
-      drive.move(VectorR.fromPolar(visionSpeed, DriveSubsystem.getYawDegrees() + limelight.x + 180), MathR.limit(limelight.x * -1 * (1d/90d), -0.20, 0.20));
+      
+      drive.move(VectorR.fromPolar(visionSpeed, DriveSubsystem.getYawDegrees() + limelight.x + addedAngle), MathR.limit(limelight.x * -1 * (1d/90d), -0.20, 0.20));
     }
     else if (super.isFinished()){
-      drive.move(VectorR.fromPolar(0.20, DriveSubsystem.getYawDegrees() + limelight.x + 180), MathR.limit(limelight.x * -1 * (1d/90d), -0.20, 0.20));
+      drive.move(VectorR.fromPolar(0.20, DriveSubsystem.getYawDegrees() + limelight.x + addedAngle), MathR.limit(limelight.x * -1 * (1d/90d), -0.20, 0.20));
     }
 
     else{
@@ -75,6 +81,9 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return intakeTimer.get() > 0.1 && ClawIntakeSubsystem.isObjectInClaw();
+    if (endWhenIntaken){
+      return intakeTimer.get() > 0.1 && ClawIntakeSubsystem.isObjectInClaw();
+    }
+    else return super.isFinished();
   }
 }
