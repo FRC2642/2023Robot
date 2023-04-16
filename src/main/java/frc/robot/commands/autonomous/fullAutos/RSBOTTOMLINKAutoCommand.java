@@ -35,10 +35,10 @@ import frc.robot.utils.Easings.Functions;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
+public class RSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
   /** Creates a new BSBOTTOMLINKAutoCommand. */
-  public BSBOTTOMLINKAutoCommand(DriveSubsystem drive, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage, ClawIntakeSubsystem intake, ClawGripperSubsystem pneumatics, ClawWristSubsystem wrist, LimelightSubsystem camera) {
-    PiratePath path = new PiratePath("BS3CUBE");
+  public RSBOTTOMLINKAutoCommand(DriveSubsystem drive, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage, ClawIntakeSubsystem intake, ClawGripperSubsystem pneumatics, ClawWristSubsystem wrist, LimelightSubsystem camera) {
+    PiratePath path = new PiratePath("RS3CUBE");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
 
@@ -65,7 +65,7 @@ public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
       new RunIntakeCommand(intake, 0.2).raceWith(
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)),
       
-      new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
+      new RunIntakeCommand(intake, -0.5).withTimeout(0.3),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist).alongWith(
         new FollowPathCommand(drive, getFirstCube, true, 0)
