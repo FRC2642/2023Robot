@@ -71,19 +71,13 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
         new WaitCommand(0.5).andThen(
-        (new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.20, 2.5)
-        /*new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist))*/).raceWith(
+        new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, true, 0, 0.20, 2.5).raceWith(
           new RunIntakeCommand(intake, 0.4)
       ))),
         
-      
-
-        
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
-        
         new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
-      
       
       new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(

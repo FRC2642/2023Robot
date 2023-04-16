@@ -148,9 +148,9 @@ public class RobotContainer {
       //Human button
       new JoystickButton(auxButtonBoard, 8)
           .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
-      //Ground pickyp button
+      //Knocked down cone placement button
       new JoystickButton(auxButtonBoard, 9)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_GROUND_CONE, shoulder, slider, carriage, wrist)));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_KOCKED_CONE, shoulder, slider, carriage, wrist)));
       //Travel button
       new JoystickButton(auxButtonBoard, 1)
         .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
