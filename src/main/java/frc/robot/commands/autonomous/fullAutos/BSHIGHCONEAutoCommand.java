@@ -4,6 +4,7 @@
 
 package frc.robot.commands.autonomous.fullAutos;
 
+import edu.wpi.first.wpilibj2.command.ConditionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -75,19 +76,20 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
         new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CUBE, driveToCube, 
         true, 0, 0.30, 2, true).raceWith(
           new RunIntakeCommand(intake, 0.4)
-      ))).until(() -> DriveSubsystem.getRelativeFieldPosition().getX() > 25),
+      ))).withTimeout(4),
         
-
+      new ConditionalCommand(new WaitCommand(15), new WaitCommand(0.0), () -> DriveSubsystem.getRelativeFieldPosition().getX() > 23),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
         new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
       
-      new RunIntakeCommand(intake, -0.16).withTimeout(0.3),
+      new RunIntakeCommand(intake, -0.2).withTimeout(0.3),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
         new OpenCloseClawCommand(gripper, false),
         new FollowPathCommand(drive, driveToCone, false, 0.5)
-      ).until(() -> DriveSubsystem.getRelativeFieldPosition().getX() > 25)
+      ).until(() -> DriveSubsystem.getRelativeFieldPosition().getX() > 23)
 
       
+
       
       
 
