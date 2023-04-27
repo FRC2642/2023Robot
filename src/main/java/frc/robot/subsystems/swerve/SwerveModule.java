@@ -22,101 +22,62 @@ public class SwerveModule {
 
   // HARDWARE
   public final WPI_TalonFX angleMotor;
-  public final WPI_TalonFX driveMotor;
-  public final CANCoder absEncoder;
-  public final CANCoder turnEncoder;
+  private final WPI_TalonFX driveMotor;
+  public final CANCoder orientationEncoder;
 
   // INFORMATION
   public final SwerveModuleInfo info;
-  private final double absMaxValue;
-  private final double absStraightValue;
-  public final VectorR position;
-  private double totalDegreesTurned;
+  private final double defensiveAngleDeg;
 
   public SwerveModule(SwerveModuleInfo info) {
     this.info = info;
     this.angleMotor = new WPI_TalonFX(info.TURN_ID);
     this.driveMotor = new WPI_TalonFX(info.DRIVE_ID);
-    this.absMaxValue = info.ABS_ENCODER_MAX_VALUE;
-    this.absStraightValue = info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
-    this.position = VectorR.fromCartesian(info.X, info.Y);
-    this.absEncoder = new CANCoder(info.ENCODER_ID);
-    this.turnEncoder = new CANCoder(info.ENCODER_ID);
+    this.orientationEncoder = new CANCoder(info.ENCODER_ID);
+    this.defensiveAngleDeg = VectorR.fromCartesian(info.X, info.Y).getAngle();
     angleMotor.setNeutralMode(NeutralMode.Brake);
     driveMotor.setNeutralMode(NeutralMode.Brake);
-
-    //angleMotor.configClosedloopRamp(0);
-    //driveMotor.configClosedloopRamp(0);
-    turnEncoder.setPosition(0);
+    orientationEncoder.setPosition(0);
     driveMotor.setSelectedSensorPosition(0);
-
-    
-  }
-
-  //ENOCDER METHODS
-  public double getEncoderValue(){
-    return driveMotor.getSelectedSensorPosition();
-  }
-
-  public void setEncoderValue(double pos){
-    driveMotor.setSelectedSensorPosition(pos);
-  }
-
-  public double getTurnEncoderValue(){
-    return absEncoder.getAbsolutePosition();
-  }
-
-  public double getRelativeTurnEncoderValue(){
-    return turnEncoder.getPosition();
   }
 
   //RESET METHODS
   public void resetDriveEncoder() {
-    setEncoderValue(0.0);
+    driveMotor.setSelectedSensorPosition(0);
   }
 
   // MODULE WHEEL MEASUREMENTS
   public double getWheelSpeed() {
-    return driveMotor.getSelectedSensorVelocity() * Constants.FEET_PER_DISPLACEMENT * (1d/60d);
+    return driveMotor.getSelectedSensorVelocity() * Constants.FEET_PER_DISPLACEMENT * (100d/1d);
   }
 
   private double getWheelPosition() {
-    return getEncoderValue() * Constants.FEET_PER_DISPLACEMENT;
+    return driveMotor.getSelectedSensorPosition() * Constants.FEET_PER_DISPLACEMENT;
   }
-
-  public double getWheelPositionWithoutDrift(){
-    return getWheelPosition() - (Constants.DRIFT_PER_DEGREE * totalDegreesTurned);
-  }
-
-  
 
   /*
    * positive (+) = left turn CCW
    * negative (-) = right turn CW
    */
-  public double getWheelHeadingRadians() {
-    return (((getTurnEncoderValue() - absStraightValue) / absMaxValue) * Math.PI * 2.0);
+  public double getWheelOrientationDegrees() {
+    return orientationEncoder.getAbsolutePosition() - info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
   }
 
   public VectorR getVelocity() {
-    return VectorR.fromPolar(getWheelSpeed(), getWheelHeadingRadians());
+    return VectorR.fromPolar(getWheelSpeed(), getWheelOrientationDegrees());
   }
 
   private double lastWheelPosition = 0;
   private double increment = 0;
 
   public VectorR getPositionIncrement() {
-    return VectorR.fromPolar(increment, getWheelHeadingRadians());
+    return VectorR.fromPolar(increment, getWheelOrientationDegrees());
   }
+  
   private void updateIncrementMeasurement() {
-    double pos = getWheelPositionWithoutDrift();
-    
+    double pos = getWheelPosition();
     increment = pos - lastWheelPosition;
     lastWheelPosition = pos;
-  }
-
-  public void updateTotalDegreesTurned(){
-    totalDegreesTurned = turnEncoder.getPosition();
   }
 
   // MODULE SPEEDS CALCULATIONS
@@ -146,35 +107,33 @@ public class SwerveModule {
    * speed 0 min - 1 max, turns module drive wheel
    * angle radians follows coordinate plane standards, sets module wheel to angle
    */
-  public void update(double speed, double anglerad) {
+  public void update(double speed, double angleDegrees) {
 
-    desired.setFromPolar(speed, anglerad);
+    desired.setFromPolar(speed, angleDegrees);
 
-    if (Math.abs(MathR.getDistanceToAngleRadians(getWheelHeadingRadians(), desiredAngle())) > Math.toRadians(90))
+    if (Math.abs(MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle())) > 90d)
       reverse();
 
-    double speed_power = MathR.limit(desiredSpeed(), -1, 1);
-    double angle_power = 1 * MathR
-        .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngleRadians(getWheelHeadingRadians(), desiredAngle()), -1, 1);
-
-    driveMotor.set(speed_power);
+    double speed_power = MathR.limit(desiredSpeed(), -1.2, 1.2);
+    double angle_power = MathR
+        .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle()), -1, 1);
+   
+  
+    driveMotor.set(speed_power); 
     angleMotor.set(angle_power);
 
-    updateTotalDegreesTurned();
     updateIncrementMeasurement();
   }
 
   public void stop() {
-    angleMotor.stopMotor();
-    driveMotor.stopMotor();
+    angleMotor.set(0);
+    driveMotor.set(0);
+    
     
     updateIncrementMeasurement();
   }
 
   public void stopDefensively() {
-    update(0.0000001, position.getAngle());
+    update(0.0000001,  defensiveAngleDeg);
   }
-
-  
-
 }

@@ -39,14 +39,7 @@ public class Easings {
         easeInOutBounce
     }
 
-    /// <summary>
-    /// Constant Pi.
-    /// </summary>
     private static final double PI = Math.PI;
-
-    /// <summary>
-    /// Constant Pi / 2.
-    /// </summary>
     private static final double HALFPI = Math.PI / 2.0f;
 
     public static double interpolate(double outputMin, double outputMax, double inputMin, double inputMax, double input, Functions easing) {
@@ -56,9 +49,7 @@ public class Easings {
         return denormalized;
     }
 
-    /// <summary>
     /// Interpolate using the specified function.
-    /// </summary>
     public static double interpolate(double p, Functions function) {
         switch (function) {
             case easeStep:
@@ -128,39 +119,27 @@ public class Easings {
         }
     }
 
-    /// <summary>
-    /// Modeled after the line y = x
-    /// </summary>
     public static double easeLinear(double p) {
         return p;
     }
 
-    /// <summary>
-    /// It's either 1, or it's not
-    /// </summary>
+    // It's either 1, or it's not
     public static double easeStep(double p) {
         return Math.floor(p);
     }
 
-    /// <summary>
-    /// Modeled after the parabola y = x^2
-    /// </summary>
     public static double easeInQuad(double p) {
         return p * p;
     }
 
-    /// <summary>
     /// Modeled after the parabola y = -x^2 + 2x
-    /// </summary>
     public static double easeOutQuad(double p) {
         return -(p * (p - 2));
     }
 
-    /// <summary>
-    /// Modeled after the piecewise quad
-    /// y = (1/2)((2x)^2) ; [0, 0.5)
-    /// y = -(1/2)((2x-1)*(2x-3) - 1) ; [0.5, 1]
-    /// </summary>
+    // Modeled after the piecewise quad
+    // y = (1/2)((2x)^2) ; [0, 0.5)
+    // y = -(1/2)((2x-1)*(2x-3) - 1) ; [0.5, 1]
     public static double easeInOutQuad(double p) {
         if (p < 0.5f) {
             return 2 * p * p;
@@ -169,26 +148,22 @@ public class Easings {
         return (-2 * p * p) + (4 * p) - 1;
     }
 
-    /// <summary>
-    /// Modeled after the cubic y = x^3
-    /// </summary>
+    // Modeled after the cubic y = x^3
     public static double easeInCubic(double p) {
         return p * p * p;
     }
 
-    /// <summary>
-    /// Modeled after the cubic y = (x - 1)^3 + 1
-    /// </summary>
+    // Modeled after the cubic y = (x - 1)^3 + 1
+   
     public static double easeOutCubic(double p) {
         double f = p - 1;
         return (f * f * f) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the piecewise cubic
-    /// y = (1/2)((2x)^3) ; [0, 0.5)
-    /// y = (1/2)((2x-2)^3 + 2) ; [0.5, 1]
-    /// </summary>
+    
+    // Modeled after the piecewise cubic
+    // y = (1/2)((2x)^3) ; [0, 0.5)
+    // y = (1/2)((2x-2)^3 + 2) ; [0.5, 1]
     public static double easeInOutCubic(double p) {
         if (p < 0.5f) {
             return 4 * p * p * p;
@@ -198,26 +173,20 @@ public class Easings {
         return (0.5f * f * f * f) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the quart x^4
-    /// </summary>
+    // Modeled after the quart x^4
     public static double easeInQuart(double p) {
         return p * p * p * p;
     }
 
-    /// <summary>
-    /// Modeled after the quart y = 1 - (x - 1)^4
-    /// </summary>
+    // Modeled after the quart y = 1 - (x - 1)^4
     public static double easeOutQuart(double p) {
         double f = p - 1;
         return (f * f * f * (1 - p)) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the piecewise quart
-    /// y = (1/2)((2x)^4) ; [0, 0.5)
-    /// y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
-    /// </summary>
+    // Modeled after the piecewise quart
+    // y = (1/2)((2x)^4) ; [0, 0.5)
+    // y = -(1/2)((2x-2)^4 - 2) ; [0.5, 1]
     public static double easeInOutQuart(double p) {
         if (p < 0.5f) {
             return 8 * p * p * p * p;
@@ -227,26 +196,21 @@ public class Easings {
         return (-8 * f * f * f * f) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the quint y = x^5
-    /// </summary>
+    // Modeled after the quint y = x^5
+    // </summary>
     public static double easeInQuint(double p) {
         return p * p * p * p * p;
     }
 
-    /// <summary>
-    /// Modeled after the quint y = (x - 1)^5 + 1
-    /// </summary>
+    // Modeled after the quint y = (x - 1)^5 + 1
     public static double easeOutQuint(double p) {
         double f = p - 1;
         return (f * f * f * f * f) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the piecewise quint
-    /// y = (1/2)((2x)^5) ; [0, 0.5)
-    /// y = (1/2)((2x-2)^5 + 2) ; [0.5, 1]
-    /// </summary>
+    // Modeled after the piecewise quint
+    // y = (1/2)((2x)^5) ; [0, 0.5)
+    // y = (1/2)((2x-2)^5 + 2) ; [0.5, 1]
     public static double easeInOutQuint(double p) {
         if (p < 0.5f) {
             return 16 * p * p * p * p * p;
@@ -256,46 +220,34 @@ public class Easings {
         return (0.5f * f * f * f * f * f) + 1;
     }
 
-    /// <summary>
-    /// Modeled after quarter-cycle of sine wave
-    /// </summary>
+    // Modeled after quarter-cycle of sine wave
     public static double easeInSine(double p) {
         return Math.sin((p - 1) * HALFPI) + 1;
     }
 
-    /// <summary>
-    /// Modeled after quarter-cycle of sine wave (different phase)
-    /// </summary>
+    // Modeled after quarter-cycle of sine wave (different phase)
     public static double easeOutSine(double p) {
         return Math.sin(p * HALFPI);
     }
 
-    /// <summary>
-    /// Modeled after half sine wave
-    /// </summary>
+    // Modeled after half sine wave
     public static double easeInOutSine(double p) {
         return 0.5f * (1 - Math.cos(p * PI));
     }
 
-    /// <summary>
-    /// Modeled after shifted quadrant IV of unit circle
-    /// </summary>
+    // Modeled after shifted quadrant IV of unit circle
     public static double easeInCirc(double p) {
         return 1 - Math.sqrt(1 - (p * p));
     }
 
-    /// <summary>
-    /// Modeled after shifted quadrant II of unit circle
-    /// </summary>
+    // Modeled after shifted quadrant II of unit circle
     public static double easeOutCirc(double p) {
         return Math.sqrt((2 - p) * p);
     }
 
-    /// <summary>
-    /// Modeled after the piecewise circ function
-    /// y = (1/2)(1 - Math.sqrt(1 - 4x^2)) ; [0, 0.5)
-    /// y = (1/2)(Math.sqrt(-(2x - 3)*(2x - 1)) + 1) ; [0.5, 1]
-    /// </summary>
+    // Modeled after the piecewise circ function
+    // y = (1/2)(1 - Math.sqrt(1 - 4x^2)) ; [0, 0.5)
+    // y = (1/2)(Math.sqrt(-(2x - 3)*(2x - 1)) + 1) ; [0.5, 1]
     public static double easeInOutCirc(double p) {
         if (p < 0.5f) {
             return 0.5f * (1 - Math.sqrt(1 - (4 * (p * p))));
@@ -304,25 +256,19 @@ public class Easings {
         return 0.5f * (Math.sqrt(-((2 * p) - 3) * ((2 * p) - 1)) + 1);
     }
 
-    /// <summary>
-    /// Modeled after the expo function y = 2^(10(x - 1))
-    /// </summary>
+    // Modeled after the expo function y = 2^(10(x - 1))
     public static double easeInExpo(double p) {
         return (p <= 0.0f) ? p : Math.pow(2, 10 * (p - 1));
     }
 
-    /// <summary>
-    /// Modeled after the expo function y = -2^(-10x) + 1
-    /// </summary>
+    // Modeled after the expo function y = -2^(-10x) + 1
     public static double easeOutExpo(double p) {
         return (p >= 1.0f) ? p : 1 - Math.pow(2, -10 * p);
     }
 
-    /// <summary>
-    /// Modeled after the piecewise expo
-    /// y = (1/2)2^(10(2x - 1)) ; [0,0.5)
-    /// y = -(1/2)*2^(-10(2x - 1))) + 1 ; [0.5,1]
-    /// </summary>
+    // Modeled after the piecewise expo
+    // y = (1/2)2^(10(2x - 1)) ; [0,0.5)
+    // y = -(1/2)*2^(-10(2x - 1))) + 1 ; [0.5,1]
     public static double easeInOutExpo(double p) {
         if (p == 0.0 || p >= 1.0) {
             return p;
@@ -335,27 +281,21 @@ public class Easings {
         return (-0.5f * Math.pow(2, (-20 * p) + 10)) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the damped sine wave y = sin(13pi/2*x)*Math.pow(2, 10 * (x -
-    /// 1))
-    /// </summary>
+    // Modeled after the damped sine wave y = sin(13pi/2*x)*Math.pow(2, 10 * (x -
+    // 1))
     public static double easeInElastic(double p) {
         return Math.sin(13 * HALFPI * p) * Math.pow(2, 10 * (p - 1));
     }
 
-    /// <summary>
-    /// Modeled after the damped sine wave y = sin(-13pi/2*(x + 1))*Math.pow(2,
-    /// -10x) + 1
-    /// </summary>
+    // Modeled after the damped sine wave y = sin(-13pi/2*(x + 1))*Math.pow(2,
+    // -10x) + 1
     public static double easeOutElastic(double p) {
         return (Math.sin(-13 * HALFPI * (p + 1)) * Math.pow(2, -10 * p)) + 1;
     }
 
-    /// <summary>
-    /// Modeled after the piecewise expoly-damped sine wave:
-    /// y = (1/2)*sin(13pi/2*(2*x))*Math.pow(2, 10 * ((2*x) - 1)) ; [0,0.5)
-    /// y = (1/2)*(sin(-13pi/2*((2x-1)+1))*Math.pow(2,-10(2*x-1)) + 2) ; [0.5, 1]
-    /// </summary>
+    // Modeled after the piecewise expoly-damped sine wave:
+    // y = (1/2)*sin(13pi/2*(2*x))*Math.pow(2, 10 * ((2*x) - 1)) ; [0,0.5)
+    // y = (1/2)*(sin(-13pi/2*((2x-1)+1))*Math.pow(2,-10(2*x-1)) + 2) ; [0.5, 1]
     public static double easeInOutElastic(double p) {
         if (p < 0.5f) {
             return 0.5f * Math.sin(13 * HALFPI * (2 * p)) * Math.pow(2, 10 * ((2 * p) - 1));
@@ -364,26 +304,20 @@ public class Easings {
         return 0.5f * ((Math.sin(-13 * HALFPI * (2 * p)) * Math.pow(2, -10 * ((2 * p) - 1))) + 2);
     }
 
-    /// <summary>
-    /// Modeled after the overshooting cubic y = x^3-x*sin(x*pi)
-    /// </summary>
+    // Modeled after the overshooting cubic y = x^3-x*sin(x*pi)
     public static double easeInBack(double p) {
         return (p * p * p) - (p * Math.sin(p * PI));
     }
 
-    /// <summary>
-    /// Modeled after overshooting cubic y = 1-((1-x)^3-(1-x)*sin((1-x)*pi))
-    /// </summary>
+    // Modeled after overshooting cubic y = 1-((1-x)^3-(1-x)*sin((1-x)*pi))
     public static double easeOutBack(double p) {
         double f = 1 - p;
         return 1 - ((f * f * f) - (f * Math.sin(f * PI)));
     }
 
-    /// <summary>
-    /// Modeled after the piecewise overshooting cubic function:
-    /// y = (1/2)*((2x)^3-(2x)*sin(2*x*pi)) ; [0, 0.5)
-    /// y = (1/2)*(1-((1-x)^3-(1-x)*sin((1-x)*pi))+1) ; [0.5, 1]
-    /// </summary>
+    // Modeled after the piecewise overshooting cubic function:
+    // y = (1/2)*((2x)^3-(2x)*sin(2*x*pi)) ; [0, 0.5)
+    // y = (1/2)*(1-((1-x)^3-(1-x)*sin((1-x)*pi))+1) ; [0.5, 1]
     public static double easeInOutBack(double p) {
         if (p < 0.5f) {
             double f = 2 * p;
