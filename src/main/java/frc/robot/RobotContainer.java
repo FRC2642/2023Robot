@@ -75,7 +75,7 @@ public class RobotContainer {
   public final SliderSubsystem slider = new SliderSubsystem();
   public final ShoulderSubsystem shoulder = new ShoulderSubsystem();
   public final ClawWristSubsystem wrist = new ClawWristSubsystem();
-  public final LEDs leds = new LEDs();
+  //public final LEDs leds = new LEDs();
 
 
   public final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
@@ -137,7 +137,7 @@ public class RobotContainer {
       slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));
       shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
       wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
-      leds.setDefaultCommand(new SetLEDsCommand(leds, mainControl, auxControl));
+      //leds.setDefaultCommand(new SetLEDsCommand(leds, mainControl, auxControl));
 
       // BUTTONS
 
@@ -192,7 +192,7 @@ public class RobotContainer {
       new JoystickButton(mainControl, Button.kY.value)
           .whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));
     } else {
-      leds.setDefaultCommand(new RunCommand(() -> LEDs.animateLEDs(LEDPattern.STROBE_BLUE), leds));
+      //leds.setDefaultCommand(new RunCommand(() -> LEDs.animateLEDs(LEDPattern.STROBE_BLUE), leds));
       drive.setDefaultCommand(new RunCommand(() -> drive.stop(), drive));
       carriage.setDefaultCommand(new RunCommand(() -> carriage.setManual(-1 * mainControl.getRightY()), carriage));
       slider.setDefaultCommand(new RunCommand(() -> slider.setManual(-1 * mainControl.getLeftY()), slider));

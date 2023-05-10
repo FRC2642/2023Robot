@@ -37,9 +37,7 @@ public class SetShoulderCommand extends CommandBase {
 
   @Override
   public boolean isFinished() {
-    if (shoulder.atSetPosition()){
-      System.out.println("Shoulder done");
-    }
+    
     return shoulder.atSetPosition();  
   }
 }

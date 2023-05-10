@@ -48,6 +48,7 @@ public class SwerveModules implements Iterable<SwerveModule> {
 
    
   public void debugSmartDashboard() {
+    
     SmartDashboard.putNumber("FR", frontRight.orientationEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("FL", frontLeft.orientationEncoder.getAbsolutePosition());
     SmartDashboard.putNumber("BR", backRight.orientationEncoder.getAbsolutePosition());
