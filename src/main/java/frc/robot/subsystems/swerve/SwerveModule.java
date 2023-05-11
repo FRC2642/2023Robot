@@ -28,6 +28,7 @@ public class SwerveModule {
   // INFORMATION
   public final SwerveModuleInfo info;
   private final double defensiveAngleDeg;
+  private double wheelOrientation = 0.0;
 
   public SwerveModule(SwerveModuleInfo info) {
     this.info = info;
@@ -60,7 +61,7 @@ public class SwerveModule {
    * negative (-) = right turn CW
    */
   public double getWheelOrientationDegrees() {
-    return orientationEncoder.getAbsolutePosition() - info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
+    return wheelOrientation- info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
   }
 
   public VectorR getVelocity() {
@@ -108,6 +109,7 @@ public class SwerveModule {
    * angle radians follows coordinate plane standards, sets module wheel to angle
    */
   public void update(double speed, double angleDegrees) {
+    wheelOrientation = orientationEncoder.getAbsolutePosition();
 
     desired.setFromPolar(speed, angleDegrees);
 

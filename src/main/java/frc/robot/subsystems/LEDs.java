@@ -30,18 +30,18 @@ import edu.wpi.first.wpilibj.util.Color;
 
 public class LEDs extends SubsystemBase {
   
-  public final static CANdle candle = new CANdle(Constants.LED_PORT);
+  /*public final static CANdle candle = new CANdle(Constants.LED_PORT);
   private static LEDPattern currentPattern;
-   /** Creates a new LEDs. */
+   /** Creates a new LEDs. 
   public LEDs() {
     candle.configLEDType(LEDStripType.GRB);
 
-  }
+  }*/
 
   public static void animateLEDs(LEDPattern pattern){
-    if (currentPattern == null || pattern != currentPattern){
-      candle.animate(pattern.currentAnimation);
-    }
+    //if (currentPattern == null || pattern != currentPattern){
+    //  candle.animate(pattern.currentAnimation);
+    //}
   }
 
 

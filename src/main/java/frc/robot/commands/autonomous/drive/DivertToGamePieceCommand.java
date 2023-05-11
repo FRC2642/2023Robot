@@ -82,8 +82,9 @@ public class DivertToGamePieceCommand extends FollowPathCommand {
   @Override
   public boolean isFinished() {
     if (endWhenIntaken){
-      return intakeTimer.get() > 0.1 && ClawIntakeSubsystem.isObjectInClaw();
+      return intakeTimer.get() > 0.15 && ClawIntakeSubsystem.isObjectInClaw();
     }
     else return super.isFinished();
   }
 }
+ 

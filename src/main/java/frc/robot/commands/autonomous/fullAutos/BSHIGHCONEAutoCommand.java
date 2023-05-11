@@ -78,7 +78,6 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
           new RunIntakeCommand(intake, 0.4)
       ))).withTimeout(4),
         
-      new ConditionalCommand(new WaitCommand(15), new WaitCommand(0.0), () -> DriveSubsystem.getRelativeFieldPosition().getX() > 23),
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
         new FollowPathCommand(drive, driveBackToPlace, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
       

@@ -23,7 +23,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public static final double DEGREES_PER_TICK = -1 * 360d / 3.3d;
   public static final double INCLINE_DEGREES = 23d;
-  public static final double MAX_DEGREES = 220;//213;
+  public static final double MAX_DEGREES = 215;//213;
   public static final double MIN_DEGREES = 20;//20;
   public static final double AT_SETPOINT_THRESHOLD = 10d;
 
