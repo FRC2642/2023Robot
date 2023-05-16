@@ -143,24 +143,24 @@ public class RobotContainer {
       // BUTTONS
 
       //Fully extend button
-      new JoystickButton(auxControl, 1).whileTrue(
+      new JoystickButton(auxControl, 1).onTrue(
           (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage, wrist)));
       //Fully retract button
-      new JoystickButton(auxControl, 2).whileTrue(
+      new JoystickButton(auxControl, 2).onTrue(
           (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist)));
       //Override button
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
       //Chute button
-      new JoystickButton(auxButtonBoard, 7).whileTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage, wrist)));
+      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage, wrist)));
       //Human button
       new JoystickButton(auxButtonBoard, 8)
-          .whileTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
       //Knocked down cone placement button
       new JoystickButton(auxButtonBoard, 9)
-          .whileTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_KOCKED_CONE, shoulder, slider, carriage, wrist)));
+          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_KOCKED_CONE, shoulder, slider, carriage, wrist)));
       // //Travel button
-      // new JoystickButton(auxButtonBoard, 1)
-      //   .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
+       new JoystickButton(auxButtonBoard, 1)
+         .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
       //Extend slider button
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
@@ -177,7 +177,7 @@ public class RobotContainer {
         return SliderSubsystem.currentSetPosition;
       }));
       //Reset Gyro D-Pad
-      new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(180).andThen(new ResetDisplacementCommand(new VectorR())));
+      new POVButton(mainControl, 0).onTrue(new ResetGyroCommand(180).andThen(new ResetDisplacementCommand(new VectorR())));
       //Floor cone detection
       new JoystickButton(mainControl, Button.kX.value)
           .whileTrue(
