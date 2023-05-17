@@ -34,7 +34,12 @@ public class SetWristCommand extends CommandBase {
 
   @Override
   public void execute() {
-    wrist.set(position.get());
+    if (!wrist.atSetPosition()){
+      wrist.set(position.get());
+    }
+    else{
+      wrist.set(0.0);
+    }
   }
   
   @Override

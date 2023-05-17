@@ -36,7 +36,9 @@ public class SetCarriageCommand extends CommandBase {
 
   @Override
   public void execute() {
-    carriage.set(position.get());
+    if (!carriage.atSetPosition()){
+      carriage.set(position.get());
+    }
   }
   
   @Override

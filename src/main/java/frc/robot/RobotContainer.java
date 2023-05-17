@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import frc.robot.commands.autonomous.claw.RunIntakeCommand;
 import frc.robot.commands.autonomous.fullAutos.BSBOTTOMLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.BSHIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.CONEBALANCEAutoCommand;
@@ -161,21 +162,12 @@ public class RobotContainer {
       //Travel button
       //new JoystickButton(auxButtonBoard, 1)
       //  .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
-      //Extend slider button
-      new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
-        SliderSubsystem.protectionEnabled = false;
-        return SliderPosition.EXTENDED;
-      }));
-      //Retract slider button
-      new JoystickButton(auxButtonBoard, 11).onTrue(new SetSliderCommand(slider, () -> {
-        SliderSubsystem.protectionEnabled = false;
-        return SliderPosition.RETRACTED;
-      }));
-      //Activate slider protection
-      new JoystickButton(auxButtonBoard, 10).onTrue(new SetSliderCommand(slider, () -> {
-        SliderSubsystem.protectionEnabled = true;
-        return SliderSubsystem.currentSetPosition;
-      }));
+      //Run arm forwards button
+      new JoystickButton(auxButtonBoard, 12).whileTrue(new RunCommand(()->{shoulder.set(0.4);}, shoulder));
+      //Run arm backwards button
+      new JoystickButton(auxButtonBoard, 11).whileTrue(new RunCommand(()->{shoulder.set(-0.4);}, shoulder));
+      //Outtake button
+      new JoystickButton(auxButtonBoard, 10).whileTrue(new RunIntakeCommand(intake, -0.5));
       //Reset Gyro D-Pad
       new POVButton(mainControl, 0).whileTrue(new ResetGyroCommand(180).andThen(new ResetDisplacementCommand(new VectorR())));
       //Floor cone detection

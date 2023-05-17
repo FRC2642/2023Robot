@@ -39,7 +39,12 @@ public class SetShoulderCommand extends CommandBase {
   
   @Override
   public void execute() {
-    shoulder.set(position.get());
+    if (!shoulder.atSetPosition()){
+      shoulder.set(position.get());
+    }
+    else{
+      shoulder.set(0.0);
+    }
   }
 
   @Override

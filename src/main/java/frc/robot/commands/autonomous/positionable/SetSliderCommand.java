@@ -40,7 +40,12 @@ public class SetSliderCommand extends CommandBase {
 
   @Override
   public void execute() {
-    sliders.set(position.get());
+    if (!sliders.atSetPosition()){
+      sliders.set(position.get());
+    }
+    else{
+      sliders.set(0.0);
+    }
   }
 
   @Override
