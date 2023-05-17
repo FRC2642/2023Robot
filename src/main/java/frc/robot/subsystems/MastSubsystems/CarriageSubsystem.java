@@ -21,7 +21,7 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 public class CarriageSubsystem extends SubsystemBase implements IPositionable<CarriageSubsystem.CarriagePosition> {
 
   public static final double FULL_EXTENSION_PER_TICK = 1.0/95d;
-  public static final double AT_SETPOINT_THRESHOLD = 0.05;
+  public static double AT_SETPOINT_THRESHOLD = 0.05;
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private static RelativeEncoder carriageEncoder;

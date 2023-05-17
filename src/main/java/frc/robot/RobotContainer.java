@@ -21,6 +21,7 @@ import frc.robot.commands.autonomous.fullAutos.real.CUBEBALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.RSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.ScoreAndTaxiAuto;
+import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetLEDsCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand.RobotConfiguration;
@@ -132,34 +133,34 @@ public class RobotContainer {
     if (!DEBUG) {
       drive.setDefaultCommand(new JoystickOrientedDriveCommand(drive, mainControl));
       gripper.setDefaultCommand(new TeleopGripperCommand(gripper, auxControl));
-      carriage.setDefaultCommand(new TeleopCarriageCommand(carriage,  auxControl));
+      carriage.setDefaultCommand(new SetCarriageCommand(carriage, ()->CarriagePosition.RETRACTED, 0.2));
       intake.setDefaultCommand(new TeleopIntakeCommand(intake, auxControl));
-      slider.setDefaultCommand(new TeleopSliderCommand(slider, auxControl));
-      shoulder.setDefaultCommand(new TeleopShoulderCommand(shoulder, auxControl));
-      wrist.setDefaultCommand(new TeleopWristCommand(wrist, auxControl));
+      slider.setDefaultCommand(new SetSliderCommand(slider, ()->SliderPosition.RETRACTED, 0.2));
+      shoulder.setDefaultCommand(new SetShoulderCommand(shoulder, ()->ShoulderPosition.TRAVEL_MODE, 20d));
+      wrist.setDefaultCommand(new SetWristCommand(wrist, ()->WristPosition.HORIZONTAL1, 10d));
       //leds.setDefaultCommand(new SetLEDsCommand(leds, mainControl, auxControl));
 
       // BUTTONS
 
       //Fully extend button
-      new JoystickButton(auxControl, 1).onTrue(
+      new JoystickButton(auxControl, 1).whileTrue(
           (new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH, shoulder, slider, carriage, wrist)));
       //Fully retract button
-      new JoystickButton(auxControl, 2).onTrue(
+      new JoystickButton(auxControl, 2).whileTrue(
           (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist)));
       //Override button
       new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
       //Chute button
-      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage, wrist)));
+      new JoystickButton(auxButtonBoard, 7).whileTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage, wrist)));
       //Human button
       new JoystickButton(auxButtonBoard, 8)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
+          .whileTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
       //Knocked down cone placement button
       new JoystickButton(auxButtonBoard, 9)
-          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_KOCKED_CONE, shoulder, slider, carriage, wrist)));
+          .whileTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_KOCKED_CONE, shoulder, slider, carriage, wrist)));
       //Travel button
-      new JoystickButton(auxButtonBoard, 1)
-        .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
+      //new JoystickButton(auxButtonBoard, 1)
+      //  .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
       //Extend slider button
       new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;

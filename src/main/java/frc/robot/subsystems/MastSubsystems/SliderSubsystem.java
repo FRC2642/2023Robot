@@ -20,7 +20,7 @@ import frc.robot.utils.MathR;
 public class SliderSubsystem extends SubsystemBase implements IPositionable<SliderSubsystem.SliderPosition> {
 
   public static final double FULL_EXTENSION_PER_TICK = 1d/248d;
-  public static final double AT_SETPOINT_THRESHOLD = 0.12;
+  public static double AT_SETPOINT_THRESHOLD = 0.12;
 
   private final CANSparkMax sliderMotor = new CANSparkMax(Constants.MAIN_SLIDER_MOTOR, MotorType.kBrushless);
   private final Solenoid brake = ClawGripperSubsystem.pneumatics.makeSolenoid(2);

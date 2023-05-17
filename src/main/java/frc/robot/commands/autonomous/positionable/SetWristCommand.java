@@ -14,9 +14,16 @@ public class SetWristCommand extends CommandBase {
   private final ClawWristSubsystem wrist;
   private final Supplier<ClawWristSubsystem.WristPosition> position;
 
+  public SetWristCommand(ClawWristSubsystem wrist, Supplier<ClawWristSubsystem.WristPosition> position, double threshold) {
+    this.wrist = wrist;
+    this.position = position;
+    ClawWristSubsystem.AT_SETPOINT_THRESHOLD = threshold;
+    addRequirements(wrist);
+  }
   public SetWristCommand(ClawWristSubsystem wrist, Supplier<ClawWristSubsystem.WristPosition> position) {
     this.wrist = wrist;
     this.position = position;
+    ClawWristSubsystem.AT_SETPOINT_THRESHOLD = 5d;
     addRequirements(wrist);
   }
   @Override

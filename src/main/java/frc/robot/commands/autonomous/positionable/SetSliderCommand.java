@@ -14,9 +14,17 @@ public class SetSliderCommand extends CommandBase {
   private final SliderSubsystem sliders;
   private final Supplier<SliderSubsystem.SliderPosition> position;
 
+  public SetSliderCommand(SliderSubsystem sliders, Supplier<SliderSubsystem.SliderPosition> position, double threshold) {
+    this.sliders = sliders;
+    this.position = position;
+    SliderSubsystem.AT_SETPOINT_THRESHOLD = threshold;
+    addRequirements(sliders);
+  }
+
   public SetSliderCommand(SliderSubsystem sliders, Supplier<SliderSubsystem.SliderPosition> position) {
     this.sliders = sliders;
     this.position = position;
+    SliderSubsystem.AT_SETPOINT_THRESHOLD = 0.12;
     addRequirements(sliders);
   }
   @Override

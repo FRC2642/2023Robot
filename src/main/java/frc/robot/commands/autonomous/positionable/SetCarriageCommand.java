@@ -14,9 +14,17 @@ public class SetCarriageCommand extends CommandBase {
   private final CarriageSubsystem carriage;
   private final Supplier<CarriageSubsystem.CarriagePosition> position;
 
-  public SetCarriageCommand(CarriageSubsystem carriage, Supplier<CarriageSubsystem.CarriagePosition> position) {
+  public SetCarriageCommand(CarriageSubsystem carriage, Supplier<CarriageSubsystem.CarriagePosition> position, double threshold) {
     this.carriage = carriage;
     this.position = position;
+    CarriageSubsystem.AT_SETPOINT_THRESHOLD = threshold;
+    addRequirements(carriage);
+  }
+
+  public SetCarriageCommand(CarriageSubsystem carriage, Supplier<CarriageSubsystem.CarriagePosition> position){
+    this.carriage = carriage;
+    this.position = position;
+    CarriageSubsystem.AT_SETPOINT_THRESHOLD = 0.05;
     addRequirements(carriage);
   }
 

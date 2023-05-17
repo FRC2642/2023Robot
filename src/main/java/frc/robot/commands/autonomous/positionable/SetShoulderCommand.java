@@ -14,9 +14,16 @@ public class SetShoulderCommand extends CommandBase {
   private final ShoulderSubsystem shoulder;
   private final Supplier<ShoulderSubsystem.ShoulderPosition> position;
   
+  public SetShoulderCommand(ShoulderSubsystem shoulder, Supplier<ShoulderSubsystem.ShoulderPosition> position, double threshold) {
+    this.shoulder = shoulder;
+    this.position = position;
+    ShoulderSubsystem.AT_SETPOINT_THRESHOLD = threshold;
+    addRequirements(shoulder);
+  }
   public SetShoulderCommand(ShoulderSubsystem shoulder, Supplier<ShoulderSubsystem.ShoulderPosition> position) {
     this.shoulder = shoulder;
     this.position = position;
+    ShoulderSubsystem.AT_SETPOINT_THRESHOLD = 10d;
     addRequirements(shoulder);
   }
   @Override
