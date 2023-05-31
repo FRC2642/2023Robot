@@ -20,13 +20,9 @@ public class MathR {
     }
 
     public static double modulo(double x, double y) {
-        if (x >= 0)
-            return x % y;
-        else {
-            while (x < 0)
-                x += y;
-            return x % y;
-        }
+        while (x < 0)
+            x += y;
+        return x % y;
     }
 
     public static double limit(double input, double min, double max) {

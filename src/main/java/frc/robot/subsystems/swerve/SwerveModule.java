@@ -106,7 +106,7 @@ public class SwerveModule {
   /*
    * UPDATE OR STOP METHODS MUST BE CALLED PERIODICALLY 
    * speed 0 min - 1 max, turns module drive wheel
-   * angle radians follows coordinate plane standards, sets module wheel to angle
+   * angle degrees follows coordinate plane standards, sets module wheel to angle
    */
   public void update(double speed, double angleDegrees) {
     wheelOrientation = orientationEncoder.getAbsolutePosition();
