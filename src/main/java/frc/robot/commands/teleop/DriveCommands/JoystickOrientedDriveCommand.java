@@ -36,9 +36,6 @@ public class JoystickOrientedDriveCommand extends CommandBase {
   public void execute() {
       maxSpeed = MathR.lerp(0.25, 1.2, 0.0, 1.0, control.getLeftTriggerAxis());
 
-      //MAX_SPEED = (control.getRightTriggerAxis())/(2.0)+0.5;
-      
-
       leftJoystick.setFromCartesian(control.getLeftX(), -control.getLeftY());
       leftJoystick.rotate(-90);
       rightJoystick.setFromCartesian(control.getRightX(), -control.getRightY());
