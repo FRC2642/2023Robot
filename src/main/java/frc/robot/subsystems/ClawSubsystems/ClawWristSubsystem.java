@@ -58,7 +58,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   public void set(double speed) {
     currentSetPosition = WristPosition.MANUAL;
 
-    if (ShoulderSubsystem.getShoulderAngle() <= 30 && CarriageSubsystem.getCarriageExtension() <= 0.2 || ((getWristAngle() < 0 && speed < 0) || (getWristAngle() > 180 && speed > 0))){
+    if (ShoulderSubsystem.getShoulderAngle() <= 30 && CarriageSubsystem.getCarriageExtension() <= 0.2 || ((getWristAngle() < 180 && speed < 0) || (getWristAngle() > 360 && speed > 0))){
       wristMotor.set(0.0);
     }
     else{
@@ -124,8 +124,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   
   public enum WristPosition {
     MANUAL(-1),
-    HORIZONTAL2(0),
-    HORIZONTAL1(180),
+    HORIZONTAL2(180),
+    HORIZONTAL1(360),
     DIAGONAL1(225),
     DIAGONAL2(315),
     VERTICAL1(270);
