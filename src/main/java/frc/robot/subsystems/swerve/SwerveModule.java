@@ -9,6 +9,9 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.RelativeEncoder;
 
+import edu.wpi.first.hal.can.CANExceptionFactory;
+import edu.wpi.first.hal.can.CANMessageNotFoundException;
+import edu.wpi.first.wpilibj.CAN;
 import frc.robot.Constants;
 import frc.robot.utils.MathR;
 import frc.robot.utils.VectorR;
@@ -109,7 +112,10 @@ public class SwerveModule {
    * angle radians follows coordinate plane standards, sets module wheel to angle
    */
   public void update(double speed, double angleDegrees) {
+    
+    
     wheelOrientation = orientationEncoder.getAbsolutePosition();
+  
 
     desired.setFromPolar(speed, angleDegrees);
 

@@ -25,6 +25,10 @@ public class PiratePoint implements Comparable<PiratePoint> {
         return new PiratePoint(position.getX(), position.getY(), heading, time, stopPoint);
     }
 
+    /*public void setHeading(double heading){
+        this.heading = heading;
+    }*/
+
     @Override
     public int compareTo(PiratePoint arg0) {
         return Double.compare(time, arg0.time);

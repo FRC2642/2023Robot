@@ -94,6 +94,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
             double Y = pt.position.getY();
             var newPt = pt.clone();
             newPt.position.setY(Constants.FIELD_Y - Y);
+            //newPt.
             bluePath.add(newPt);
         }
 
