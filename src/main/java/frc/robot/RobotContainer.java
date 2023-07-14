@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import frc.robot.commands.autonomous.fullAutos.BSBOTTOMLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.BSHIGHCONEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.BSHIGHLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.CONEBALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.RS2HIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.RSBOTTOMLINKAutoCommand;
@@ -107,6 +108,7 @@ public class RobotContainer {
     autoChooser.addOption("Bump Side 3 Low Cube", new RSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, gripper, wrist, clawLimelight));
     autoChooser.addOption("Balance High Cone", new CONEBALANCEAutoCommand(slider, gripper, drive, carriage, intake, shoulder, wrist)); 
     autoChooser.addOption("Bump Side 2 High Cone", new RS2HIGHCONEAutoCommand(drive, clawLimelight, shoulder, slider, carriage, wrist, gripper, intake)); 
+    autoChooser.addOption("Flat Side High Link", new BSHIGHLINKAutoCommand(drive, clawLimelight, poleLimelight, slider, carriage, shoulder, gripper, intake, wrist));
 
     SmartDashboard.putData(autoChooser);
 

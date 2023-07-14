@@ -68,6 +68,10 @@ public class SwerveModule {
     return VectorR.fromPolar(getWheelSpeed(), getWheelOrientationDegrees());
   }
 
+  public double getWheelPower(){
+    return driveMotor.get();
+  }
+
   private double lastWheelPosition = 0;
   private double increment = 0;
 
