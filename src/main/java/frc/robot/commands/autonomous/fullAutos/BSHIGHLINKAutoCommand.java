@@ -59,12 +59,12 @@ public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
       new RunCommand(()->{
         shoulder.set(0.45);
       }, shoulder).withTimeout(0.5).raceWith(
-        new SetSliderCommand(sliders, ()->SliderPosition.EXTENDED), new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED)
+        new SetSliderCommand(sliders, ()->SliderPosition.EXTENDED).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED))
       ),
-      new WaitCommand(0.1),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
       new OpenCloseClawCommand(gripper, true),
+      new WaitCommand(0.1),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
         new WaitCommand(0.3).andThen(
@@ -75,7 +75,7 @@ public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
       ))).withTimeout(4),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
-        new FollowPathCommand(drive, driveToPlaceCone, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
+        new FollowPathCommand(drive, driveToPlaceCone, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.3)),
       
       new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist),
       new OpenCloseClawCommand(gripper, true),
@@ -90,7 +90,7 @@ public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
         new FollowPathCommand(drive, driveToPlaceCube, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.2)),
       
-      new RunIntakeCommand(intake, -0.2).withTimeout(0.3)
+      new RunIntakeCommand(intake, -0.8).withTimeout(0.3)
 
     );
   }
