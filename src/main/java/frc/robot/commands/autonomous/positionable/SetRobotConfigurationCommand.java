@@ -34,7 +34,8 @@ public class SetRobotConfigurationCommand extends ParallelCommandGroup {
 
   public enum RobotConfiguration {
     PLACE_CONE_HIGH(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_CONE_HIGH, WristPosition.HORIZONTAL2),
-    PLACE_CONE_HIGH_AUTO(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_CONE_HIGH_AUTO, WristPosition.HORIZONTAL2),
+    PLACE_FIRST_CONE_HIGH_AUTO(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_FIRST_CONE_HIGH_AUTO, WristPosition.HORIZONTAL2),
+    PLACE_SECOND_CONE_HIGH_AUTO(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_SECOND_CONE_HIGH_AUTO, WristPosition.HORIZONTAL2),
     PICKUP_FLOOR(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.PICKUP_GROUND, WristPosition.HORIZONTAL1),
     PLACE_KOCKED_CONE(SliderPosition.EXTENDED, CarriagePosition.EXTENDED, ShoulderPosition.PLACE_CONE_HIGH, WristPosition.HORIZONTAL1),
     TRAVEL_MODE(SliderPosition.RETRACTED, CarriagePosition.RETRACTED, ShoulderPosition.TRAVEL_MODE, WristPosition.HORIZONTAL1),

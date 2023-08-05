@@ -67,7 +67,7 @@ public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
       
       
       
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_FIRST_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
       new OpenCloseClawCommand(gripper, true),
       new WaitCommand(0.2),
       

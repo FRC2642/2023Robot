@@ -62,7 +62,7 @@ public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
         new SetSliderCommand(sliders, ()->SliderPosition.EXTENDED).raceWith(new SetCarriageCommand(carriage, ()->CarriagePosition.EXTENDED))
       ),
 
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_FIRST_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist).raceWith(new RunIntakeCommand(intake, 0.2)),
       new OpenCloseClawCommand(gripper, true),
       new WaitCommand(0.1),
 
@@ -70,14 +70,14 @@ public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
         new WaitCommand(0.3).andThen(
         new OpenCloseClawCommand(gripper, false),
         new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, driveToCone, 
-        true, 0, 0.20, 2, true).raceWith(
+        true, 0, 0.20, 1.7, true).raceWith(
           new RunIntakeCommand(intake, 1)
       ))).withTimeout(4),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, sliders, carriage, wrist).alongWith(
         new FollowPathCommand(drive, driveToPlaceCone, false, 0.5)).raceWith(new RunIntakeCommand(intake, 0.3)),
       
-      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist),
+      new SetRobotConfigurationCommand(RobotConfiguration.PLACE_SECOND_CONE_HIGH_AUTO, shoulder, sliders, carriage, wrist),
       new OpenCloseClawCommand(gripper, true),
 
       new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, sliders, carriage, wrist).alongWith(
