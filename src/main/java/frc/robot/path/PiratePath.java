@@ -4,18 +4,10 @@
 
 package frc.robot.path;
 
-import java.io.Console;
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.FileSystem;
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.opencv.core.Point;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -72,10 +64,10 @@ public class PiratePath extends TreeSet<PiratePoint> {
                 double t = point.get("time").asDouble();
                 double x = (Constants.FIELD_X) - (translation.get("x").asDouble() * Constants.FOOT_PER_METER);
                 double y = (Constants.FIELD_Y) - (translation.get("y").asDouble() * Constants.FOOT_PER_METER);
-                double h = point.get("holonomicRotation").asDouble() + 180;
+                double r = point.get("holonomicRotation").asDouble() + 180;
                 boolean stop = point.get("velocity").asDouble() == 0.0 && !first;
 
-                PiratePoint pt = new PiratePoint(x, y, h, t, stop);
+                PiratePoint pt = new PiratePoint(x, y, r, t, stop);
                 add(pt);
                 first = false;
             }
@@ -94,6 +86,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
             double Y = pt.position.getY();
             var newPt = pt.clone();
             newPt.position.setY(Constants.FIELD_Y - Y);
+            newPt.holonomicRotation = -newPt.holonomicRotation;
             bluePath.add(newPt);
         }
 
@@ -156,7 +149,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
                         time, interpolationEasing);
                 double y = Easings.interpolate(current.position.getY(), next.position.getY(), current.time, next.time,
                         time, interpolationEasing);
-                double h = Easings.interpolate(current.heading, next.heading, current.time, next.time, time,
+                double h = Easings.interpolate(current.holonomicRotation, next.holonomicRotation, current.time, next.time, time,
                         interpolationEasing);
                 add(new PiratePoint(x, y, h, time, false));
             }

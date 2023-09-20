@@ -70,6 +70,7 @@ public class DriveSubsystem extends SubsystemBase {
 
       // position tracking
       var inc = module.getPositionIncrement();
+      
       inc.mult(1d / 4d);
       inc.rotate(getYawDegrees());
       displacement.add(inc);

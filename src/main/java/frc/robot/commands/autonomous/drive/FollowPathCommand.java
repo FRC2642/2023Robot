@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.utils.MathR;
-import frc.robot.utils.VectorR;
 import frc.robot.path.*;
 
 public class FollowPathCommand extends CommandBase {
@@ -73,7 +72,7 @@ public class FollowPathCommand extends CommandBase {
     nextPoint = null;
     if (recenterDisplacementToFirstPoint) {
       DriveSubsystem.resetDisplacement(path.getFirst().position);
-      DriveSubsystem.resetGyro(path.getFirst().heading);
+      DriveSubsystem.resetGyro(path.getFirst().holonomicRotation);
     }
     return true;
   }
@@ -113,7 +112,7 @@ public class FollowPathCommand extends CommandBase {
     velocity.sub(DriveSubsystem.getRelativeFieldPosition());
     velocity.mult(MOVEMENT_KP / delta_t);
 
-    double turn = MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), nextPoint.heading) / delta_t;
+    double turn = MathR.getDistanceToAngle(DriveSubsystem.getYawDegrees(), nextPoint.holonomicRotation) / delta_t;
 
     drive.move(velocity, turn * HEADING_KP);
   }

@@ -61,7 +61,7 @@ public class SwerveModule {
    * negative (-) = right turn CW
    */
   public double getWheelOrientationDegrees() {
-    return wheelOrientation- info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
+    return wheelOrientation - info.ABS_ENCODER_VALUE_WHEN_STRAIGHT;
   }
 
   public VectorR getVelocity() {

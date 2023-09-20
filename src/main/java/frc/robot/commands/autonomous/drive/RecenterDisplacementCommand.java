@@ -34,7 +34,6 @@ public class RecenterDisplacementCommand extends CommandBase {
   public void execute() {
     if (limelight.confidence() > MIN_CONFIDENCE && timer.get() > RESET_INTERVAL) {
       timer.reset();
-      VectorR old = DriveSubsystem.getRelativeFieldPosition();
       DriveSubsystem.resetDisplacement(VectorR.fromCartesian(limelight.botposeX, limelight.botposeY));
         
     } 

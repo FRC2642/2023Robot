@@ -50,7 +50,7 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   }
 
   public static double getWristAngle() {
-    return MathR.getDistanceToAngle(0, wristEncoder.getPosition()/*+106.4*/, 300)+111;
+    return MathR.getDistanceToAngle(0, wristEncoder.getPosition(), 300)+163;
   }
 
 
@@ -124,8 +124,8 @@ public class ClawWristSubsystem extends SubsystemBase implements IPositionable<C
   
   public enum WristPosition {
     MANUAL(-1),
-    HORIZONTAL2(180),
-    HORIZONTAL1(360),
+    HORIZONTAL1(180),
+    HORIZONTAL2(360),
     DIAGONAL1(225),
     DIAGONAL2(315),
     VERTICAL1(270);

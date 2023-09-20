@@ -5,11 +5,8 @@
 package frc.robot.commands.autonomous.fullAutos.real;
 
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.commands.autonomous.claw.EndWhenObjectInClawCommand;
-import frc.robot.commands.autonomous.claw.OpenCloseClawCommand;
 import frc.robot.commands.autonomous.claw.RunIntakeCommand;
 import frc.robot.commands.autonomous.drive.DriveTowardsGamePieceCommand;
 import frc.robot.commands.autonomous.drive.FollowPathCommand;
@@ -26,14 +23,12 @@ import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
-import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem.ShoulderPosition;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem.SliderPosition;
-import frc.robot.utils.VectorR;
 import frc.robot.utils.Easings.Functions;
 
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more

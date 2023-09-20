@@ -10,19 +10,20 @@ import frc.robot.utils.VectorR;
 public class PiratePoint implements Comparable<PiratePoint> {
     
     public final VectorR position;
-    public final double heading;
     public final double time;
+    public double holonomicRotation;
     public final boolean stopPoint;
+    
 
-    public PiratePoint(double x, double y, double heading, double time, Boolean stopPoint) {
+    public PiratePoint(double x, double y, double holonomicRotation, double time, Boolean stopPoint) {
         position = VectorR.fromCartesian(x, y);
-        this.heading = heading;
+        this.holonomicRotation = holonomicRotation;
         this.time = time;
         this.stopPoint = stopPoint;
     }
 
     public PiratePoint clone() {
-        return new PiratePoint(position.getX(), position.getY(), heading, time, stopPoint);
+        return new PiratePoint(position.getX(), position.getY(), holonomicRotation, time, stopPoint);
     }
 
     @Override
@@ -32,7 +33,7 @@ public class PiratePoint implements Comparable<PiratePoint> {
 
     @Override
     public String toString() {
-        return "{[pos: " + position.toString() + "ft] [t: " + VectorR.truncate(time, 2) + "s] [head: " + VectorR.truncate(heading, 0) + "deg]}";
+        return "{[pos: " + position.toString() + "ft] [t: " + VectorR.truncate(time, 2) + "s] [rot: " + VectorR.truncate(holonomicRotation, 0) + "deg]}";
     }
 
     

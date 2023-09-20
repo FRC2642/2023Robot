@@ -16,12 +16,12 @@ import frc.robot.commands.autonomous.fullAutos.BSBOTTOMLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.BSHIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.BSHIGHLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.CONEBALANCEAutoCommand;
+import frc.robot.commands.autonomous.fullAutos.DriftTestPath;
 import frc.robot.commands.autonomous.fullAutos.RS2HIGHCONEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.RSBOTTOMLINKAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.CUBEBALANCEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.BSHIGHCUBEAutoCommand;
 import frc.robot.commands.autonomous.fullAutos.real.RSHIGHCUBEAutoCommand;
-import frc.robot.commands.autonomous.fullAutos.real.ScoreAndTaxiAuto;
 import frc.robot.commands.autonomous.positionable.SetCarriageCommand;
 import frc.robot.commands.autonomous.positionable.SetLEDsCommand;
 import frc.robot.commands.autonomous.positionable.SetRobotConfigurationCommand;
@@ -44,12 +44,10 @@ import frc.robot.commands.teleop.resetters.ResetDisplacementCommand;
 import frc.robot.commands.teleop.resetters.ResetGyroCommand;
 import frc.robot.commands.teleop.resetters.ResetSliderEncoderCommand;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.LEDs;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawGripperSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem;
 import frc.robot.subsystems.ClawSubsystems.ClawWristSubsystem.WristPosition;
-import frc.robot.subsystems.LEDs.LEDPattern;
 import frc.robot.subsystems.LimelightSubsystem.DetectionType;
 import frc.robot.subsystems.MastSubsystems.SliderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem.CarriagePosition;
@@ -60,6 +58,7 @@ import frc.robot.utils.Easings.Functions;
 import frc.robot.subsystems.ClawSubsystems.ClawIntakeSubsystem;
 import frc.robot.subsystems.MastSubsystems.ShoulderSubsystem;
 import frc.robot.subsystems.MastSubsystems.CarriageSubsystem;
+import frc.robot.subsystems.LEDs;
 
 
 public class RobotContainer {
@@ -68,8 +67,8 @@ public class RobotContainer {
   public final Joystick auxButtonBoard = new Joystick(Constants.AUX_BUTTON_BOARD_PORT);
 
   public final DriveSubsystem drive = new DriveSubsystem();
-  public final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight-back");
-  public final LimelightSubsystem poleLimelight = new LimelightSubsystem("limelight-front");
+  public final LimelightSubsystem poleLimelight = new LimelightSubsystem("limelight-back");
+  public final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight-front");
 
   public final ClawGripperSubsystem gripper = new ClawGripperSubsystem();
   public final CarriageSubsystem carriage = new CarriageSubsystem();
@@ -81,16 +80,11 @@ public class RobotContainer {
 
 
   public final SendableChooser<Command> autoChooser = new SendableChooser<Command>();
-  public final PiratePath taxiPath = new PiratePath(false);
 
   public static boolean DEBUG = false;
 
 
   public RobotContainer() {
-
-    taxiPath.add(new PiratePoint(0, 0, 180, 0, false));
-    taxiPath.add(new PiratePoint(14.5, 0, 180, 8, false));
-    taxiPath.fillWithSubPointsEasing(0.01, Functions.easeInOutCubic);
 
     SmartDashboard.putNumber("DEBUG MODE", 0);
 
@@ -98,8 +92,6 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
-    autoChooser.addOption("Mobility High Cube",
-        new ScoreAndTaxiAuto(slider, gripper, drive, carriage, shoulder, intake, taxiPath));
     autoChooser.addOption("Flat Side High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, poleLimelight, carriage, shoulder, intake, gripper, slider, wrist));
     autoChooser.addOption("Bump Side High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider, wrist));
     autoChooser.addOption("Flat Side High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider, wrist));
@@ -109,11 +101,11 @@ public class RobotContainer {
     autoChooser.addOption("Balance High Cone", new CONEBALANCEAutoCommand(slider, gripper, drive, carriage, intake, shoulder, wrist)); 
     autoChooser.addOption("Bump Side 2 High Cone", new RS2HIGHCONEAutoCommand(drive, clawLimelight, shoulder, slider, carriage, wrist, gripper, intake)); 
     autoChooser.addOption("Flat Side High Link", new BSHIGHLINKAutoCommand(drive, clawLimelight, poleLimelight, slider, carriage, shoulder, gripper, intake, wrist));
-
+    autoChooser.addOption("Drift Test Path", new DriftTestPath(drive));
     SmartDashboard.putData(autoChooser);
 
     
-    // SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
+    SmartDashboard.putData(new ResetDisplacementCommand(new VectorR()));
     SmartDashboard.putData(new ResetSliderEncoderCommand(SliderPosition.ZERO));
     SmartDashboard.putData(new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED));
 

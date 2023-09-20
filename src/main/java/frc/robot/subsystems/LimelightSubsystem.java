@@ -27,9 +27,9 @@ public class LimelightSubsystem extends SubsystemBase {
    */
   public enum DetectionType {
     CONE(0),
-    CUBE(1),
+    CUBE(3), //1
     FIDUCIAL(2),
-    RETROREFLECTIVE(3),
+    RETROREFLECTIVE(1),//3
     NONE(-1);
 
     public final int pipeline;
