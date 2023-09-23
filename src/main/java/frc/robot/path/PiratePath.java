@@ -6,7 +6,9 @@ package frc.robot.path;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.TreeSet;
+import java.util.function.BiConsumer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.wpi.first.wpilibj.Filesystem;
 import frc.robot.Constants;
 import frc.robot.utils.Easings;
+import frc.robot.utils.MathR;
 
 /**
  * Represents a field path for a swerve robot, contains helper functions for
@@ -100,6 +103,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
         int index = 0;
         for (var pt : this) {
             current.add(pt);
+            
             if (pt.stopPoint && pt.time != 0.0) {
                 current.name = this.name + "[" + index + "]";
                 paths.add(current);
@@ -107,9 +111,38 @@ public class PiratePath extends TreeSet<PiratePoint> {
                 index++;
             }
         }
-
         return paths;
     }
+
+    public ArrayList<PiratePath> getSubPaths(ArrayList<Double> separatePathAtTimes, double rangeToSeparate) {
+        ArrayList<PiratePath> paths = new ArrayList<>();
+        HashMap<Double, Double> separatedAtTime = new HashMap<>(separatePathAtTimes.size());
+
+        PiratePath current = new PiratePath(true);
+        int index = 0;
+        if (separatePathAtTimes.isEmpty()){
+            return getSubPaths();
+        }
+        else{
+            for (var pt : this) {
+                current.add(pt);
+                for (Double time : separatePathAtTimes){
+                    if (pt.stopPoint || MathR.range(time, pt.time, rangeToSeparate) && pt.time != 0.0) {
+                        if (!separatedAtTime.containsKey(time) && MathR.range(separatedAtTime.get(time), pt.time, rangeToSeparate)){
+                            separatedAtTime.put(time, pt.time);
+                            current.name = this.name + "[" + index + "]";
+                            paths.add(current);
+                            current = new PiratePath(true);
+                            index++;
+                        }
+                    }
+                }
+            }
+        }
+        return paths;
+    }
+
+    
 
     @Override
     public String toString() {

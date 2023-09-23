@@ -35,6 +35,10 @@ public class MathR {
         return input;
     }
 
+    public static boolean range(double input, double comparison, double range){
+        return (input-range >= comparison || input+range <= comparison);
+    }
+
     public static double limitWhenReached(double input, double min, double max, boolean lowerLimit, boolean upperLimit) {
         if (lowerLimit && upperLimit) return 0.0;
         if (lowerLimit) return limit(input, 0, max);
