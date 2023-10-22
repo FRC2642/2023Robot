@@ -70,7 +70,7 @@ public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
         new WaitCommand(0.3).andThen(
         new OpenCloseClawCommand(gripper, false),
         new DivertToGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, driveToCone, 
-        true, 0, 0.20, 1.7, true).raceWith(
+        true, 0, 0.20, 1.5, true).raceWith(
           new RunIntakeCommand(intake, 1)
       ))).withTimeout(4),
 
