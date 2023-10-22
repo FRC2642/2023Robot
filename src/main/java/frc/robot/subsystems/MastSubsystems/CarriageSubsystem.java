@@ -21,11 +21,11 @@ import com.revrobotics.SparkMaxLimitSwitch.Type;
 public class CarriageSubsystem extends SubsystemBase implements IPositionable<CarriageSubsystem.CarriagePosition> {
 
   public static final double FULL_EXTENSION_PER_TICK = 1.0/95d;
-  public static final double AT_SETPOINT_THRESHOLD = 0.05;
+  public static final double AT_SETPOINT_THRESHOLD = 0.08;
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private static RelativeEncoder carriageEncoder;
-  private final PIDController carriagePIDController = new PIDController(3.0, 0, 0);
+  private final PIDController carriagePIDController = new PIDController(5, 0, 0);
   private static SparkMaxLimitSwitch bottomLimitSwitch;
   private static SparkMaxLimitSwitch topLimitSwitch;
 
@@ -114,12 +114,12 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
   
   @Override
   public void periodic() {
-  //  SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
-   // SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
+    SmartDashboard.putBoolean("Carriage Up", isCarriageUp());
+    SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
     SmartDashboard.putNumber("Carriage Extension", getCarriageExtension());
 
-  //  if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);
-   // else if (isCarriageDown()) resetCarriageEncoder(CarriagePosition.RETRACTED);
+    if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);
+    else if (isCarriageDown()) resetCarriageEncoder(CarriagePosition.RETRACTED);
   }
   
   public enum CarriagePosition {
