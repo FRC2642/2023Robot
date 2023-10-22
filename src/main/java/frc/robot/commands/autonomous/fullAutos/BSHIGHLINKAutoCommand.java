@@ -37,7 +37,7 @@ import frc.robot.utils.Easings.Functions;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
   /** Creates a new BSHIGHLINKAutoCommand. */
-  public BSHIGHLINKAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, LimelightSubsystem poleLimelight, SliderSubsystem sliders, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawGripperSubsystem gripper, ClawIntakeSubsystem intake, ClawWristSubsystem wrist) {
+  public BSHIGHLINKAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, SliderSubsystem sliders, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawGripperSubsystem gripper, ClawIntakeSubsystem intake, ClawWristSubsystem wrist) {
     PiratePath path = new PiratePath("BSHIGHLINK");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();

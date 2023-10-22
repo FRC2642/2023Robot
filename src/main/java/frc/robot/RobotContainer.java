@@ -67,7 +67,7 @@ public class RobotContainer {
   public final Joystick auxButtonBoard = new Joystick(Constants.AUX_BUTTON_BOARD_PORT);
 
   public final DriveSubsystem drive = new DriveSubsystem();
-  public final LimelightSubsystem poleLimelight = new LimelightSubsystem("limelight-back");
+  //public final LimelightSubsystem poleLimelight = new LimelightSubsystem("limelight-back");
   public final LimelightSubsystem clawLimelight = new LimelightSubsystem("limelight-front");
 
   public final ClawGripperSubsystem gripper = new ClawGripperSubsystem();
@@ -92,7 +92,7 @@ public class RobotContainer {
 
     // Auto options
     autoChooser.setDefaultOption("NO AUTO SELECTED!", new WaitCommand(5));
-    autoChooser.addOption("Flat Side High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, poleLimelight, carriage, shoulder, intake, gripper, slider, wrist));
+    autoChooser.addOption("Flat Side High Cone High Cube", new BSHIGHCONEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider, wrist));
     autoChooser.addOption("Bump Side High Cube Mid Cube", new RSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider, wrist));
     autoChooser.addOption("Flat Side High Cube Mid Cube", new BSHIGHCUBEAutoCommand(drive, clawLimelight, carriage, shoulder, intake, gripper, slider, wrist));
     autoChooser.addOption("Balance High Cube", new CUBEBALANCEAutoCommand(slider, gripper, drive, carriage, intake));
@@ -100,7 +100,7 @@ public class RobotContainer {
     autoChooser.addOption("Bump Side 3 Low Cube", new RSBOTTOMLINKAutoCommand(drive, shoulder, slider, carriage, intake, gripper, wrist, clawLimelight));
     autoChooser.addOption("Balance High Cone", new CONEBALANCEAutoCommand(slider, gripper, drive, carriage, intake, shoulder, wrist)); 
     autoChooser.addOption("Bump Side 2 High Cone", new RS2HIGHCONEAutoCommand(drive, clawLimelight, shoulder, slider, carriage, wrist, gripper, intake)); 
-    autoChooser.addOption("Flat Side High Link", new BSHIGHLINKAutoCommand(drive, clawLimelight, poleLimelight, slider, carriage, shoulder, gripper, intake, wrist));
+    autoChooser.addOption("Flat Side High Link", new BSHIGHLINKAutoCommand(drive, clawLimelight, slider, carriage, shoulder, gripper, intake, wrist));
     autoChooser.addOption("Drift Test Path", new DriftTestPath(drive));
     SmartDashboard.putData(autoChooser);
 
@@ -177,15 +177,15 @@ public class RobotContainer {
           .whileTrue(
               new TurnTowardsGamePieceCommand(drive, clawLimelight, LimelightSubsystem.DetectionType.CONE, mainControl));
       //Human player cone detection
-      new JoystickButton(mainControl, Button.kB.value)
+      /*new JoystickButton(mainControl, Button.kB.value)
       .whileTrue(
-          new TurnTowardsGamePieceCommand(drive, poleLimelight, LimelightSubsystem.DetectionType.CONE, mainControl));
+          new TurnTowardsGamePieceCommand(drive, poleLimelight, LimelightSubsystem.DetectionType.CONE, mainControl));*/
       //Floor cube detection
       new JoystickButton(mainControl, Button.kA.value)
           .whileTrue(new TurnTowardsGamePieceCommand(drive, clawLimelight, DetectionType.CUBE, mainControl));
       //Pole lineup detection
-      new JoystickButton(mainControl, Button.kY.value)
-          .whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));
+      /*new JoystickButton(mainControl, Button.kY.value)
+          .whileTrue(new TurnTowardsGamePieceCommand(drive, poleLimelight, DetectionType.RETROREFLECTIVE, mainControl));*/
 
     } 
     

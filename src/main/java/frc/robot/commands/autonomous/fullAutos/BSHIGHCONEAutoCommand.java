@@ -42,7 +42,7 @@ import frc.robot.utils.Easings.Functions;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class BSHIGHCONEAutoCommand extends SequentialCommandGroup {
   /** Creates a new TWOCUBESHOOTAutoCommand. */
-  public BSHIGHCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, LimelightSubsystem poleLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders, ClawWristSubsystem wrist) {
+  public BSHIGHCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawIntakeSubsystem intake, ClawGripperSubsystem gripper, SliderSubsystem sliders, ClawWristSubsystem wrist) {
     PiratePath path = new PiratePath("BSCONE");
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
