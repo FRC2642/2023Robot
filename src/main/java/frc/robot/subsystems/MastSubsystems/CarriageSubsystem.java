@@ -25,7 +25,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private static RelativeEncoder carriageEncoder;
-  private final PIDController carriagePIDController = new PIDController(5, 0, 0);
+  private final PIDController carriagePIDController = new PIDController(3, 0, 0);
   private static SparkMaxLimitSwitch bottomLimitSwitch;
   private static SparkMaxLimitSwitch topLimitSwitch;
 

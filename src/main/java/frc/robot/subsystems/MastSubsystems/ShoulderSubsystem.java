@@ -116,7 +116,7 @@ public class ShoulderSubsystem extends SubsystemBase implements IPositionable<Sh
 
   public enum ShoulderPosition {
     MANUAL(-1),
-    TRAVEL_MODE(50),
+    TRAVEL_MODE(60),
     CHUTE(MIN_DEGREES),
     PICKUP_GROUND(MAX_DEGREES),
     PICKUP_HUMANPLAYER(20),
