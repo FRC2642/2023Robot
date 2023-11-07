@@ -25,7 +25,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
 
   private final CANSparkMax carriageMotor = new CANSparkMax(Constants.CARRIAGE_MOTOR, MotorType.kBrushless);
   private static RelativeEncoder carriageEncoder;
-  private final PIDController carriagePIDController = new PIDController(3, 0, 0);
+  private final PIDController carriagePIDController = new PIDController(4.5, 0, 0);
   private static SparkMaxLimitSwitch bottomLimitSwitch;
   private static SparkMaxLimitSwitch topLimitSwitch;
 
@@ -118,12 +118,13 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     SmartDashboard.putBoolean("Carriage Down", isCarriageDown());
     SmartDashboard.putNumber("Carriage Extension", getCarriageExtension());
 
-    if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);
-    else if (isCarriageDown()) resetCarriageEncoder(CarriagePosition.RETRACTED);
+    //if (isCarriageUp()) resetCarriageEncoder(CarriagePosition.EXTENDED);
+    //else if (isCarriageDown()) resetCarriageEncoder(CarriagePosition.RETRACTED);
   }
   
   public enum CarriagePosition {
     EXTENDED(1),
+    HUMAN(0.9),
     RETRACTED(0),
     CHUTE(0.25),
     MANUAL(-1);
