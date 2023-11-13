@@ -38,7 +38,7 @@ public class RS2HIGHCONEAutoCommand extends SequentialCommandGroup {
   
 
   public RS2HIGHCONEAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, ShoulderSubsystem shoulder, SliderSubsystem sliders, CarriageSubsystem carriage, ClawWristSubsystem wrist, ClawGripperSubsystem gripper, ClawIntakeSubsystem intake) {
-    PiratePath path = new PiratePath("RS2HIGHCONE");
+    PiratePath path = new PiratePath("RS2HIGHCONE", false);
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
   

@@ -38,7 +38,7 @@ import frc.robot.utils.Easings.Functions;
 public class BSHIGHLINKAutoCommand extends SequentialCommandGroup {
   /** Creates a new BSHIGHLINKAutoCommand. */
   public BSHIGHLINKAutoCommand(DriveSubsystem drive, LimelightSubsystem clawLimelight, SliderSubsystem sliders, CarriageSubsystem carriage, ShoulderSubsystem shoulder, ClawGripperSubsystem gripper, ClawIntakeSubsystem intake, ClawWristSubsystem wrist) {
-    PiratePath path = new PiratePath("BSHIGHLINK");
+    PiratePath path = new PiratePath("BSHIGHLINK", false);
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
 

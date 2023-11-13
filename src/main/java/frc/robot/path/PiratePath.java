@@ -31,6 +31,7 @@ public class PiratePath extends TreeSet<PiratePoint> {
 
     public final boolean allianceDependent;
     public String name;
+    public boolean choreo;
 
     /*
      * Creates an empty path
@@ -43,8 +44,9 @@ public class PiratePath extends TreeSet<PiratePoint> {
     /*
      * Creates a path from a JSON file from FRC PathPlanner 2023
      */
-    public PiratePath(String name) {
+    public PiratePath(String name, boolean choreo) {
         this.name = name;
+        this.choreo = choreo;
         Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, name + ".wpilib.json"));
         if (e != null) {
             e.printStackTrace();
@@ -59,16 +61,33 @@ public class PiratePath extends TreeSet<PiratePoint> {
             JsonNode root = JSON_MAPPER.readTree(jsonFile);
             var pointIterator = root.elements();
             boolean first = true;
+
+            double t = 0.0;
+            double x = 0.0;
+            double y = 0.0;
+            double r = 0.0;
+            boolean stop = false;
+            
             while (pointIterator.hasNext()) {
                 var point = pointIterator.next();
-                JsonNode pose = point.get("pose");
-                JsonNode translation = pose.get("translation");
+                
+                if (choreo){
+                t = point.get("timestamp").asDouble();
+                x = (Constants.FIELD_X) - (point.get("x").asDouble() * Constants.FOOT_PER_METER);
+                y = (Constants.FIELD_Y) - (point.get("y").asDouble() * Constants.FOOT_PER_METER);
+                r = point.get("heading").asDouble() + 180;
+                stop = point.get("velocityX").asDouble() == 0.0 && point.get("velocityY").asDouble() == 0.0 && !first;
+                }
+                else{
+                    JsonNode pose = point.get("pose");
+                    JsonNode translation = pose.get("translation");
 
-                double t = point.get("time").asDouble();
-                double x = (Constants.FIELD_X) - (translation.get("x").asDouble() * Constants.FOOT_PER_METER);
-                double y = (Constants.FIELD_Y) - (translation.get("y").asDouble() * Constants.FOOT_PER_METER);
-                double r = point.get("holonomicRotation").asDouble() + 180;
-                boolean stop = point.get("velocity").asDouble() == 0.0 && !first;
+                    t = point.get("time").asDouble();
+                    x = (Constants.FIELD_X) - (translation.get("x").asDouble() * Constants.FOOT_PER_METER);
+                    y = (Constants.FIELD_Y) - (translation.get("y").asDouble() * Constants.FOOT_PER_METER);
+                    r = point.get("holonomicRotation").asDouble() + 180;
+                    stop = point.get("velocity").asDouble() == 0.0 && !first;
+                }
 
                 PiratePoint pt = new PiratePoint(x, y, r, t, stop);
                 add(pt);

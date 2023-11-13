@@ -39,7 +39,7 @@ import frc.robot.utils.Easings.Functions;
 public class BSBOTTOMLINKAutoCommand extends SequentialCommandGroup {
   /** Creates a new BSBOTTOMLINKAutoCommand. */
   public BSBOTTOMLINKAutoCommand(DriveSubsystem drive, ShoulderSubsystem shoulder, SliderSubsystem slider, CarriageSubsystem carriage, ClawIntakeSubsystem intake, ClawGripperSubsystem pneumatics, ClawWristSubsystem wrist, LimelightSubsystem camera) {
-    PiratePath path = new PiratePath("BS3CUBE");
+    PiratePath path = new PiratePath("BS3CUBE", false);
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
     var paths = path.getSubPaths();
 
