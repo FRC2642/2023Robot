@@ -22,7 +22,7 @@ import frc.robot.utils.Easings.Functions;
 public class DriftTestPath extends SequentialCommandGroup {
   /** Creates a new DriftTestPath. */
   public DriftTestPath(DriveSubsystem drive) {
-    PiratePath path = new PiratePath("Drift Test Path", false);
+    PiratePath path = new PiratePath("TestPath2", true);
     path.fillWithSubPointsEasing(0.01, Functions.easeLinear);
 
     addCommands(
@@ -32,6 +32,7 @@ public class DriftTestPath extends SequentialCommandGroup {
       new ResetGyroCommand(180),
       new ResetSliderEncoderCommand(SliderPosition.RETRACTED),
       new ResetCarriageEncoderCommand(CarriagePosition.RETRACTED),
+      
       new FollowPathCommand(drive, path, true, 0.5)
     );
   }

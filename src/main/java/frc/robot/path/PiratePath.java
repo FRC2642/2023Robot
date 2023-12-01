@@ -47,7 +47,13 @@ public class PiratePath extends TreeSet<PiratePoint> {
     public PiratePath(String name, boolean choreo) {
         this.name = name;
         this.choreo = choreo;
-        Exception e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, name + ".wpilib.json"));
+        Exception e;
+        if (choreo){
+            e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, name + ".json"));
+        }
+        else{
+            e = trySetFromPathPlannerJSON(new File(PARENT_DIRECTORY, name + ".wpilib.json"));
+        }
         if (e != null) {
             e.printStackTrace();
             add(DEFAULT_VALUE);
@@ -72,11 +78,11 @@ public class PiratePath extends TreeSet<PiratePoint> {
                 var point = pointIterator.next();
                 
                 if (choreo){
-                t = point.get("timestamp").asDouble();
-                x = (Constants.FIELD_X) - (point.get("x").asDouble() * Constants.FOOT_PER_METER);
-                y = (Constants.FIELD_Y) - (point.get("y").asDouble() * Constants.FOOT_PER_METER);
-                r = point.get("heading").asDouble() + 180;
-                stop = point.get("velocityX").asDouble() == 0.0 && point.get("velocityY").asDouble() == 0.0 && !first;
+                    t = point.get("timestamp").asDouble();
+                    x = (Constants.FIELD_X) - (point.get("x").asDouble() * Constants.FOOT_PER_METER);
+                    y = (Constants.FIELD_Y) - (point.get("y").asDouble() * Constants.FOOT_PER_METER);
+                    r = point.get("heading").asDouble() + 180;
+                    stop = point.get("velocityX").asDouble() == 0.0 && point.get("velocityY").asDouble() == 0.0 && !first;
                 }
                 else{
                     JsonNode pose = point.get("pose");
