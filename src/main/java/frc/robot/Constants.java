@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 public final class Constants {
 
     // Ratios
-    public static final double FEET_PER_DISPLACEMENT = 6.1078e-5;//6.52131382735e-5;
+    public static final double FEET_PER_DISPLACEMENT = 0.1248804253858982;// <- VALUE FOR NEW FIRMWARE <- || -> VALUE FOR OLD FIRMWARE -> 6.1078e-5;
     public static final double MODULE_ANGLE_KP = 0.00524;
     public static final double FOOT_PER_METER = 3.28084;
 

@@ -7,6 +7,8 @@ package frc.robot.subsystems.swerve;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.sensors.CANCoder;
+import com.ctre.phoenixpro.controls.TorqueCurrentFOC;
+import com.ctre.phoenixpro.hardware.TalonFX;
 import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants;
@@ -21,8 +23,8 @@ import frc.robot.utils.VectorR;
 public class SwerveModule {
 
   // HARDWARE
-  public final WPI_TalonFX angleMotor;
-  private final WPI_TalonFX driveMotor;
+  public final TalonFX angleMotor;
+  private final TalonFX driveMotor;
   public final CANCoder orientationEncoder;
 
   // INFORMATION
@@ -30,30 +32,32 @@ public class SwerveModule {
   private final double defensiveAngleDeg;
   private double wheelOrientation = 0.0;
 
+
+
   public SwerveModule(SwerveModuleInfo info) {
     this.info = info;
-    this.angleMotor = new WPI_TalonFX(info.TURN_ID);
-    this.driveMotor = new WPI_TalonFX(info.DRIVE_ID);
+    this.angleMotor = new TalonFX(info.TURN_ID);
+    this.driveMotor = new TalonFX(info.DRIVE_ID);
     this.orientationEncoder = new CANCoder(info.ENCODER_ID);
     this.defensiveAngleDeg = VectorR.fromCartesian(info.X, info.Y).getAngle();
-    angleMotor.setNeutralMode(NeutralMode.Brake);
-    driveMotor.setNeutralMode(NeutralMode.Brake);
+    
     orientationEncoder.setPosition(0);
-    driveMotor.setSelectedSensorPosition(0);
+    //driveMotor.setSelectedSensorPosition(0);
   }
 
   //RESET METHODS
   public void resetDriveEncoder() {
-    driveMotor.setSelectedSensorPosition(0);
+    //driveMotor.getPosition
   }
 
   // MODULE WHEEL MEASUREMENTS
   public double getWheelSpeed() {
-    return driveMotor.getSelectedSensorVelocity() * Constants.FEET_PER_DISPLACEMENT * (100d/1d);
+    return driveMotor.getVelocity().getValue() * Constants.FEET_PER_DISPLACEMENT * (100d/1d);
   }
 
   private double getWheelPosition() {
-    return driveMotor.getSelectedSensorPosition() * Constants.FEET_PER_DISPLACEMENT;
+    
+    return driveMotor.getPosition().getValue() * Constants.FEET_PER_DISPLACEMENT;
   }
 
   /*
@@ -113,14 +117,15 @@ public class SwerveModule {
    * angle radians follows coordinate plane standards, sets module wheel to angle
    */
   public void update(double speed, double angleDegrees) {
+    
+    
     wheelOrientation = orientationEncoder.getAbsolutePosition();
-
     desired.setFromPolar(speed, angleDegrees);
 
     if (Math.abs(MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle())) > 90d)
       reverse();
 
-    double speed_power = MathR.limit(desiredSpeed(), -1.2, 1.2);
+    double speed_power = MathR.limit(desiredSpeed(), -1, 1);
     double angle_power = MathR
         .limit(Constants.MODULE_ANGLE_KP * MathR.getDistanceToAngle(getWheelOrientationDegrees(), desiredAngle()), -1, 1);
    
