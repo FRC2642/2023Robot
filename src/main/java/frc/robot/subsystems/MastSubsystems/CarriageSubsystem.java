@@ -132,7 +132,7 @@ public class CarriageSubsystem extends SubsystemBase implements IPositionable<Ca
     public final double extension;
     private CarriagePosition(double extension) {
       this.extension = extension;
-    }
+  }
   }
 
 }

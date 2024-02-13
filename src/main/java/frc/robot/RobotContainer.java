@@ -143,30 +143,30 @@ public class RobotContainer {
       new JoystickButton(auxControl, 2).onTrue(
           (new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_FLOOR, shoulder, slider, carriage, wrist)));
       //Override button
-      new JoystickButton(auxButtonBoard, 6).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
+      new JoystickButton(auxButtonBoard, 12).onTrue(new InstantCommand(() -> {}, shoulder, wrist));
       //Chute button
-      new JoystickButton(auxButtonBoard, 7).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage, wrist)));
+      new JoystickButton(auxButtonBoard, 11).onTrue((new SetRobotConfigurationCommand(RobotConfiguration.CHUTE, shoulder, slider, carriage, wrist)));
       //Human button
-      new JoystickButton(auxButtonBoard, 8)
+      new JoystickButton(auxButtonBoard, 4)
           .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PICKUP_HUMAN_PLAYER, shoulder, slider, carriage, wrist)));
       //Knocked down cone placement button
       new JoystickButton(auxButtonBoard, 9)
           .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.PLACE_KOCKED_CONE, shoulder, slider, carriage, wrist)));
       // //Travel button
-       new JoystickButton(auxButtonBoard, 1)
+       new JoystickButton(auxButtonBoard, 6)
          .onTrue((new SetRobotConfigurationCommand(RobotConfiguration.TRAVEL_MODE, shoulder, slider, carriage, wrist)));
       //Extend slider button
-      new JoystickButton(auxButtonBoard, 12).onTrue(new SetSliderCommand(slider, () -> {
+      new JoystickButton(auxButtonBoard, 8).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.EXTENDED;
       }));
       //Retract slider button
-      new JoystickButton(auxButtonBoard, 11).onTrue(new SetSliderCommand(slider, () -> {
+      new JoystickButton(auxButtonBoard, 10).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = false;
         return SliderPosition.RETRACTED;
       }));
       //Activate slider protection
-      new JoystickButton(auxButtonBoard, 10).onTrue(new SetSliderCommand(slider, () -> {
+      new JoystickButton(auxButtonBoard, 7).onTrue(new SetSliderCommand(slider, () -> {
         SliderSubsystem.protectionEnabled = true;
         return SliderSubsystem.currentSetPosition;
       }));
